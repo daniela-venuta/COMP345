@@ -9,54 +9,59 @@ struct location
 {
     std::string* name;
 
-    location(std::string* name) : name(name) {}
+    explicit location(std::string* name) : name(name) {}
+    virtual ~location();
 };
 
 
 struct region : location
 {
-    region(std::string* name) : location(name) {}
+    explicit region(std::string* name) : location(name) {}
 };
 
 template <class T>
 struct territory
 {
     typedef pair<int, territory<T>*> territoryEdge;
-    vector<territoryEdge> adjacency; //cost of edge, destination vertex
+    vector<territoryEdge> adjacency;
     T* value;
 	
-    territory(T* value) : value(value) {}
+    explicit territory(T* value) : value(value) {}
+    virtual ~territory();
 
-    string toString();
-    string getName();
+    string to_string();
+    string get_name();
 };
 
 template <class T>
 class graph: public location
 {
+protected:
+	explicit graph(std::string* name) : location(name) {}
+
 public:
     typedef map<string, territory<T>*> territories;
     territories terrs;
 
-    graph(std::string* name) : location(name) {}
+    virtual ~graph();
 
-    void addTerritory(territory<T>* terr);
-    void addEdge(const string& from, const string& to, double cost);
-    virtual string toString();
+    void add_territory(territory<T>* terr);
+    void add_edge(const string& from, const string& to, double cost);
+    virtual string to_string();
 };
 
 class continent : public graph<region>
 {
 public:
-    continent(std::string* name): graph<region>(name) {}
+    explicit continent(std::string* name): graph<region>(name) {}
 };
 
 class gameMap : public graph<continent>
 {
 public:
-    gameMap(std::string* name) : graph<continent>(name) {}
+    explicit gameMap(std::string* name) : graph<continent>(name) {}
 	
-    string toString() override;
+    string to_string() override;
 };
 
 #pragma region aliases
