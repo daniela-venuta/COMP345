@@ -1,38 +1,45 @@
 #pragma once
 
 #include <string>
+#include <vector>
+
 using std::string;
-
-class Deck {
-public:
-	Deck();
-	~Deck();
-
-	void draw();
-};
-
-class Hand {
-public:
-	Hand();
-	~Hand();
-
-	void exchange();
-private:
-	Card *cards[13]; // max amount of cards a player can hold
-};
+using std::vector;
 
 class Card {
 public:
-	Card(string goodDesc, string actionDesc);
+	Card(const string goodDesc,const string actionDesc);
+	Card(const Card& otherCard);
 	~Card();
 
-	//TODO: copyConstructor
-
 	// getters and setters
-	string getGoods();
-	string getAction();
+	string getGoods() const;
+	string getAction() const;
 
 private:
 	string goods;
 	string action;
 };
+
+class Deck {
+public:
+	Deck();
+	Deck(const Deck& otherDeck);
+	~Deck();
+
+	void draw();
+private:
+	vector<Card> cardDeck;
+};
+
+class Hand {
+public:
+	Hand();
+	Hand(const Hand& otherHand);
+	~Hand();
+
+	void exchange();
+private:
+	vector<Card> handCards;
+};
+
