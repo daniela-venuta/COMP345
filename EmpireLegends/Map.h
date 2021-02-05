@@ -99,6 +99,7 @@ public:
     /// <param name="second">second territory name</param>
     /// <param name="cost"></param>
     void add_edge(const string& first, const string& second, double cost);
+    territory<T>* find_territory(string name);
     /// <summary>
     /// Returns the graph's string representation
     /// </summary>
@@ -117,19 +118,6 @@ public:
     /// </summary>
     /// <param name="name">continent's name</param>
     explicit continent(string* name): graph<region>(name) {}
-};
-
-/// <summary>
-/// Invalid map exception
-/// </summary>
-struct invalidMapException : exception
-{
-	/// <summary>
-	/// 2-parameter constructor
-	/// </summary>
-	/// <param name="name">map name</param>
-	/// <param name="reason">invalidity reason</param>
-	invalidMapException(const string& name, const string& reason);
 };
 
 /// <summary>
@@ -164,3 +152,34 @@ template <class T>
 using territories = map<string, territory<T>*>;
 
 #pragma endregion aliases
+
+#pragma region exceptions
+
+/// <summary>
+/// Invalid map exception
+/// </summary>
+struct invalidMapException : exception
+{
+    /// <summary>
+    /// 2-parameter constructor
+    /// </summary>
+    /// <param name="name">map name</param>
+    /// <param name="reason">invalidity reason</param>
+    invalidMapException(const string& name, const string& reason);
+};
+
+/// <summary>
+/// Territory not found exception
+/// </summary>
+struct territoryNotFoundException : exception
+{
+    /// <summary>
+    /// 2-parameter constructor
+    /// </summary>
+    /// <param name="territory_name">element name</param>
+    /// <param name="graph_name">searched graph's name</param>
+    territoryNotFoundException(const string& territory_name, const string& graph_name);
+};
+
+#pragma endregion exceptions
+

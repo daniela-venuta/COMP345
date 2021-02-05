@@ -64,6 +64,15 @@ void mapDriverStart() {
 		//m2 should not validate
 		cout << e.what() << endl;
 	}
+	try
+	{
+		c1->find_territory("test_test");
+	}
+	catch (territoryNotFoundException& e)
+	{
+		//Should not find territory with incorrect name
+		cout << e.what() << endl;
+	}
 
 	delete m1;
 	delete m2;

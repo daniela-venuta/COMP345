@@ -1,6 +1,19 @@
 #include "Map.h"
 #include <iostream>
 
+#pragma region exceptions
+
+invalidMapException::invalidMapException(const string& name, const string& reason)
+    : exception((new string("Invalid Map '" + name + "': " + reason))->c_str())
+{}
+
+territoryNotFoundException::territoryNotFoundException(const string& territory_name, const string& graph_name)
+    : exception((new string("Territory '" + territory_name + "' is not in graph '" + graph_name + "'\n"))->c_str())
+
+{}
+
+#pragma endregion exceptions
+
 #pragma region location
 
 location::~location()
@@ -89,7 +102,7 @@ void graph<T>::add_territory(territory<T>* terr)
         terrs[name] = terr;
         return;
     }
-    cout << "\nTerritory '" << terr->get_name() << "' already exists in " << *this->name << " and was not added\n" <<endl;
+    cout << "\nTerritory '" << terr->get_name() << "' already exists in '" << *this->name << "' and was not added\n" <<endl;
 }
 
 template <class T>
@@ -101,6 +114,19 @@ void graph<T>::add_edge(const string& first, const string& second, double cost)
     pair<int, territory<T>*> edgeSecond = make_pair(cost, s);
     f->adjacency.push_back(edgeSecond);
     s->adjacency.push_back(edgeFirst);
+}
+
+template <class T>
+territory<T>* graph<T>::find_territory(string name)
+{	
+    for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
+    {
+    	if (itr->second->get_name() == name)
+    	{
+            return itr->second;
+    	}
+    }
+    throw territoryNotFoundException(name, *this->name);
 }
 
 template<class T>
@@ -150,10 +176,6 @@ string gameMap::to_string()
     return s;
 }
 
-invalidMapException::invalidMapException(const string& name, const string& reason)
-: exception((new string("Invalid Map " + name + ": " + reason))->c_str())
-{}
-
 void gameMap::validate()
 {
     vector<string> keys;
@@ -167,7 +189,7 @@ void gameMap::validate()
                 keys.push_back(terr_itr->first);
         	} else
             {
-                throw invalidMapException(*this->name, terr_itr->first + " is in multiple continents\n");
+                throw invalidMapException(*this->name, "'" + terr_itr->first + "' is in multiple continents\n");
             }
         }
     }
