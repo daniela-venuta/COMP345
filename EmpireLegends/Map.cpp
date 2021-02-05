@@ -1,7 +1,5 @@
 #include "Map.h"
-#include <string>
 #include <iostream>
-
 
 #pragma region location
 
@@ -21,7 +19,7 @@ template <class T>
 string territory<T>::to_string()
 {
     string s;
-    s.append("\t\t");
+    s.append("\t");
     for (const auto pair : adjacency)
     {
         s.append("(");
@@ -38,20 +36,40 @@ string territory<T>::to_string()
 template <class T>
 string territory<T>::get_name()
 {
-    return *static_cast<location*>(this->value)->name;
+    return *reinterpret_cast<location*>(this->value)->name;
 }
 
 template <class T>
 territory<T>::~territory()
 {
-    cout << "Deleting territory: " << this->get_name() << endl;
-    //Deleting all pointers in the vector
-    for (auto adj : adjacency)
+    if (this->value == nullptr || this->adjacency.empty())
     {
-        adj.second = nullptr;
+        return;
     }
-    adjacency.clear();
-    delete value;
+	
+    cout << "Deleting territory: " << this->get_name() << endl;
+    for (auto itr = adjacency.begin(); itr != adjacency.end(); itr = adjacency.begin())
+    {
+        if (itr->second->value == nullptr || itr->second->adjacency.empty())
+        {
+            break;
+        }
+    	
+        auto other_adjacency = itr->second->adjacency;
+
+        for (auto other_itr = other_adjacency.begin(); other_itr != other_adjacency.end(); ++other_itr)
+        {
+            if (other_itr->second->get_name() == this->get_name())
+            {
+                other_adjacency.erase(other_itr);
+                break;
+            }
+        }
+        adjacency.erase(itr);
+    }
+    this->adjacency.clear();
+    delete  this->value;
+    this->value = nullptr;
 }
 
 #pragma endregion territory
@@ -71,28 +89,27 @@ void graph<T>::add_territory(territory<T>* terr)
         terrs[name] = terr;
         return;
     }
-    cout << "\nTerritory already exists!";
+    cout << "\nTerritory '" << terr->get_name() << "' already exists in " << *this->name << " and was not added\n" <<endl;
 }
 
 template <class T>
-void graph<T>::add_edge(const string& from, const string& to, double cost)
+void graph<T>::add_edge(const string& first, const string& second, double cost)
 {
-    territory<T>* f = (terrs.find(from)->second);
-    territory<T>* t = (terrs.find(to)->second);
-    pair<int, territory<T>*> edgeFrom = make_pair(cost, f);
-    pair<int, territory<T>*> edgeTo = make_pair(cost, t);
-    f->adjacency.push_back(edgeTo);
-    t->adjacency.push_back(edgeFrom);
+    territory<T>* f = (terrs.find(first)->second);
+    territory<T>* s = (terrs.find(second)->second);
+    pair<int, territory<T>*> edgeFirst = make_pair(cost, f);
+    pair<int, territory<T>*> edgeSecond = make_pair(cost, s);
+    f->adjacency.push_back(edgeSecond);
+    s->adjacency.push_back(edgeFirst);
 }
 
 template<class T>
 string graph<T>::to_string()
 {
     string s;
-    s.append(*this->name);
-    s.append("\n");
     for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
+        s.append("\t");
         s.append(itr->second->to_string());
         s.append("\n");
     }
@@ -103,10 +120,13 @@ template <class T>
 graph<T>::~graph()
 {
     cout << "Deleting graph: " << *this->name << endl;
-	//Deleting all pointers in the map
+	//Deleting all territories in the graph
     for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
-        delete itr->second;
+    	if (!itr->second->adjacency.empty())
+    	{
+            delete itr->second;
+    	}
     }
     terrs.clear();
 }
@@ -122,12 +142,37 @@ string gameMap::to_string()
     s.append("\n");
     for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
-        s.append("\t");
+        s.append(itr->second->to_string());
+        s.append("\n");
         s.append(itr->second->value->to_string());
         s.append("\n");
     }
     return s;
 }
 
-#pragma endregion gameMap
+invalidMapException::invalidMapException(const string& name, const string& reason)
+: exception((new string("Invalid Map " + name + ": " + reason))->c_str())
+{}
 
+void gameMap::validate()
+{
+    vector<string> keys;
+    for (auto continent_itr = terrs.begin(); continent_itr != terrs.end(); ++continent_itr)
+    {
+        auto continent_terrs = continent_itr->second->value->terrs;
+        for (auto terr_itr = continent_terrs.begin(); terr_itr != continent_terrs.end(); ++terr_itr)
+        {
+        	if (find(keys.begin(), keys.end(), terr_itr->first) == keys.end())
+        	{
+                keys.push_back(terr_itr->first);
+        	} else
+            {
+                throw invalidMapException(*this->name, terr_itr->first + " is in multiple continents\n");
+            }
+        }
+    }
+
+    cout << *this->name << " is valid\n" << endl;
+}
+
+#pragma endregion gameMap
