@@ -3,12 +3,12 @@
 
 #pragma region exceptions
 
-invalidMapException::invalidMapException(const string& name, const string& reason)
+InvalidMapException::InvalidMapException(const string& name, const string& reason)
     : exception((new string("Invalid Map '" + name + "': " + reason))->c_str())
 {}
 
-territoryNotFoundException::territoryNotFoundException(const string& territory_name, const string& graph_name)
-    : exception((new string("Territory '" + territory_name + "' is not in graph '" + graph_name + "'\n"))->c_str())
+TerritoryNotFoundException::TerritoryNotFoundException(const string& territoryName, const string& graphName)
+    : exception((new string("Territory '" + territoryName + "' is not in graph '" + graphName + "'\n"))->c_str())
 
 {}
 
@@ -16,7 +16,7 @@ territoryNotFoundException::territoryNotFoundException(const string& territory_n
 
 #pragma region location
 
-location::~location()
+Location::~Location()
 {
     delete name;
 }
@@ -25,20 +25,20 @@ location::~location()
 
 #pragma region territory
 
-template class territory<region>;
-template class territory<continent>;
+template class Territory<Region>;
+template class Territory<Continent>;
 
 template <class T>
-string territory<T>::to_string()
+string Territory<T>::toString()
 {
     string s;
     s.append("\t");
     for (const auto pair : adjacency)
     {
         s.append("(");
-        s.append(this->get_name());
+        s.append(this->getName());
         s.append(", ");
-        s.append(pair.second->get_name());
+        s.append(pair.second->getName());
         s.append(", ");
         s.append(std::to_string(pair.first));
         s.append(") ");
@@ -47,20 +47,20 @@ string territory<T>::to_string()
 }
 
 template <class T>
-string territory<T>::get_name()
+string Territory<T>::getName()
 {
-    return *reinterpret_cast<location*>(this->value)->name;
+    return *reinterpret_cast<Location*>(this->value)->name;
 }
 
 template <class T>
-territory<T>::~territory()
+Territory<T>::~Territory()
 {
     if (this->value == nullptr || this->adjacency.empty())
     {
         return;
     }
 	
-    cout << "Deleting territory: " << this->get_name() << endl;
+    cout << "Deleting territory: " << this->getName() << endl;
     for (auto itr = adjacency.begin(); itr != adjacency.end(); itr = adjacency.begin())
     {
         if (itr->second->value == nullptr || itr->second->adjacency.empty())
@@ -68,13 +68,13 @@ territory<T>::~territory()
             break;
         }
     	
-        auto other_adjacency = itr->second->adjacency;
+        auto otherAdjacency = itr->second->adjacency;
 
-        for (auto other_itr = other_adjacency.begin(); other_itr != other_adjacency.end(); ++other_itr)
+        for (auto otherItr = otherAdjacency.begin(); otherItr != otherAdjacency.end(); ++otherItr)
         {
-            if (other_itr->second->get_name() == this->get_name())
+            if (otherItr->second->getName() == this->getName())
             {
-                other_adjacency.erase(other_itr);
+                otherAdjacency.erase(otherItr);
                 break;
             }
         }
@@ -89,61 +89,61 @@ territory<T>::~territory()
 
 #pragma region graph
 
-template class graph<region>;
-template class graph<continent>;
+template class Graph<Region>;
+template class Graph<Continent>;
 
 template <class T>
-void graph<T>::add_territory(territory<T>* terr)
+void Graph<T>::addTerritory(Territory<T>* terr)
 {
-    string name = terr->get_name();
-    typename territories::iterator itr = terrs.find(name);
+    string name = terr->getName();
+    typename Territories::iterator itr = terrs.find(name);
     if (itr == terrs.end())
     {
         terrs[name] = terr;
         return;
     }
-    cout << "\nTerritory '" << terr->get_name() << "' already exists in '" << *this->name << "' and was not added\n" <<endl;
+    cout << "\nTerritory '" << terr->getName() << "' already exists in '" << *this->name << "' and was not added\n" <<endl;
 }
 
 template <class T>
-void graph<T>::add_edge(const string& first, const string& second, double cost)
+void Graph<T>::addEdge(const string& first, const string& second, double cost)
 {
-    territory<T>* f = (terrs.find(first)->second);
-    territory<T>* s = (terrs.find(second)->second);
-    pair<int, territory<T>*> edgeFirst = make_pair(cost, f);
-    pair<int, territory<T>*> edgeSecond = make_pair(cost, s);
+    Territory<T>* f = (terrs.find(first)->second);
+    Territory<T>* s = (terrs.find(second)->second);
+    pair<int, Territory<T>*> edgeFirst = make_pair(cost, f);
+    pair<int, Territory<T>*> edgeSecond = make_pair(cost, s);
     f->adjacency.push_back(edgeSecond);
     s->adjacency.push_back(edgeFirst);
 }
 
 template <class T>
-territory<T>* graph<T>::find_territory(string name)
+Territory<T>* Graph<T>::findTerritory(string name)
 {	
     for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
-    	if (itr->second->get_name() == name)
+    	if (itr->second->getName() == name)
     	{
             return itr->second;
     	}
     }
-    throw territoryNotFoundException(name, *this->name);
+    throw TerritoryNotFoundException(name, *this->name);
 }
 
 template<class T>
-string graph<T>::to_string()
+string Graph<T>::toString()
 {
     string s;
     for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
         s.append("\t");
-        s.append(itr->second->to_string());
+        s.append(itr->second->toString());
         s.append("\n");
     }
     return s;
 }
 
 template <class T>
-graph<T>::~graph()
+Graph<T>::~Graph()
 {
     cout << "Deleting graph: " << *this->name << endl;
 	//Deleting all territories in the graph
@@ -161,35 +161,35 @@ graph<T>::~graph()
 
 #pragma region gameMap
 
-string gameMap::to_string()
+string GameMap::toString()
 {
     string s;
     s.append(*this->name);
     s.append("\n");
     for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
-        s.append(itr->second->to_string());
+        s.append(itr->second->toString());
         s.append("\n");
-        s.append(itr->second->value->to_string());
+        s.append(itr->second->value->toString());
         s.append("\n");
     }
     return s;
 }
 
-void gameMap::validate()
+void GameMap::validate()
 {
     vector<string> keys;
-    for (auto continent_itr = terrs.begin(); continent_itr != terrs.end(); ++continent_itr)
+    for (auto continentItr = terrs.begin(); continentItr != terrs.end(); ++continentItr)
     {
-        auto continent_terrs = continent_itr->second->value->terrs;
-        for (auto terr_itr = continent_terrs.begin(); terr_itr != continent_terrs.end(); ++terr_itr)
+        auto continentTerrs = continentItr->second->value->terrs;
+        for (auto terrItr = continentTerrs.begin(); terrItr != continentTerrs.end(); ++terrItr)
         {
-        	if (find(keys.begin(), keys.end(), terr_itr->first) == keys.end())
+        	if (find(keys.begin(), keys.end(), terrItr->first) == keys.end())
         	{
-                keys.push_back(terr_itr->first);
+                keys.push_back(terrItr->first);
         	} else
             {
-                throw invalidMapException(*this->name, "'" + terr_itr->first + "' is in multiple continents\n");
+                throw InvalidMapException(*this->name, "'" + terrItr->first + "' is in multiple continents\n");
             }
         }
     }

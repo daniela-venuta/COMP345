@@ -5,12 +5,10 @@
 
 using namespace std;
 
-struct nullValueException : exception {};
-
 /// <summary>
 /// Location class
 /// </summary>
-struct location
+struct Location
 {
     std::string* name;
 
@@ -18,138 +16,145 @@ struct location
     /// 1-parameter constructor
     /// </summary>
     /// <param name="name">location name</param>
-    explicit location(string* name) : name(name) {}
-    virtual ~location();
+    explicit Location(string* name) : name(name) {}
+    virtual ~Location();
 };
 
 /// <summary>
 /// Region class
 /// </summary>
-struct region : location
+struct Region : Location
 {
     /// <summary>
     /// 1-parameter constructor
     /// </summary>
     /// <param name="name">region name</param>
-    explicit region(string* name) : location(name) {}
+    explicit Region(string* name) : Location(name) {}
 };
 
 /// <summary>
 /// Generic territory class that acts as a graph node and stores a value
 /// </summary>
 template <class T>
-struct territory
+struct Territory
 {
-    typedef pair<int, territory<T>*> territoryEdge;
-    vector<territoryEdge> adjacency;
+    typedef pair<int, Territory<T>*> TerritoryEdge;
+    vector<TerritoryEdge> adjacency;
     T* value;
 
     /// <summary>
     /// 1-parameter constructor
     /// </summary>
     /// <param name="value">territory's value</param>
-    explicit territory(T* value) : value(value) {}
+    explicit Territory(T* value) : value(value) {}
 	/// <summary>
 	/// Destructor
 	/// </summary>
-	virtual ~territory();
+	virtual ~Territory();
 
     /// <summary>
     /// Returns the territory's string representation
     /// </summary>
     /// <returns>string representation</returns>
-    string to_string();
+    string toString();
     /// <summary>
     /// Returns the territory's name
     /// </summary>
     /// <returns>territory's name</returns>
-    string get_name();
+    string getName();
 };
 
 /// <summary>
 /// Generic undirected graph class
 /// </summary>
 template <class T>
-class graph: public location
+class Graph: public Location
 {
 protected:
 	/// <summary>
 	/// 1-parameter constructor
 	/// </summary>
 	/// <param name="name">graph's name</param>
-	explicit graph(string* name) : location(name) {}
+	explicit Graph(string* name) : Location(name) {}
 
 public:
-    typedef map<string, territory<T>*> territories;
-    territories terrs;
+    typedef map<string, Territory<T>*> Territories;
+    Territories terrs;
     /// <summary>
     /// Destructor
     /// </summary>
-    virtual ~graph();
+    virtual ~Graph();
 
     /// <summary>
     /// Adding a territory to the graph
     /// </summary>
     /// <param name="terr">territory to add</param>
-    void add_territory(territory<T>* terr);
+    void addTerritory(Territory<T>* terr);
     /// <summary>
     /// Adding an edge to the graph
     /// </summary>
     /// <param name="first">first territory name</param>
     /// <param name="second">second territory name</param>
     /// <param name="cost"></param>
-    void add_edge(const string& first, const string& second, double cost);
-    territory<T>* find_territory(string name);
+    void addEdge(const string& first, const string& second, double cost);
+    /// <summary>
+    /// Finding a territory in the graph
+    /// </summary>
+    /// <param name="name">territory name</param>
+    /// <returns>found territory</returns>
+    /// <throws>TerritoryNotFoundException</throws>
+    Territory<T>* findTerritory(string name);
     /// <summary>
     /// Returns the graph's string representation
     /// </summary>
     /// <returns>string representation</returns>
-	virtual string to_string();
+	virtual string toString();
 };
 
 /// <summary>
 /// Continent class, which is a graph of regions
 /// </summary>
-class continent : public graph<region>
+class Continent : public Graph<Region>
 {
 public:
     /// <summary>
     /// 1-parameter constructor
     /// </summary>
     /// <param name="name">continent's name</param>
-    explicit continent(string* name): graph<region>(name) {}
+    explicit Continent(string* name): Graph<Region>(name) {}
 };
 
 /// <summary>
 /// GameMap class, which is a graph of continents
 /// </summary>
-class gameMap : public graph<continent>
+class GameMap : public Graph<Continent>
 {
 public:
     /// <summary>
     /// 1-parameter constructor
     /// </summary>
     /// <param name="name">map's name</param>
-    explicit gameMap(string* name) : graph<continent>(name) {}
+    explicit GameMap(string* name) : Graph<Continent>(name) {}
 
     /// <summary>
     /// Returns the map's string representation
     /// </summary>
     /// <returns>string representation</returns>
-    string to_string() override;
+    string toString() override;
     /// <summary>
     /// Validates the map. If the map is invalid, it throws an invalidMapException
     /// </summary>
+    /// <throws>InvalidMapException</throws>
     void validate();
 };
 
 #pragma region aliases
 
 template <class T>
-using territoryEdge = pair<int, territory<T>*>;
+using TerritoryEdge = pair<int, Territory<T>*>;
 
 template <class T>
-using territories = map<string, territory<T>*>;
+using Territories = map<string, Territory<T>*>;
 
 #pragma endregion aliases
 
@@ -158,27 +163,27 @@ using territories = map<string, territory<T>*>;
 /// <summary>
 /// Invalid map exception
 /// </summary>
-struct invalidMapException : exception
+struct InvalidMapException : exception
 {
     /// <summary>
     /// 2-parameter constructor
     /// </summary>
     /// <param name="name">map name</param>
     /// <param name="reason">invalidity reason</param>
-    invalidMapException(const string& name, const string& reason);
+    InvalidMapException(const string& name, const string& reason);
 };
 
 /// <summary>
 /// Territory not found exception
 /// </summary>
-struct territoryNotFoundException : exception
+struct TerritoryNotFoundException : exception
 {
     /// <summary>
     /// 2-parameter constructor
     /// </summary>
-    /// <param name="territory_name">element name</param>
-    /// <param name="graph_name">searched graph's name</param>
-    territoryNotFoundException(const string& territory_name, const string& graph_name);
+    /// <param name="territoryName">element name</param>
+    /// <param name="graphName">searched graph's name</param>
+    TerritoryNotFoundException(const string& territoryName, const string& graphName);
 };
 
 #pragma endregion exceptions
