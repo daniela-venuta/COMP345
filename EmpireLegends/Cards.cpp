@@ -1,8 +1,13 @@
 #include "Cards.h"
 
 //======= DECK METHODS =======//
-Deck::Deck() {
+Deck::Deck()
+{
 
+}
+
+Deck::~Deck()
+{
 }
 
 ostream& operator<<(ostream& os, const Deck& deck)
@@ -17,9 +22,18 @@ ostream& operator>>(ostream& os, const Deck& deck)
 	return os;
 }
 
-//======= HAND METHODS =======//
-Hand::Hand() {
+//Deck& Deck::operator=(const Deck& deck)
+//{
+//}
 
+//======= HAND METHODS =======//
+Hand::Hand()
+{
+
+}
+
+Hand::~Hand()
+{
 }
 
 ostream& operator<<(ostream& os, const Hand& hand)
@@ -35,11 +49,20 @@ ostream& operator>>(ostream& os, const Hand& hand)
 }
 
 
+//Hand& Hand::operator=(const Hand& hand)
+//{
+//}
+
 //======= CARD METHODS =======//
-Card::Card(const string goodDesc, const string actionDesc) {
+Card::Card(const string goodDesc, const string actionDesc)
+{
 	// initialize card
 	goods = goodDesc;
 	action = actionDesc;
+}
+
+Card::~Card()
+{
 }
 
 Card::Card(const Card& otherCard)
@@ -50,15 +73,19 @@ Card::Card(const Card& otherCard)
 
 ostream& operator<<(ostream& os, const Card& card)
 {
-	os << "";
+	os << "this is a card";
 	return os;
 }
 
 ostream& operator>>(ostream& os, const Card& card)
 {
-	os << "";
+	os << "this is a card";
 	return os;
 }
+
+//Card& Card::operator=(const Card& card)
+//{
+//}
 
 string Card::getAction() const
 {

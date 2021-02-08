@@ -12,12 +12,17 @@ using std::ostream;
 class Card {
 public:
 	Card(const string goodDesc,const string actionDesc);
-	Card(const Card& otherCard);
 	~Card();
+
+	// copy constructor
+	Card(const Card& otherCard);
 
 	// stream insertion operator overload
 	friend ostream& operator<<(ostream& os, const Card& card);
 	friend ostream& operator>>(ostream& os, const Card& card);
+
+	// assignment operator
+	Card& operator = (const Card& card);
 
 	// getters and setters
 	string getGoods() const;
@@ -31,12 +36,17 @@ private:
 class Deck {
 public:
 	Deck();
-	Deck(const Deck& otherDeck);
 	~Deck();
+
+	// copy constructor
+	Deck(const Deck& otherDeck);
 
 	// stream insertion operator overload
 	friend ostream& operator<<(ostream& os, const Deck& deck);
 	friend ostream& operator>>(ostream& os, const Deck& deck);
+
+	// assignment operator
+	Deck& operator = (const Deck& deck);
 
 	Card draw();
 private:
@@ -46,12 +56,17 @@ private:
 class Hand {
 public:
 	Hand();
-	Hand(const Hand& otherHand);
 	~Hand();
 
+	// copy constructor
+	Hand(const Hand& otherHand);
+	
 	// stream insertion operator overload
 	friend ostream& operator<<(ostream& os, const Hand& hand);
 	friend ostream& operator>>(ostream& os, const Hand& hand);
+
+	//assignment operator
+	Hand& operator = (const Hand& hand);
 	
 	void exchange();
 private:
