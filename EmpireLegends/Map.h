@@ -3,8 +3,6 @@
 #include <map>
 #include <string>
 
-using namespace std;
-
 /// <summary>
 /// Location class
 /// </summary>
@@ -16,7 +14,7 @@ struct Location
     /// 1-parameter constructor
     /// </summary>
     /// <param name="name">location name</param>
-    explicit Location(string* name) : name(name) {}
+    explicit Location(std::string* name) : name(name) {}
     virtual ~Location();
 };
 
@@ -29,17 +27,24 @@ struct Region : Location
     /// 1-parameter constructor
     /// </summary>
     /// <param name="name">region name</param>
-    explicit Region(string* name) : Location(name) {}
+    explicit Region(std::string name) : Location(new std::string(name)) {}
 };
 
 /// <summary>
 /// Generic territory class that acts as a graph node and stores a value
 /// </summary>
 template <class T>
-struct Territory
+class Territory
 {
-    typedef pair<int, Territory<T>*> TerritoryEdge;
-    vector<TerritoryEdge> adjacency;
+    /// <summary>
+    /// Removes the territory's presence in adjacent territories.
+    /// </summary>
+    /// <param name="itr">vector iterator for adjacent territories</param>
+    void removeOwnAdjacency(typename std::vector<std::pair<int, Territory<T>*>>::iterator itr);
+
+public:
+    typedef std::pair<int, Territory<T>*> TerritoryEdge;
+    std::vector<TerritoryEdge> adjacency;
     T* value;
 
     /// <summary>
@@ -56,12 +61,21 @@ struct Territory
     /// Returns the territory's string representation
     /// </summary>
     /// <returns>string representation</returns>
-    string toString();
+    std::string toString();
+    /// <summary>
+    /// String stream operator overload
+    /// </summary>
+    /// <param name="os">stream to write to</param>
+    /// <param name="terr">territory to add to the stream</param>
+    /// <returns>stream with the territory's string representation added</returns>
+    friend std::ostream& operator<<(std::ostream& os, Territory* terr) {
+        return os << terr->toString();
+    }
     /// <summary>
     /// Returns the territory's name
     /// </summary>
     /// <returns>territory's name</returns>
-    string getName();
+    std::string getName();
 };
 
 /// <summary>
@@ -75,10 +89,10 @@ protected:
 	/// 1-parameter constructor
 	/// </summary>
 	/// <param name="name">graph's name</param>
-	explicit Graph(string* name) : Location(name) {}
+	explicit Graph(std::string* name) : Location(name) {}
 
 public:
-    typedef map<string, Territory<T>*> Territories;
+    typedef std::map<std::string, Territory<T>*> Territories;
     Territories terrs;
     /// <summary>
     /// Destructor
@@ -96,19 +110,28 @@ public:
     /// <param name="first">first territory name</param>
     /// <param name="second">second territory name</param>
     /// <param name="cost"></param>
-    void addEdge(const string& first, const string& second, double cost);
+    void addEdge(const std::string& first, const std::string& second, double cost);
     /// <summary>
     /// Finding a territory in the graph
     /// </summary>
     /// <param name="name">territory name</param>
     /// <returns>found territory</returns>
-    /// <throws>TerritoryNotFoundException</throws>
-    Territory<T>* findTerritory(string name);
+    Territory<T>* findTerritory(std::string name);
     /// <summary>
     /// Returns the graph's string representation
     /// </summary>
     /// <returns>string representation</returns>
-	virtual string toString();
+	virtual std::string toString();
+
+    /// <summary>
+    /// String stream operator overload
+    /// </summary>
+    /// <param name="os">stream to write to</param>
+    /// <param name="graph">graph to add to the stream</param>
+    /// <returns>stream with the graph's string representation added</returns>
+    friend std::ostream& operator<<(std::ostream& os, Graph* graph) {
+        return os << graph->toString();
+    }
 };
 
 /// <summary>
@@ -121,7 +144,7 @@ public:
     /// 1-parameter constructor
     /// </summary>
     /// <param name="name">continent's name</param>
-    explicit Continent(string* name): Graph<Region>(name) {}
+    explicit Continent(std::string name): Graph<Region>(new std::string(name)) {}
 };
 
 /// <summary>
@@ -129,61 +152,86 @@ public:
 /// </summary>
 class GameMap : public Graph<Continent>
 {
+    /// <summary>
+    /// Checks that there are no duplicated keys found in a continent iterator. Throws InvalidMapException if a duplication is found.
+    /// </summary>
+	void checkForKeyDuplicates(std::vector<std::string>& keys, std::map<std::string, Territory<Continent>*>::iterator continentTerrs);
 public:
     /// <summary>
     /// 1-parameter constructor
     /// </summary>
     /// <param name="name">map's name</param>
-    explicit GameMap(string* name) : Graph<Continent>(name) {}
+    explicit GameMap(std::string name) : Graph<Continent>(new std::string(name)) {}
 
     /// <summary>
     /// Returns the map's string representation
     /// </summary>
     /// <returns>string representation</returns>
-    string toString() override;
+    std::string toString() override;
     /// <summary>
-    /// Validates the map. If the map is invalid, it throws an invalidMapException
+    /// Validates the map. If the map is invalid, it throws an InvalidMapException
     /// </summary>
-    /// <throws>InvalidMapException</throws>
     void validate();
 };
 
 #pragma region aliases
 
 template <class T>
-using TerritoryEdge = pair<int, Territory<T>*>;
+using TerritoryEdge = std::pair<int, Territory<T>*>;
 
 template <class T>
-using Territories = map<string, Territory<T>*>;
+using Territories = std::map<std::string, Territory<T>*>;
 
 #pragma endregion aliases
 
 #pragma region exceptions
 
 /// <summary>
+/// Generic map exception
+/// </summary>
+struct MapException : std::exception
+{
+    /// <summary>
+    /// 1-parameter constructor
+    /// </summary>
+    /// <param name="message">exception name</param>
+    MapException(std::string message) : exception((new std::string(message))->c_str()) {}
+
+    /// <summary>
+    /// String stream operator overload
+    /// </summary>
+    /// <param name="os">stream to write to</param>
+    /// <param name="graph">graph to add to the stream</param>
+    /// <returns>stream with the graph's string representation added</returns>
+    friend std::ostream& operator<<(std::ostream& os, MapException e) {
+        return os << std::string(e.what());
+    }
+};
+
+/// <summary>
 /// Invalid map exception
 /// </summary>
-struct InvalidMapException : exception
+struct InvalidMapException : MapException
 {
     /// <summary>
     /// 2-parameter constructor
     /// </summary>
     /// <param name="name">map name</param>
     /// <param name="reason">invalidity reason</param>
-    InvalidMapException(const string& name, const string& reason);
+    InvalidMapException(const std::string& name, const std::string& reason);
 };
 
 /// <summary>
 /// Territory not found exception
 /// </summary>
-struct TerritoryNotFoundException : exception
+struct TerritoryNotFoundException : MapException
 {
     /// <summary>
     /// 2-parameter constructor
     /// </summary>
     /// <param name="territoryName">element name</param>
     /// <param name="graphName">searched graph's name</param>
-    TerritoryNotFoundException(const string& territoryName, const string& graphName);
+    TerritoryNotFoundException(const std::string& territoryName, const std::string& graphName);
 };
 
 #pragma endregion exceptions

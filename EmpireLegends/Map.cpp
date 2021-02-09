@@ -3,13 +3,12 @@
 
 #pragma region exceptions
 
-InvalidMapException::InvalidMapException(const string& name, const string& reason)
-    : exception((new string("Invalid Map '" + name + "': " + reason))->c_str())
+InvalidMapException::InvalidMapException(const std::string& name, const std::string& reason)
+    : MapException(std::string("Invalid Map '" + name + "': " + reason))
 {}
 
-TerritoryNotFoundException::TerritoryNotFoundException(const string& territoryName, const string& graphName)
-    : exception((new string("Territory '" + territoryName + "' is not in graph '" + graphName + "'\n"))->c_str())
-
+TerritoryNotFoundException::TerritoryNotFoundException(const std::string& territoryName, const std::string& graphName)
+    : MapException(std::string("Territory '" + territoryName + "' is not in graph '" + graphName + "'\n"))
 {}
 
 #pragma endregion exceptions
@@ -29,9 +28,9 @@ template class Territory<Region>;
 template class Territory<Continent>;
 
 template <class T>
-string Territory<T>::toString()
+std::string Territory<T>::toString()
 {
-    string s;
+    std::string s;
     s.append("\t");
     for (const auto pair : adjacency)
     {
@@ -47,9 +46,24 @@ string Territory<T>::toString()
 }
 
 template <class T>
-string Territory<T>::getName()
+std::string Territory<T>::getName()
 {
     return *reinterpret_cast<Location*>(this->value)->name;
+}
+
+template <class T>
+void Territory<T>::removeOwnAdjacency(typename std::vector<std::pair<int, Territory<T>*>>::iterator itr)
+{
+	auto otherAdjacency = itr->second->adjacency;
+	for (auto otherItr = otherAdjacency.begin(); otherItr != otherAdjacency.end(); ++otherItr)
+	{
+		// Removing itself from the other territory's adjacency vector if it's found in it (without deleting the pointer)
+		if (otherItr->second->getName() == this->getName())
+		{
+			otherAdjacency.erase(otherItr);
+			break;
+		}
+	}
 }
 
 template <class T>
@@ -60,24 +74,19 @@ Territory<T>::~Territory()
         return;
     }
 	
-    cout << "Deleting territory: " << this->getName() << endl;
+    std::cout << "Deleting territory: " << this->getName() << std::endl;
     for (auto itr = adjacency.begin(); itr != adjacency.end(); itr = adjacency.begin())
     {
+    	// If the adjacent territory's value is null or its adjacency vector is empty, it means it's virtually already deleted
         if (itr->second->value == nullptr || itr->second->adjacency.empty())
         {
+        	//We shouldn't try to remove it
             break;
         }
-    	
-        auto otherAdjacency = itr->second->adjacency;
 
-        for (auto otherItr = otherAdjacency.begin(); otherItr != otherAdjacency.end(); ++otherItr)
-        {
-            if (otherItr->second->getName() == this->getName())
-            {
-                otherAdjacency.erase(otherItr);
-                break;
-            }
-        }
+    	// Remove the current territory from the adjacent territories
+        removeOwnAdjacency(itr);
+    	
         adjacency.erase(itr);
     }
     this->adjacency.clear();
@@ -95,29 +104,31 @@ template class Graph<Continent>;
 template <class T>
 void Graph<T>::addTerritory(Territory<T>* terr)
 {
-    string name = terr->getName();
+    std::string name = terr->getName();
     typename Territories::iterator itr = terrs.find(name);
     if (itr == terrs.end())
     {
         terrs[name] = terr;
         return;
     }
-    cout << "\nTerritory '" << terr->getName() << "' already exists in '" << *this->name << "' and was not added\n" <<endl;
+    std::cout << "\nTerritory '" << terr->getName() << "' already exists in '" << *this->name << "' and was not added\n"
+	    << std::endl;
 }
 
 template <class T>
-void Graph<T>::addEdge(const string& first, const string& second, double cost)
+void Graph<T>::addEdge(const std::string& first, const std::string& second, double cost)
 {
     Territory<T>* f = (terrs.find(first)->second);
     Territory<T>* s = (terrs.find(second)->second);
-    pair<int, Territory<T>*> edgeFirst = make_pair(cost, f);
-    pair<int, Territory<T>*> edgeSecond = make_pair(cost, s);
+    std::pair<int, Territory<T>*> edgeFirst = std::make_pair(cost, f);
+    std::pair<int, Territory<T>*> edgeSecond = std::make_pair(cost, s);
+	// Creating the undirected edge by adding each territory to the other's adjacency vector
     f->adjacency.push_back(edgeSecond);
     s->adjacency.push_back(edgeFirst);
 }
 
 template <class T>
-Territory<T>* Graph<T>::findTerritory(string name)
+Territory<T>* Graph<T>::findTerritory(std::string name)
 {	
     for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
@@ -130,9 +141,9 @@ Territory<T>* Graph<T>::findTerritory(string name)
 }
 
 template<class T>
-string Graph<T>::toString()
+std::string Graph<T>::toString()
 {
-    string s;
+    std::string s;
     for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
         s.append("\t");
@@ -145,7 +156,7 @@ string Graph<T>::toString()
 template <class T>
 Graph<T>::~Graph()
 {
-    cout << "Deleting graph: " << *this->name << endl;
+    std::cout << "Deleting graph: " << *this->name << std::endl;
 	//Deleting all territories in the graph
     for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
@@ -161,13 +172,15 @@ Graph<T>::~Graph()
 
 #pragma region gameMap
 
-string GameMap::toString()
+std::string GameMap::toString()
 {
-    string s;
+	std::string s;
     s.append(*this->name);
     s.append("\n");
     for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
+        s.append(itr->second->getName());
+        s.append("\n");
         s.append(itr->second->toString());
         s.append("\n");
         s.append(itr->second->value->toString());
@@ -176,25 +189,33 @@ string GameMap::toString()
     return s;
 }
 
+void GameMap::checkForKeyDuplicates(std::vector<std::string>& keys, std::map<std::string, Territory<Continent>*>::iterator continentItr)
+{
+	auto continentTerrs = continentItr->second->value->terrs;
+	for (auto terrItr = continentTerrs.begin(); terrItr != continentTerrs.end(); ++terrItr)
+	{
+		// If the key is not in the keys vector
+		if (find(keys.begin(), keys.end(), terrItr->first) == keys.end())
+		{
+			// Adding the territory's key to the keys vector
+			keys.push_back(terrItr->first);
+		} else
+		{
+			throw InvalidMapException(*this->name, "'" + terrItr->first + "' is in multiple continents\n");
+		}
+	}
+}
+
 void GameMap::validate()
 {
-    vector<string> keys;
+	std::vector<std::string> keys;
+    // Check that all regions from all continents are never found twice in the keys vector 
     for (auto continentItr = terrs.begin(); continentItr != terrs.end(); ++continentItr)
     {
-        auto continentTerrs = continentItr->second->value->terrs;
-        for (auto terrItr = continentTerrs.begin(); terrItr != continentTerrs.end(); ++terrItr)
-        {
-        	if (find(keys.begin(), keys.end(), terrItr->first) == keys.end())
-        	{
-                keys.push_back(terrItr->first);
-        	} else
-            {
-                throw InvalidMapException(*this->name, "'" + terrItr->first + "' is in multiple continents\n");
-            }
-        }
+        checkForKeyDuplicates(keys, continentItr);
     }
 
-    cout << *this->name << " is valid\n" << endl;
+	std::cout << *this->name << " is valid\n" << std::endl;
 }
 
 #pragma endregion gameMap

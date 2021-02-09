@@ -26,7 +26,7 @@
     <ClCompile Include="Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="MapDriver.cpp">
       <Filter>Driver Files</Filter>
     </ClCompile>
   </ItemGroup>
