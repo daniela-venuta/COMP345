@@ -8,14 +8,16 @@
 /// </summary>
 struct Location
 {
-    std::string* name;
+    std::string name;
 
     /// <summary>
     /// 1-parameter constructor
     /// </summary>
     /// <param name="name">location name</param>
-    explicit Location(std::string* name) : name(name) {}
-    virtual ~Location();
+    explicit Location(std::string name)
+    {
+        this->name = std::move(name);
+    }
 };
 
 /// <summary>
@@ -27,22 +29,26 @@ struct Region : Location
     /// 1-parameter constructor
     /// </summary>
     /// <param name="name">region name</param>
-    explicit Region(std::string name) : Location(new std::string(name)) {}
+    explicit Region(std::string name) : Location(name) {}
+    /// <summary>
+    /// Copy constructor
+    /// </summary>
+    /// <param name="region">region to copy</param>
+    Region(const Region& region);
+    /// <summary>
+    /// Assignment operator overload
+    /// </summary>
+    /// <param name="region">region to assign to this instance</param>
+    /// <returns>Region copied from parameter region</returns>
+    Region& operator=(Region region);
 };
 
 /// <summary>
 /// Generic territory class that acts as a graph node and stores a value
 /// </summary>
 template <class T>
-class Territory
+struct Territory
 {
-    /// <summary>
-    /// Removes the territory's presence in adjacent territories.
-    /// </summary>
-    /// <param name="itr">vector iterator for adjacent territories</param>
-    void removeOwnAdjacency(typename std::vector<std::pair<int, Territory<T>*>>::iterator itr);
-
-public:
     typedef std::pair<int, Territory<T>*> TerritoryEdge;
     std::vector<TerritoryEdge> adjacency;
     T* value;
@@ -52,6 +58,17 @@ public:
     /// </summary>
     /// <param name="value">territory's value</param>
     explicit Territory(T* value) : value(value) {}
+    /// <summary>
+    /// Copy constructor. Does not copy the adjacency vector, since it's the graph's responsibility
+    /// </summary>
+    /// <param name="territory">territory to copy</param>
+    Territory(const Territory<T>& territory);
+    /// <summary>
+    /// Assignment operator overload
+    /// </summary>
+    /// <param name="territory">territory to assign to this instance</param>
+    /// <returns>Territory copied from parameter region</returns>
+    Territory<T>& operator=(Territory<T> territory);
 	/// <summary>
 	/// Destructor
 	/// </summary>
@@ -61,21 +78,22 @@ public:
     /// Returns the territory's string representation
     /// </summary>
     /// <returns>string representation</returns>
-    std::string toString();
+    std::string toString() const;
     /// <summary>
-    /// String stream operator overload
+    /// Stream insertion operator overload
     /// </summary>
+    /// <param name="os">stream to write to</param>
     /// <param name="os">stream to write to</param>
     /// <param name="terr">territory to add to the stream</param>
     /// <returns>stream with the territory's string representation added</returns>
-    friend std::ostream& operator<<(std::ostream& os, Territory* terr) {
-        return os << terr->toString();
+    friend std::ostream& operator<<(std::ostream& os, const Territory& terr) {
+        return os << terr.toString();
     }
     /// <summary>
     /// Returns the territory's name
     /// </summary>
     /// <returns>territory's name</returns>
-    std::string getName();
+    std::string getName() const;
 };
 
 /// <summary>
@@ -89,11 +107,24 @@ protected:
 	/// 1-parameter constructor
 	/// </summary>
 	/// <param name="name">graph's name</param>
-	explicit Graph(std::string* name) : Location(name) {}
+	explicit Graph(std::string name) : Location(name) {}
 
 public:
     typedef std::map<std::string, Territory<T>*> Territories;
     Territories terrs;
+	
+    /// <summary>
+    /// Copy constructor
+    /// </summary>
+    /// <param name="graph">graph to copy</param>
+    Graph<T>(const Graph<T>& graph);
+    /// <summary>
+    /// Assignment operator overload
+    /// </summary>
+    /// <param name="graph">graph to assign to this instance</param>
+    /// <returns>Graph copied from parameter region</returns>
+    Graph<T>& operator=(Graph<T> graph);
+	
     /// <summary>
     /// Destructor
     /// </summary>
@@ -109,8 +140,8 @@ public:
     /// </summary>
     /// <param name="first">first territory name</param>
     /// <param name="second">second territory name</param>
-    /// <param name="cost"></param>
-    void addEdge(const std::string& first, const std::string& second, double cost);
+    /// <param name="cost">cost to travel between the two territories</param>
+    void addEdge(const std::string& first, const std::string& second, int cost);
     /// <summary>
     /// Finding a territory in the graph
     /// </summary>
@@ -121,16 +152,16 @@ public:
     /// Returns the graph's string representation
     /// </summary>
     /// <returns>string representation</returns>
-	virtual std::string toString();
+	virtual std::string toString() const;
 
     /// <summary>
-    /// String stream operator overload
+    /// Stream insertion operator overload
     /// </summary>
     /// <param name="os">stream to write to</param>
     /// <param name="graph">graph to add to the stream</param>
     /// <returns>stream with the graph's string representation added</returns>
-    friend std::ostream& operator<<(std::ostream& os, Graph* graph) {
-        return os << graph->toString();
+    friend std::ostream& operator<<(std::ostream& os, const Graph& graph) {
+        return os << graph.toString();
     }
 };
 
@@ -144,7 +175,7 @@ public:
     /// 1-parameter constructor
     /// </summary>
     /// <param name="name">continent's name</param>
-    explicit Continent(std::string name): Graph<Region>(new std::string(name)) {}
+    explicit Continent(std::string name): Graph<Region>(name) {}
 };
 
 /// <summary>
@@ -161,13 +192,13 @@ public:
     /// 1-parameter constructor
     /// </summary>
     /// <param name="name">map's name</param>
-    explicit GameMap(std::string name) : Graph<Continent>(new std::string(name)) {}
+    explicit GameMap(std::string name) : Graph<Continent>(name) {}
 
     /// <summary>
     /// Returns the map's string representation
     /// </summary>
     /// <returns>string representation</returns>
-    std::string toString() override;
+    std::string toString() const override;
     /// <summary>
     /// Validates the map. If the map is invalid, it throws an InvalidMapException
     /// </summary>
@@ -198,7 +229,7 @@ struct MapException : std::exception
     MapException(std::string message) : exception((new std::string(message))->c_str()) {}
 
     /// <summary>
-    /// String stream operator overload
+    /// Stream insertion operator overload
     /// </summary>
     /// <param name="os">stream to write to</param>
     /// <param name="graph">graph to add to the stream</param>
@@ -206,6 +237,33 @@ struct MapException : std::exception
     friend std::ostream& operator<<(std::ostream& os, MapException e) {
         return os << std::string(e.what());
     }
+};
+
+/// <summary>
+/// Territory already in graph exception
+/// </summary>
+struct TerritoryInGraphException : MapException
+{
+    /// <summary>
+    /// 2-parameter constructor
+    /// </summary>
+    /// <param name="territoryName">territory name</param>
+    /// <param name="graphName">graph name</param>
+    TerritoryInGraphException(const std::string& territoryName, const std::string& graphName);
+};
+
+/// <summary>
+/// Edge already in graph exception
+/// </summary>
+struct EdgeInGraphException : MapException
+{
+    /// <summary>
+    /// 2-parameter constructor
+    /// </summary>
+    /// <param name="firstName">first territory name</param>
+    /// <param name="secondName">second territory name</param>
+    /// <param name="graphName">graph name</param>
+    EdgeInGraphException(const std::string& firstName, const std::string& secondName, const std::string& graphName);
 };
 
 /// <summary>

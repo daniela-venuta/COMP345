@@ -15,11 +15,26 @@ int main() {
 	c1->addTerritory(t1);
 	c1->addTerritory(t2);
 	c1->addTerritory(t3);
-	c1->addTerritory(t3);
+	try
+	{
+		c1->addTerritory(t3);
+	} catch (TerritoryInGraphException& e)
+	{
+		// Should not be able to add t3 twice
+		std::cout << e << std::endl;
+	}
 	c1->addEdge("Region 1", "Region 2", 1);
 	c1->addEdge("Region 1", "Region 3", 1);
 	c1->addEdge("Region 2", "Region 3", 1);
-
+	try
+	{
+		c1->addEdge("Region 1", "Region 2", 1);
+	}
+	catch (EdgeInGraphException& e)
+	{
+		//Should not add already existing edge
+		std::cout << e << std::endl;
+	}
 	c2->addTerritory(t4);
 	c2->addTerritory(t5);
 	c2->addTerritory(t6);
@@ -31,8 +46,6 @@ int main() {
 	c3->addTerritory(t4);
 	c3->addTerritory(t5);
 	c3->addTerritory(t6);
-	c3->addEdge("Region 4", "Region 5", 1);
-	c3->addEdge("Region 5", "Region 6", 1);
 
 	auto* m1 = new GameMap("Map 1");
 	auto* m2 = new GameMap("Map 2");
@@ -49,11 +62,15 @@ int main() {
 	m2->addEdge("Continent 1", "Continent 3", 3);
 
 	std::cout << "----------------------------------------------------------------------------------" << std::endl;
-	std::cout << m1 << std::endl; //Testing map stream operator overload
+	std::cout << *m1 << std::endl; //Testing map stream operator overload
 	std::cout << "----------------------------------------------------------------------------------" << std::endl;
-	std::cout << c1 << std::endl; //Testing continent stream operator overload
+	std::cout << *c1 << std::endl; //Testing continent stream operator overload
 	std::cout << "----------------------------------------------------------------------------------" << std::endl;
-	std::cout << t1 << std::endl; //Testing territory stream operator overload
+	std::cout << *t1 << std::endl; //Testing territory stream operator overload
+	std::cout << "----------------------------------------------------------------------------------" << std::endl;
+	auto copiedM1 = *m1; //Testing map copy constructor (which uses all other copy constructors)
+	std::cout << "\nPrinting copied map:" << std::endl;
+	std::cout << copiedM1 << std::endl;
 	std::cout << "----------------------------------------------------------------------------------" << std::endl;
 
 	try
@@ -79,6 +96,5 @@ int main() {
 
 	delete m1;
 	delete m2;
-
 	return 0;
 }
