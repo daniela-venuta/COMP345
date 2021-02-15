@@ -1,20 +1,22 @@
-#include "Player.h"
+#include "Player.h";
+#include <iostream>;
+
+// using std::cout;
 
 //========= PLAYER METHODS =========//
 // Instantiate a new Player object with a given player name
-Player::Player(string username)
+Player::Player(const string username)
 {
 	// verify that this is not a duplicate username for the current players in game
 	playerName = username;
-	totalCoins = 0; // players start off with no coins
-	// define an empty vector<Territory>
-	// define an empty vector<Card> hand
+	totalCoins = 0;
+    unplacedArmies = 18;
+    placedArmies = 0;
 	// define a bidingFacility
-	// define an empty vector<City>
-	// define an empty vectory<Army>
+	// playerCities, playerArmies and playerTerritories should all be instantiated to empty vectors
 }
 
-Player::PayCoin(int price)
+Player::PayCoin(const int price)
 {
 	if ((totalCoins - price) > 0)
 	{
@@ -27,35 +29,45 @@ Player::MovesOverLand(const Territory from, const Territory to)
 {
 	// check current territory
 	// check that destination territory is valid
+	// check that travel can be done between both territories
 	// move player to the specified territory
 }
 
-//========= ARMY METHODS =========//
 // Place armies at the specified location
-Army::PlaceNewArmies(const Territory location, const int number)
+Player::PlaceNewArmies(const Territory location, const int number)
 {
-	// check that territory is valid
-	// check that the terriroty is not already occupied (?)
-	// add specified number of armies to the specified terriroty
+	// check that the territory is valid
+	// check that the territory is not already occupied TODO: read rules to see if this is necessary
+	// add specified number of armies to the specified territory
 	// add territory to vector<Territory> playerTerritories
-	// reduce total number of available armies vector<Army> playerArmies
+	if ((unplacedArmies - number >= 0) && (placedArmies + number <= 18))
+	{
+		unplacedArmies = unplacedArmies - number;
+		placedArmies = placedArmies + number;
+	}
+	else if ((unplacedArmies - number < 0) || (placedArmies + number > 18))
+	{
+		cout << "This action is not permissible.";
+	};
 }
 
 // Move specified number of armies from one territory to another
-Army::MoveArmies(const int number, const Territory to, const Territory from)
+Player::MoveArmies(const int number, const Territory to, const Territory from)
 {
 	// check that starting territory is valid
 	// check that destination territory is valid
+	// check that travel can be done between both territories
 	// move specified number of armies to the specified territory
+	// modify location of armies in vector<int, string> playerArmies
 }
 
 // Destroy all enemy armies found at the specified location
-Army::DestroyArmy(const Territory location)
+Player::DestroyArmy(const Territory location)
 {
 	// check that there are armies at the specified location
 	// check that, if there are armies present, that they aren't the players' own armies
 	// destroy specified number of armies found at the specified location
-	// check original owner of territory and reduce number of armies
+	// identify original owner of territory and reduce number of placedArmies > increase number of unplacedArmies
 }
 
 //========= CITY METHODS =========//
