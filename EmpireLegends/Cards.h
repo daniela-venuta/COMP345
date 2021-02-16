@@ -12,7 +12,7 @@ using std::ostream;
 class Card {
 public:
 	Card(const string goodDesc,const string actionDesc);
-	~Card();
+	~Card() = default;
 
 	// copy constructor
 	Card(const Card& otherCard);
@@ -33,9 +33,31 @@ private:
 	string action;
 };
 
+class Hand {
+public:
+	Hand();
+	~Hand();
+
+	// copy constructor
+	Hand(const Hand& otherHand);
+
+	// stream insertion operator overload
+	friend ostream& operator<<(ostream& os, const Hand& hand);
+	friend ostream& operator>>(ostream& os, const Hand& hand);
+
+	//assignment operator
+	Hand& operator = (const Hand& hand);
+
+	Card* exchange(int rowPosition, int cost);
+	void addCard(Card* card);
+private:
+	vector<Card*> handCards;
+};
+
+
 class Deck {
 public:
-	Deck();
+	Deck(const vector<Card*> playingCards);
 	~Deck();
 
 	// copy constructor
@@ -50,26 +72,8 @@ public:
 
 	Card draw();
 private:
-	vector<Card> cardDeck;
+	vector<Card*> cardDeck;
+	Hand* hand;
 };
 
-class Hand {
-public:
-	Hand();
-	~Hand();
-
-	// copy constructor
-	Hand(const Hand& otherHand);
-	
-	// stream insertion operator overload
-	friend ostream& operator<<(ostream& os, const Hand& hand);
-	friend ostream& operator>>(ostream& os, const Hand& hand);
-
-	//assignment operator
-	Hand& operator = (const Hand& hand);
-	
-	void exchange();
-private:
-	vector<Card> handCards;
-};
 

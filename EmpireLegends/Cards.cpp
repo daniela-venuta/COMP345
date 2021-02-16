@@ -1,13 +1,23 @@
 #include "Cards.h"
 
 //======= DECK METHODS =======//
-Deck::Deck()
+Deck::Deck(const vector<Card*> playingCards)
 {
-
+	hand = new Hand();
+	cardDeck = playingCards;
 }
 
 Deck::~Deck()
 {
+	hand = nullptr;
+	cardDeck.clear();
+}
+
+Card Deck::draw()
+{
+	int last = cardDeck.size();
+	Card* drawCard = cardDeck.at(last-1);
+	hand->addCard(drawCard);
 }
 
 ostream& operator<<(ostream& os, const Deck& deck)
@@ -36,6 +46,24 @@ Hand::~Hand()
 {
 }
 
+Hand& Hand::operator=(const Hand& hand)
+{
+}
+
+Card* Hand::exchange(int rowPosition, int cost)
+{
+	Card* exchangeCard = handCards.at(rowPosition - 1);
+
+	// remove card from Hand
+	handCards.erase(handCards.begin() + rowPosition);
+
+	return exchangeCard;
+}
+
+void Hand::addCard(Card* card)
+{
+}
+
 ostream& operator<<(ostream& os, const Hand& hand)
 {
 	os << "";
@@ -59,10 +87,6 @@ Card::Card(const string goodDesc, const string actionDesc)
 	// initialize card
 	goods = goodDesc;
 	action = actionDesc;
-}
-
-Card::~Card()
-{
 }
 
 Card::Card(const Card& otherCard)
