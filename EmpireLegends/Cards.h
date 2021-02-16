@@ -70,7 +70,7 @@ public:
 	// assignment operator
 	Deck& operator = (const Deck& deck);
 
-	Card draw();
+	Card* draw();
 private:
 	vector<Card*> cardDeck;
 	Hand* hand;
