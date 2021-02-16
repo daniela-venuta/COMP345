@@ -35,7 +35,7 @@ private:
 
 class Hand {
 public:
-	Hand();
+	Hand() = default;
 	~Hand();
 
 	// copy constructor
@@ -70,7 +70,7 @@ public:
 	// assignment operator
 	Deck& operator = (const Deck& deck);
 
-	Card* draw();
+	void draw();
 private:
 	vector<Card*> cardDeck;
 	Hand* hand;

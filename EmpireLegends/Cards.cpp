@@ -13,15 +13,13 @@ Deck::~Deck()
 	cardDeck.clear();
 }
 
-Card* Deck::draw()
+void Deck::draw()
 {
-	int last = cardDeck.size();
+	const int last = cardDeck.size();
 	Card* drawCard = cardDeck.at(last-1);
 
 	// add card to card space (deck hand)
 	hand->addCard(drawCard);
-
-	return drawCard;
 }
 
 ostream& operator<<(ostream& os, const Deck& deck)
@@ -41,13 +39,9 @@ ostream& operator>>(ostream& os, const Deck& deck)
 //}
 
 //======= HAND METHODS =======//
-Hand::Hand()
-{
-
-}
-
 Hand::~Hand()
 {
+	handCards.clear();
 }
 
 Hand& Hand::operator=(const Hand& hand)
