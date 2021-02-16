@@ -14,20 +14,24 @@ class Player
 public:
 	Player(string username);
 	~Player();
-	PayCoin(int price);
-	MovesOverLand(const Territory from, const Territory to);
-	PlaceNewArmies(const Territory destination, const int number);
-	MoveArmies(const int number, const Territory from, const Territory to);
-	DestroyArmy(const Territory location, const int number);
+
+	void PayCoin(int price);
+	template <class T>
+	void MoveOverLand(const Territory<T> from, const Territory<T> to);
+	void PlaceNewArmies(const Territory<Region> destination, const int number);
+	template <class T>
+	void MoveArmies(const int number, const Territory<T> from, const Territory<T> to);
+	template <class T>
+	void DestroyArmy(const Territory<T> location, const int number);
 
 private:
 	string playerName;
 	int totalCoins;
-	vector<Territory> playerTerritories;
+	vector<Territory<Region>> playerTerritories;
 	Hand playerHand;
 	//BidingFacility bidingFacility;
-	vector<City> playerCities;
-	vector<int, string> playerArmies;
+	int unplacedCities;
+	int placedCities;
 	int unplacedArmies;
 	int placedArmies;
 };
@@ -35,5 +39,5 @@ private:
 class City
 {
 public:
-	BuildCity(const Territory territory);
+	void BuildCity(const Territory<Region> territory);
 };
