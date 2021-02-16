@@ -50,7 +50,10 @@ public:
 
 	Card* exchange(int rowPosition, int cost);
 	void addCard(Card* card);
+	
 private:
+	static int getCardCost(int position);
+	
 	vector<Card*> handCards;
 };
 
@@ -71,7 +74,7 @@ public:
 	Deck& operator = (const Deck& deck);
 
 	void draw(int count);
-	const Hand* getHand() const;
+	Hand* getHand() const;
 private:
 	vector<Card*> cardDeck;
 	Hand* hand;

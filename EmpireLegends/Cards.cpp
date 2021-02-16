@@ -28,7 +28,7 @@ void Deck::draw(int count)
 	}
 }
 
-const Hand* Deck::getHand() const
+Hand* Deck::getHand() const
 {
 	return hand;
 }
@@ -66,6 +66,7 @@ ostream& operator>>(ostream& os, const Deck& deck)
 //======= HAND METHODS =======//
 Hand::~Hand()
 {
+	// clear the vector
 	handCards.clear();
 }
 
@@ -75,11 +76,21 @@ Hand::~Hand()
 
 Card* Hand::exchange(int rowPosition, int cost)
 {
-	Card* exchangeCard = handCards.at(rowPosition - 1);
+	const int cardCost = getCardCost(rowPosition);
+	Card* exchangeCard = nullptr;
 
-	// remove card from Hand
-	handCards.erase(handCards.begin() + rowPosition);
+	if(cost == cardCost)
+	{
+		exchangeCard = handCards.at(rowPosition - 1);
 
+		// remove card from Hand
+		handCards.erase(handCards.begin() + rowPosition);
+	}
+	else
+	{
+		std::cout << "Incorrect amount of coins entered. Operation failed" << std::endl;
+	}
+	
 	return exchangeCard;
 }
 
@@ -89,9 +100,26 @@ void Hand::addCard(Card* card)
 	handCards.push_back(card);
 }
 
+int Hand::getCardCost(int position)
+{
+	int cardCost;
+	switch(position)
+	{
+	case 1: cardCost = 0;
+	case 2: 
+	case 3:cardCost = 1; break;
+	case 4:
+	case 5:cardCost = 2; break;
+	case 6:cardCost = 3; break;
+	default: cardCost = 0;
+	}
+
+	return cardCost;
+}
+
 ostream& operator<<(ostream& os, const Hand& hand)
 {
-	string s = "The following cards remain in the hand: ";;
+	string s = "The following cards remain in the hand: ";
 
 	for(const Card* card : hand.handCards)
 	{
