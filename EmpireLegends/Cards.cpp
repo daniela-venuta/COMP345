@@ -13,24 +13,49 @@ Deck::~Deck()
 	cardDeck.clear();
 }
 
-void Deck::draw()
+void Deck::draw(int count)
 {
-	const int last = cardDeck.size();
-	Card* drawCard = cardDeck.at(last-1);
+	for(int i=0; i< count; i++)
+	{
+		// get card to add to the hand
+		Card* drawCard = cardDeck.at(cardDeck.size() - 1);
 
-	// add card to card space (deck hand)
-	hand->addCard(drawCard);
+		// remove card from deck
+		cardDeck.pop_back();
+
+		// add card to card space (deck hand)
+		hand->addCard(drawCard);
+	}
+}
+
+const Hand* Deck::getHand() const
+{
+	return hand;
 }
 
 ostream& operator<<(ostream& os, const Deck& deck)
 {
-	os << "";
+	string s = "The following cards remain in the deck: ";
+
+	for (const Card* card : deck.cardDeck)
+	{
+		s += card->getGoods() + " ";
+	}
+	os << s << std::endl;
+
 	return os;
 }
 
 ostream& operator>>(ostream& os, const Deck& deck)
 {
-	os << "";
+	string s = "The following cards remain in the deck: ";
+
+	for (const Card* card : deck.cardDeck)
+	{
+		s += card->getGoods() + " ";
+	}
+	os << s << std::endl;
+	
 	return os;
 }
 
@@ -44,9 +69,9 @@ Hand::~Hand()
 	handCards.clear();
 }
 
-Hand& Hand::operator=(const Hand& hand)
-{
-}
+//Hand& Hand::operator=(const Hand& hand)
+//{
+//}
 
 Card* Hand::exchange(int rowPosition, int cost)
 {
@@ -66,20 +91,29 @@ void Hand::addCard(Card* card)
 
 ostream& operator<<(ostream& os, const Hand& hand)
 {
-	os << "";
+	string s = "The following cards remain in the hand: ";;
+
+	for(const Card* card : hand.handCards)
+	{
+		s += card->getGoods() +" ";
+	}
+	os << s << std::endl;
+	
 	return os;
 }
 
 ostream& operator>>(ostream& os, const Hand& hand)
 {
-	os << "";
+	string s = "The following cards remain in the hand: ";;
+
+	for (const Card* card : hand.handCards)
+	{
+		s += card->getGoods() + " ";
+	}
+	os << s << std::endl;
 	return os;
 }
 
-
-//Hand& Hand::operator=(const Hand& hand)
-//{
-//}
 
 //======= CARD METHODS =======//
 Card::Card(const string goodDesc, const string actionDesc)
@@ -97,13 +131,13 @@ Card::Card(const Card& otherCard)
 
 ostream& operator<<(ostream& os, const Card& card)
 {
-	os << "this is a card";
+	os << "Card action: " << card.getAction() << ", Card good: " << card.getGoods() << std::endl;
 	return os;
 }
 
 ostream& operator>>(ostream& os, const Card& card)
 {
-	os << "this is a card";
+	os << "Card action: " << card.getAction() << ", Card good: " << card.getGoods() << std::endl;
 	return os;
 }
 
