@@ -16,18 +16,22 @@ int main() {
 	cin >> numofPlayers;
 
 	switch (numofPlayers) {
+
 	case 2:
 		PlayerCoins = 14;
 		cout << " Each player gets 14 coins" << endl;
 		break;
+
 	case 3:
 		PlayerCoins = 11;
 		cout << " Each player gets 11 coins" << endl;
 		break;
+
 	case 4:
 		PlayerCoins = 9;
 		cout << " Each player gets 9 coins" << endl;
 		break;
+
 	default:
 		while (numofPlayers > 4 || numofPlayers < 2) {
 			cout << "Invalid number of players";
