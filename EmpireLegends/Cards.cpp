@@ -1,7 +1,5 @@
 #include "Cards.h"
 
-
-
 //======= DECK METHODS =======//
 Deck::Deck(const vector<Card*> playingCards)
 {
