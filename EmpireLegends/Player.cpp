@@ -16,10 +16,10 @@ Player::Player(const string username)
 	placedCities = 0;
 	unplacedArmies = 18;
 	placedArmies = 0;
-	// define a bidingFacility
 	cout << "Created new player: " << username;
 }
 
+/* 
 // Player pays coins (to buy card)
 void Player::PayCoin(const int price)
 {
@@ -102,4 +102,6 @@ void Player::BuildCity(Territory<Region>* location)
 	{
 		cout << "This action is not permissible.";
 	};
+	
 }
+*/

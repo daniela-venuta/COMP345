@@ -6,6 +6,8 @@ using namespace std;
 
 class BiddingFacility {
 
+	BiddingFacility();
+
 	// Constructor 
 	BiddingFacility(string name, int bid, int coins);
 

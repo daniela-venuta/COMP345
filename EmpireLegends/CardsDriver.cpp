@@ -1,6 +1,7 @@
-#include "Cards.h"
-#include <iostream>
-#include <cstdlib>
+/*
+//#include "Cards.h"
+//#include <iostream>
+//#include <cstdlib>
 
 int main() {
 
@@ -47,3 +48,4 @@ int main() {
 
 	return 0;
 }
+*/

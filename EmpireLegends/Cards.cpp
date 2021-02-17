@@ -1,5 +1,5 @@
-#include "Cards.h"
-
+//#include "Cards.h"
+/* 
 //======= DECK METHODS =======//
 Deck::Deck(const vector<Card*> playingCards)
 {
@@ -182,3 +182,5 @@ string Card::getGoods() const
 {
 	return goods;
 }
+
+*/

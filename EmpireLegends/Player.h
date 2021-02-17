@@ -5,6 +5,8 @@
 
 #include "Map.h"
 #include "Cards.h"
+#include "BiddingFacility.h"
+
 
 using std::string;
 using std::vector;
@@ -14,7 +16,10 @@ class Player
 public:
 	Player(string username);
 	~Player();
-
+	
+	//----------- need to check this again ----------- 
+	//BiddingFacility* getBidFacility() const;
+	
 	void PayCoin(int price);
 	int MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap map);
 	void PlaceNewArmies(Territory<Region>* destination, int& number);
@@ -29,7 +34,10 @@ private:
 	int totalCoins;
 	vector<Territory<Region>> playerTerritories;
 	Hand playerHand;
-	//BidingFacility bidingFacility;
+	
+	//----------- need to check this again ----------- 
+	//BiddingFacility* BidFacility;
+	
 	int unplacedCities;
 	int placedCities;
 	int unplacedArmies;
