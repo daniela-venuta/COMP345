@@ -105,7 +105,7 @@ int Hand::getCardCost(int position)
 	int cardCost;
 	switch(position)
 	{
-	case 1: cardCost = 0;
+	case 1:cardCost = 0; break;
 	case 2: 
 	case 3:cardCost = 1; break;
 	case 4:
