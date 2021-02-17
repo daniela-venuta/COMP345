@@ -142,15 +142,19 @@
     <ClInclude Include="Map.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MapDriver.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="PlayerDriver.cpp" />
+    <ClCompile Include="MapDriver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerDriver.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MapUtility.cpp" />
+    <ClCompile Include="MapUtility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cards.cpp" />
