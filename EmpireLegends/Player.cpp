@@ -1,4 +1,6 @@
 #include "Player.h"
+#include "Map.h"
+
 #include <iostream>
 
 using std::cout;
@@ -34,21 +36,29 @@ void Player::PayCoin(const int price)
 }
 
 // Player moves from one territory to another
-template <class T>
-void Player::MoveOverLand(Territory<T>* from, Territory<T>* to)
+int Player::MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap map)
 {
-	cout << "calling MoveOverLand...";
 	// check that destination territory is valid (graph traversal + valid travel points)
+	int travelCost = map.getTravelCost(from, to);
+	cout << "Moving from " << from << " to " << to << " will cost " << travelCost << " travel points";
+	return travelCost;
 	// check that travel points in cards are sufficient to move to destination
 }
 
 // Move specified number of armies from one territory to another
 template <class T>
-void Player::MoveArmies(int& number, Territory<T>* to, Territory<T>* from)
+void Player::MoveArmies(int& number, Territory<T>* from, Territory<T>* to)
 {
 	// check that you can call MoveOverLand with the given territories
 	// add armies to region
-	cout << "Moved " << number << " armies from " << from << " to " << to;
+	if (number > 0 && MoveOverLand(from, to) > 0)
+	{
+		cout << "Moved " << number << " armies from " << from << " to " << to;
+	}
+	else
+	{
+		cout << "Could not perform action (MoveArmies)";
+	}
 }
 
 // Place armies at the specified location
@@ -72,7 +82,6 @@ void Player::PlaceNewArmies(Territory<Region>* location, int& number)
 template <class T>
 void Player::DestroyArmy(Territory<T>* location, int& number)
 {
-	// check that you are at the specified location
 	// check that there are other armies at the specified location
 	// destroy specified number of armies found at the specified location
 	// identify original owner of territory and reduce number of placedArmies > increase number of unplacedArmies

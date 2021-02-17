@@ -16,8 +16,7 @@ public:
 	~Player();
 
 	void PayCoin(int price);
-	template <class T>
-	void MoveOverLand(Territory<T>* from, Territory<T>* to);
+	int MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap map);
 	void PlaceNewArmies(Territory<Region>* destination, int& number);
 	template <class T>
 	void MoveArmies(int& number, Territory<T>* from, Territory<T>* to);
