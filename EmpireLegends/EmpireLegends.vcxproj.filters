@@ -29,8 +29,11 @@
     <ClCompile Include="MapDriver.cpp">
       <Filter>Driver Files</Filter>
     </ClCompile>
+    <ClCompile Include="MapUtility.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
     <ClCompile Include="MapUtility.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

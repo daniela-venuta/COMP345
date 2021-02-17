@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MapUtility.cpp" />
+    <ClCompile Include="MapUtility.h" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
