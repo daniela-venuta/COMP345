@@ -18,12 +18,21 @@
     <ClInclude Include="BiddingFacility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Cards.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BiddingFacility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BiddingFacilityDriver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Cards.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CardsDriver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
