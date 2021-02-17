@@ -1,5 +1,5 @@
-#include "Player.h";
-#include <iostream>;
+#include "Player.h"
+#include <iostream>
 
 using std::cout;
 
@@ -9,43 +9,58 @@ Player::Player(const string username)
 {
 	// verify that this is not a duplicate username for the current players in game
 	playerName = username;
-	totalCoins = 0;
+	totalCoins = 9;
 	unplacedCities = 3;
 	placedCities = 0;
     unplacedArmies = 18;
     placedArmies = 0;
 	// define a bidingFacility
+	cout << "Created new player: " << username;
 }
 
+// Player pays coins (to buy card)
 void Player::PayCoin(const int price)
 {
-	if ((totalCoins - price) > 0)
+	if ((totalCoins - price) >= 0)
 	{
 		totalCoins = totalCoins - price;
+		cout << "Removed " << price << "from player total.";
+		cout << "New total: " << totalCoins <<  " coins";
+	}
+	else
+	{
+		cout << "Unsufficient funds.";
 	}
 }
 
 // Player moves from one territory to another
 template <class T>
-void Player::MoveOverLand(const Territory<T> from, const Territory<T> to)
+void Player::MoveOverLand(Territory<T>* from, Territory<T>* to)
 {
-	// check current territory
-	// check that destination territory is valid (valid travel points)
-	// check that travel can be done between both territories (graph traversal)
-	// move player to the specified territory
+	cout << "calling MoveOverLand...";
+	// check that destination territory is valid (graph traversal + valid travel points)
+	// check that travel points in cards are sufficient to move to destination
+}
+
+// Move specified number of armies from one territory to another
+template <class T>
+void Player::MoveArmies(int& number, Territory<T>* to, Territory<T>* from)
+{
+	// check that you can call MoveOverLand with the given territories
+	// add armies to region
+	cout << "Moved " << number << " armies from " << from << " to " << to;
 }
 
 // Place armies at the specified location
-void Player::PlaceNewArmies(const Territory<Region> location, const int number)
+void Player::PlaceNewArmies(Territory<Region>* location, int& number)
 {
-	// check that the territory is valid
-	// check that the territory is not already occupied TODO: read rules to see if this is necessary
-	// add specified number of armies to the specified territory
-	// add number of armies to specified regions
+	// check ownership of territory (can place ONLY if your own)
 	if ((unplacedArmies - number >= 0) && (placedArmies + number <= 18))
 	{
 		unplacedArmies = unplacedArmies - number;
 		placedArmies = placedArmies + number;
+		// add specified number of armies to the specified region
+		cout << "Added " << number << " armies at " << location;
 	}
 	else if ((unplacedArmies - number < 0) || (placedArmies + number > 18))
 	{
@@ -53,28 +68,29 @@ void Player::PlaceNewArmies(const Territory<Region> location, const int number)
 	};
 }
 
-// Move specified number of armies from one territory to another
-template <class T>
-void Player::MoveArmies(const int number, const Territory<T> to, const Territory<T> from)
-{
-	// check that you can call MoveOverLand with the given territories
-	// modify location of armies in vector<int, string> playerArmies
-}
-
 // Destroy all enemy armies found at the specified location
 template <class T>
-void Player::DestroyArmy(const Territory<T> location, const int number)
+void Player::DestroyArmy(Territory<T>* location, int& number)
 {
-	// check that there are armies at the specified location
-	// check that, if there are armies present, that they aren't the players' own armies
+	// check that you are at the specified location
+	// check that there are other armies at the specified location
 	// destroy specified number of armies found at the specified location
 	// identify original owner of territory and reduce number of placedArmies > increase number of unplacedArmies
 }
 
-//========= CITY METHODS =========//
 // Builds a city at the specified location
-void City::BuildCity(const Territory<Region> location)
+void Player::BuildCity(Territory<Region>* location)
 {
-	// add city at specified location (only one city/location?)
-	// add city to vector<City> playerCities
+	// check ownership of region (MUST HAVE AT LEAST ONE ARMY THERE)
+	if ((unplacedCities - 1 >= 0) && (placedCities + 1 <= 3))
+	{
+		unplacedCities = unplacedCities - 1;
+		placedCities = placedCities + 1;
+		// add city at specified location
+		cout << "Built a city at ${location}";
+	}
+	else if ((unplacedCities - 1 < 0) || (placedCities + 1 > 3))
+	{
+		cout << "This action is not permissible.";
+	};
 }

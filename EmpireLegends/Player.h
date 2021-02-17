@@ -1,10 +1,10 @@
 #pragma once
 
-#include <string>;
-#include <vector>;
+#include <string>
+#include <vector>
 
-#include "Map.h";
-#include "Cards.h";
+#include "Map.h"
+#include "Cards.h"
 
 using std::string;
 using std::vector;
@@ -17,12 +17,13 @@ public:
 
 	void PayCoin(int price);
 	template <class T>
-	void MoveOverLand(const Territory<T> from, const Territory<T> to);
-	void PlaceNewArmies(const Territory<Region> destination, const int number);
+	void MoveOverLand(Territory<T>* from, Territory<T>* to);
+	void PlaceNewArmies(Territory<Region>* destination, int& number);
 	template <class T>
-	void MoveArmies(const int number, const Territory<T> from, const Territory<T> to);
+	void MoveArmies(int& number, Territory<T>* from, Territory<T>* to);
 	template <class T>
-	void DestroyArmy(const Territory<T> location, const int number);
+	void DestroyArmy(Territory<T>* location, int& number);
+	void BuildCity(Territory<Region>* territory);
 
 private:
 	string playerName;
@@ -34,10 +35,4 @@ private:
 	int placedCities;
 	int unplacedArmies;
 	int placedArmies;
-};
-
-class City
-{
-public:
-	void BuildCity(const Territory<Region> territory);
 };
