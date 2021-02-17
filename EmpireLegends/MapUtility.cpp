@@ -1,4 +1,3 @@
-#pragma once
 #include "MapUtility.h"
 
 GameMap* MapUtility::createValidMap()
