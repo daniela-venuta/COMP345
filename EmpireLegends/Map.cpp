@@ -100,6 +100,57 @@ Territory<T>::~Territory()
     this->value = nullptr;
 }
 
+template <class T>
+int Territory<T>::getTravelCostWithVisits(Territory<T>* destination, std::vector<Territory<T>*>& visited)
+{
+    if (std::find(visited.begin(), visited.end(), this) != visited.end())
+    {
+        return 0;
+    }
+
+    auto cost = 0;
+
+    visited.push_back(this);
+
+    for (auto itr = this->adjacency.begin(); itr != this->adjacency.end(); ++itr)
+    {
+        if (itr->second == destination)
+        {
+            return itr->first * visited.size();
+        }
+        cost += itr->second->getTravelCostWithVisits(destination, visited);
+    }
+
+    return cost;
+}
+
+template <class T>
+int Territory<T>::getTravelCost(Territory<T>* destination)
+{
+	if (this == destination)
+	{
+        return 0;
+	}
+
+    auto visited = std::vector<Territory<T>*>();
+    visited.push_back(this);
+    auto cost = 0;
+
+	for (auto itr = this->adjacency.begin(); itr != this->adjacency.end(); ++itr)
+	{
+		if (itr->second == destination)
+		{
+            return itr->first;
+		}
+		
+        cost += itr->second->getTravelCostWithVisits(destination, visited);
+	}
+
+    visited.clear();
+
+    return cost;
+}
+
 #pragma endregion territory
 
 #pragma region graph
@@ -232,6 +283,28 @@ Graph<T>::~Graph()
 
 #pragma endregion graph
 
+
+#pragma region continent
+
+bool Continent::contains(Territory<Region>* terr)
+{
+    return this->terrs.find(terr->getName()) != this->terrs.end();
+}
+
+int Continent::getBestCost(Territory<Region>* terr)
+{
+    auto first = this->terrs.begin()->second;
+    auto last = this->terrs.rbegin()->second;
+	// Getting cost when using the first territory
+    auto travelCostFirst = terr->getTravelCost(first);
+    // Getting cost when using the last territory
+    auto travelCostLast = terr->getTravelCost(last);
+
+    return travelCostFirst <= travelCostLast ? travelCostFirst : travelCostLast;
+}
+
+#pragma endregion continent
+
 #pragma region gameMap
 
 std::string GameMap::toString() const
@@ -251,11 +324,15 @@ std::string GameMap::toString() const
     return s;
 }
 
-void GameMap::checkForKeyDuplicates(std::vector<std::string>& keys, std::map<std::string, Territory<Continent>*>::iterator continentItr)
+void GameMap::validateContinent(std::vector<std::string>& keys, std::map<std::string, Territory<Region>*> continentTerrs) const
 {
-	auto continentTerrs = continentItr->second->value->terrs;
 	for (auto terrItr = continentTerrs.begin(); terrItr != continentTerrs.end(); ++terrItr)
 	{
+        if (std::empty(terrItr->second->adjacency))
+        {
+            throw InvalidMapException(this->name, "'" + terrItr->first + "' is not connected to any other region\n");
+        }
+		
 		// If the key is not in the keys vector
 		if (find(keys.begin(), keys.end(), terrItr->first) == keys.end())
 		{
@@ -274,10 +351,55 @@ void GameMap::validate()
     // Check that all regions from all continents are never found twice in the keys vector 
     for (auto continentItr = terrs.begin(); continentItr != terrs.end(); ++continentItr)
     {
-        checkForKeyDuplicates(keys, continentItr);
+        if (std::empty(continentItr->second->adjacency))
+        {
+            throw InvalidMapException(this->name, "'" + continentItr->first + "' is not connected to any other continent\n");
+        }
+        validateContinent(keys, continentItr->second->value->terrs);
     }
 
 	std::cout << this->name << " is valid\n" << std::endl;
+}
+
+int GameMap::getTravelCost(Territory<Region>* from, Territory<Region>* to)
+{
+    auto cost = from->getTravelCost(to);
+
+	// Both territories are in the same continent
+	if (cost > 0)
+	{
+        return cost;
+	}
+
+    Territory<Continent>* continentFrom = nullptr;
+    Territory<Continent>* continentTo = nullptr;
+
+	// Find both continents the territories belong to
+	for (auto itr = this->terrs.begin(); itr != this->terrs.end(); ++itr)
+	{
+        auto* tempContinent = itr->second;
+		
+		// Stop when both continents are found
+		if (continentFrom != nullptr && continentTo != nullptr)
+		{
+            break;
+		}
+        if (continentFrom == nullptr && tempContinent->value->contains(from))
+        {
+            continentFrom = tempContinent;
+            continue;
+        }
+        if (continentTo == nullptr && tempContinent->value->contains(to))
+        {
+            continentTo = tempContinent;
+        }
+	}
+
+    cost += continentFrom->value->getBestCost(from);
+    cost += continentFrom->getTravelCost(continentTo);
+    cost += continentTo->value->getBestCost(to);
+	
+    return cost;
 }
 
 #pragma endregion gameMap
