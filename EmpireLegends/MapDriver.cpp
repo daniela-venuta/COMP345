@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Map.h"
-#include "MapUtility.h"
 
 int main() {
 	auto* c1 = new Continent("Continent 1");
@@ -15,8 +14,6 @@ int main() {
 	auto* t8 = new Territory<Region>(new Region("Region 8"));
 	auto* c3 = new Continent("Continent 3");
 
-	auto* m3 = MapUtility::createValidMap();
-	
 	c1->addTerritory(t1);
 	c1->addTerritory(t2);
 	c1->addTerritory(t3);
