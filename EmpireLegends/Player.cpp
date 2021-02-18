@@ -14,3 +14,6 @@ Player::Player(string username, int PlayerCoins) {
 	BidFacility = new BiddingFacility();
 }
 
+string Player::getName() {
+	return name; 
+}

@@ -8,16 +8,12 @@ using namespace std;
 class BiddingFacility {
 
 private: 
-	// stream insertion operator 
-	friend ostream& operator<<(ostream& output, const BiddingFacility& BD);
+	int* ptrbid; 
 
 public: 
 
 	// default constructor 
 	BiddingFacility();
-
-	// Constructor 
-	BiddingFacility(string name, int bid, int coins);
 
 	// destructor 
 	~BiddingFacility();
@@ -25,18 +21,17 @@ public:
 	// copy constructor
 	BiddingFacility(const BiddingFacility& obj);
 
+	// stream insertion operator 
+	friend ostream& operator<<(ostream& output, const BiddingFacility& BDF);
+
 	// Assignment operator
 	BiddingFacility& operator=(const BiddingFacility& rhs);
 
-
-	// other methods 
+	// method to place and compare bids per player
+	int PlaceBid(vector<Player*>& myPlayers);
 	
-	int PlaceBid(vector <Player*>& myPlayers);
+	int getBids();
 	
-	int getBid();
-	
-	void setBid();
-	
-	int compareBid();
+	void setBids(const int bids);
 
 };

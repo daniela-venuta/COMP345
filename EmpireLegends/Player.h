@@ -4,7 +4,6 @@
 #include <vector>
 #include "BiddingFacility.h"
 
-
 using std::string;
 
 
@@ -12,6 +11,7 @@ class Player
 {
 private: 
 	BiddingFacility* BidFacility; 
+	string name;
 
 
 public:
@@ -20,7 +20,8 @@ public:
 	Player(string username, int coins);
 	
 	~Player();
-	
-	
+
+	string getName();
+
 };
 	
