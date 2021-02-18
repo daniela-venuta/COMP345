@@ -4,12 +4,12 @@
 int main() {
 
 	// Create Card pointers
-	Card* cardOne = new Card("1", "");
-	Card* cardTwo = new Card("2", "");
-	Card* cardThree = new Card("3", "");
-	Card* cardFour = new Card("4", "");
-	Card* cardFive = new Card("5", "");
-	Card* cardSix = new Card("6", "");
+	Card* cardOne = new Card("Dire dragon", "Place 3 armies and destroy one army");
+	Card* cardTwo = new Card("Dire giant: Immune to attack", "Place 3 armies and destroy army");
+	Card* cardThree = new Card("Dire eye", "Place 4 armies");
+	Card* cardFour = new Card("Dire Ogre: +1 VP per 3 coins", "Move 2 armies");
+	Card* cardFive = new Card("Lake: +1 VP per Forest card", "Place 2 armies and move 3 armies");
+	Card* cardSix = new Card("Noble Hills: Three noble cards = 4 VP", "Place 3 armies");
 
 	// Example of printing goods and actions of cards
 	std::cout << *cardOne;
