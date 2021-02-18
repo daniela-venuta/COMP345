@@ -12,9 +12,10 @@ int main() {
 	Card* cardSix = new Card("Noble Hills: Three noble cards = 4 VP", "Place 3 armies");
 
 	// Example of printing goods and actions of cards
+	std::cout << "Printing cards: \n";
 	std::cout << *cardOne;
 	std::cout << *cardTwo;
-	std::cout << *cardThree;
+	std::cout << *cardThree << std::endl;
 
 	// add Cards to a vector
 	vector<Card*> cardVector;
@@ -26,16 +27,17 @@ int main() {
 	cardVector.push_back(cardSix);
 
 	// Create deck and add cards (this creates a card hand as well)
+	std::cout << "Printing deck: \n";
 	Deck* deck = new Deck(cardVector);
 	std::cout << *deck;
 	
 	// Draw cards from deck and add them to the hand
 	deck->draw(4);
-	std::cout <<"New deck after draw: \n" <<*deck;
+	std::cout <<"New deck after draw: \n" <<*deck << std::endl;
 
 	// Get Hand from the deck
 	Hand* deckHand = deck->getHand();
-	std::cout << *deckHand;
+	std::cout << *deckHand << std::endl;
 
 	// Demo exchange method on hand
 	const Card* exchangeCard1 = deckHand->exchange(2,1); // successful exchange

@@ -1,5 +1,6 @@
 #include "Cards.h"
 
+#pragma region Deck
 //======= DECK METHODS =======//
 Deck::Deck(const vector<Card*> playingCards)
 {
@@ -71,7 +72,9 @@ Deck& Deck::operator=(const Deck& deck)
 	this->hand = new Hand(*(deck.hand));
 	return *this;
 }
+#pragma endregion Deck
 
+#pragma region Hand
 //======= HAND METHODS =======//
 Hand::~Hand()
 {
@@ -157,7 +160,9 @@ ostream& operator>>(ostream& os, const Hand& hand)
 	os << s << std::endl;
 	return os;
 }
+#pragma endregion Hand
 
+#pragma region Card
 //======= CARD METHODS =======//
 
 Card::Card(const string goodDesc, const string actionDesc)
@@ -201,4 +206,6 @@ string Card::getGoods() const
 {
 	return goods;
 }
+
+#pragma endregion Card
 
