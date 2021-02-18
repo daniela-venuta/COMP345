@@ -1,4 +1,5 @@
 #pragma once
+#include "Player.h"
 #include <string>
 using namespace std;
 
@@ -6,6 +7,13 @@ using namespace std;
 
 class BiddingFacility {
 
+private: 
+	// stream insertion operator 
+	friend ostream& operator<<(ostream& output, const BiddingFacility& BD);
+
+public: 
+
+	// default constructor 
 	BiddingFacility();
 
 	// Constructor 
@@ -20,12 +28,12 @@ class BiddingFacility {
 	// Assignment operator
 	BiddingFacility& operator=(const BiddingFacility& rhs);
 
-	// stream insertion operator 
-	friend ostream& operator<<(ostream& output, const BiddingFacility& BD);
 
 	// other methods 
 	int getBid();
+	
 	void setBid();
+	
 	int compareBid();
 
 };

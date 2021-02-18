@@ -41,7 +41,9 @@ int main() {
 	}
 	
 	// enable the player objects 
+	for (int i = 0; i < numofPlayers; i++) {
 
+	}
 
 	// compare the bids 
 

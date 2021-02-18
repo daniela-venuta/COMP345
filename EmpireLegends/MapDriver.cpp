@@ -1,6 +1,7 @@
+
 #include <iostream>
 #include "Map.h"
-
+/*
 int main() {
 	auto* c1 = new Continent("Continent 1");
 	auto* t1 = new Territory<Region>(new Region("Region 1"));
@@ -99,3 +100,5 @@ int main() {
 	delete m2;
 	return 0;
 }
+
+*/

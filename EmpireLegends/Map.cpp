@@ -1,3 +1,4 @@
+/* 
 #include "Map.h"
 #include <iostream>
 #include <queue>
@@ -282,3 +283,5 @@ void GameMap::validate()
 }
 
 #pragma endregion gameMap
+
+*/
