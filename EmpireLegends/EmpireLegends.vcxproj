@@ -140,15 +140,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BiddingFacility.h" />
-    <ClInclude Include="Cards.h" />
-    <ClInclude Include="Map.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BiddingFacility.cpp" />
     <ClCompile Include="BiddingFacilityDriver.cpp" />
-    <ClCompile Include="Map.cpp" />
-    <ClCompile Include="MapDriver.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerDriver.cpp" />
   </ItemGroup>

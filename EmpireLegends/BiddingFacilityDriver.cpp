@@ -9,6 +9,7 @@ int main() {
 
 	int numofPlayers;
 	int PlayerCoins;
+	string username; 
 	vector <Player> myPlayers; 
 
 	// determines how many coins per player
@@ -41,8 +42,10 @@ int main() {
 	}
 	
 	// enable the player objects 
+	cout << "Who will be playing the game: " << endl; 
 	for (int i = 0; i < numofPlayers; i++) {
-
+		cout << "Player: "; 
+		cin >> username; 
 	}
 
 	// compare the bids 
