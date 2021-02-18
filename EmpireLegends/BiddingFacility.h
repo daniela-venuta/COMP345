@@ -27,7 +27,7 @@ public:
 	BiddingFacility& operator=(const BiddingFacility& rhs);
 
 	// method to place and compare bids per player
-	int PlaceBid(vector<Player*> myPlayers);
+	int PlaceBid(vector <Player*> myPlayers);
 
 	int getBids();
 	

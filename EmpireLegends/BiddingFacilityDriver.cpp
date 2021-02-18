@@ -62,7 +62,7 @@ int main() {
 	}
 	
 	// place bid 
-	//BiddingFacility::PlaceBid(myPlayers);
+	int a = BiddingFacility::PlaceBid(myPlayers);
 		
 	
 	
