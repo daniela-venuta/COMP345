@@ -30,6 +30,9 @@ public:
 
 
 	// other methods 
+	
+	int PlaceBid(vector <Player*>& myPlayers);
+	
 	int getBid();
 	
 	void setBid();

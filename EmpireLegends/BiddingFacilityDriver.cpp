@@ -60,9 +60,8 @@ int main() {
 		p = new Player(username, PlayerCoins);
 		myPlayers.push_back(p);
 	}
-	
-	
-
+	// place bid 
+	BiddingFacility::PlaceBid(myPlayers);
 	// compare the bids 
 
 }

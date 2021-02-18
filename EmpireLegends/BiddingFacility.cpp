@@ -10,3 +10,5 @@ BiddingFacility::BiddingFacility(const BiddingFacility& obj) {
 
 }
 
+int BiddingFacility::PlaceBid(vector <Player*>& myPlayers) {
+
