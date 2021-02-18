@@ -28,6 +28,15 @@ int BiddingFacility::getBids() {
     return *ptrbid;
 }
 
+// stream insertion operator 
+ostream& operator<<(ostream& output, const BiddingFacility& BDF) {
+
+}
+
+// Assignment operator
+BiddingFacility& BiddingFacility::operator=(const BiddingFacility& rhs) {
+
+}
 
 // method to let player place their bid
 //PlaceBid(vector<Player*>& myPlayers)
