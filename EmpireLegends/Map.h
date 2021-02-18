@@ -3,6 +3,8 @@
 #include <map>
 #include <string>
 
+// *** The graph structure used is inspired by the vector-based graph example shown in the Graphs DS zip found on the course's Moodle ***
+
 /// <summary>
 /// Location class
 /// </summary>
