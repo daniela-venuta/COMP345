@@ -1,9 +1,8 @@
 #include "Player.h"
 #include "Map.h"
+#include "MapUtility.h"
 
 #include <iostream>
-
-using std::cout;
 
 //========= PLAYER METHODS =========//
 // Instantiate a new Player object with a given player name
@@ -17,89 +16,106 @@ Player::Player(const string username)
     unplacedArmies = 18;
     placedArmies = 0;
 	// define a bidingFacility
-	cout << "Created new player: " << username;
+	std::cout << "Created new player: " << username << std::endl;
 }
 
 // Player pays coins (to buy card)
 void Player::PayCoin(const int price)
 {
-	if ((totalCoins - price) >= 0)
+	if (price > 0 && (totalCoins - price) >= 0)
 	{
 		totalCoins = totalCoins - price;
-		cout << "Removed " << price << "from player total.";
-		cout << "New total: " << totalCoins <<  " coins";
+		std::cout << "Removed " << price << " coins from player total." << std::endl;
+		std::cout << "New total: " << totalCoins <<  " coins" << std::endl;
 	}
 	else
 	{
-		cout << "Unsufficient funds.";
+		std::cout << "Cannot perform this action (PayCoin)." << std::endl;
 	}
 }
 
+// Get player balance
+int Player::getBalance()
+{
+	return totalCoins;
+}
+
 // Player moves from one territory to another
-int Player::MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap map)
+int Player::MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap* map)
 {
 	// check that destination territory is valid (graph traversal + valid travel points)
-	int travelCost = map.getTravelCost(from, to);
-	cout << "Moving from " << from << " to " << to << " will cost " << travelCost << " travel points";
+	GameMap gameMap = *map;
+	int travelCost = gameMap.getTravelCost(from, to);
+	std::cout << "This action will cost " << travelCost << " travel points" << std::endl;
 	return travelCost;
 	// check that travel points in cards are sufficient to move to destination
 }
 
 // Move specified number of armies from one territory to another
-template <class T>
-void Player::MoveArmies(int& number, Territory<T>* from, Territory<T>* to)
+void Player::MoveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map)
 {
 	// check that you can call MoveOverLand with the given territories
-	// add armies to region
-	if (number > 0 && MoveOverLand(from, to) > 0)
+	if (number > 0 && number < unplacedArmies && MoveOverLand(from, to, map) > 0)
 	{
-		cout << "Moved " << number << " armies from " << from << " to " << to;
+		unplacedArmies = unplacedArmies - number;
+		placedArmies = placedArmies + number;
+		from->removeArmies(number);
+		to->addArmies(number);
+		std::cout << "Moved " << number << " armies." << std::endl;
 	}
 	else
 	{
-		cout << "Could not perform action (MoveArmies)";
+		std::cout << "Could not perform action (MoveArmies)" << std::endl;
 	}
 }
 
 // Place armies at the specified location
-void Player::PlaceNewArmies(Territory<Region>* location, int& number)
+void Player::PlaceNewArmies(int number, Territory<Region>* location)
 {
 	// check ownership of territory (can place ONLY if your own)
-	if ((unplacedArmies - number >= 0) && (placedArmies + number <= 18))
+	if (number > 0 && unplacedArmies - number >= 0 && placedArmies + number <= 18)
 	{
 		unplacedArmies = unplacedArmies - number;
 		placedArmies = placedArmies + number;
-		// add specified number of armies to the specified region
-		cout << "Added " << number << " armies at " << location;
+		location->addArmies(number);
+		std::cout << "Added " << number << " armies at " << *location << std::endl;
 	}
-	else if ((unplacedArmies - number < 0) || (placedArmies + number > 18))
+	else
 	{
-		cout << "This action is not permissible.";
+		std::cout << "You do not have enough armies to perform this action (PlaceNewArmies)." << std::endl;
 	};
 }
 
 // Destroy all enemy armies found at the specified location
-template <class T>
-void Player::DestroyArmy(Territory<T>* location, int& number)
+void Player::DestroyArmy(int number, Territory<Region>* location)
 {
 	// check that there are other armies at the specified location
 	// destroy specified number of armies found at the specified location
 	// identify original owner of territory and reduce number of placedArmies > increase number of unplacedArmies
+	if (number > 0 && location->getArmyCount() - number > 0)
+	{
+		location->removeArmies(number);
+		std::cout << "Successfully destroyed " << number << " armies at " << *location << " ." << std::endl;
+	}
+	else
+	{
+		std::cout << "Action not permissible (DestroyArmies at " << *location << ")" << std::endl;
+	}
 }
 
 // Builds a city at the specified location
 void Player::BuildCity(Territory<Region>* location)
 {
 	// check ownership of region (MUST HAVE AT LEAST ONE ARMY THERE)
-	if ((unplacedCities - 1 >= 0) && (placedCities + 1 <= 3))
+	if (unplacedCities - 1 >= 0 && placedCities + 1 <= 3 && location->getArmyCount() > 0)
 	{
 		unplacedCities = unplacedCities - 1;
 		placedCities = placedCities + 1;
 		// add city at specified location
-		cout << "Built a city at ${location}";
+		std::cout << "Built a city at " << *location << std::endl;
 	}
 	else if ((unplacedCities - 1 < 0) || (placedCities + 1 > 3))
 	{
-		cout << "This action is not permissible.";
+		std::cout << "This action is not permissible (BuildCity)." << std::endl;
 	};
 }

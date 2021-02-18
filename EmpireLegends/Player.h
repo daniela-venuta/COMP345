@@ -16,12 +16,11 @@ public:
 	~Player();
 
 	void PayCoin(int price);
-	int MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap map);
-	void PlaceNewArmies(Territory<Region>* destination, int& number);
-	template <class T>
-	void MoveArmies(int& number, Territory<T>* from, Territory<T>* to);
-	template <class T>
-	void DestroyArmy(Territory<T>* location, int& number);
+	int getBalance();
+	int MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap* map);
+	void PlaceNewArmies(int number, Territory<Region>* destination);
+	void MoveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map);
+	void DestroyArmy(int number, Territory<Region>* location);
 	void BuildCity(Territory<Region>* territory);
 
 private:

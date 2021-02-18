@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <iostream>
 
 /// <summary>
 /// Location class
@@ -98,6 +99,12 @@ public:
     std::string getName() const;
 
     int getTravelCost(Territory<T>* destination);
+    void addArmies(int number);
+    void removeArmies(int number);
+    int getArmyCount();
+
+private:
+    int armyCount;
 };
 
 /// <summary>

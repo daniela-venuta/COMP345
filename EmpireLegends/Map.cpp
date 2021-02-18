@@ -151,6 +151,38 @@ int Territory<T>::getTravelCost(Territory<T>* destination)
     return cost;
 }
 
+template <class T>
+void Territory<T>::addArmies(int number)
+{
+    if (number > 0 && number <= 18 && (armyCount + number) <= 72)
+    {
+        armyCount = armyCount + number;
+    }
+    else
+    {
+        std::cout << "Cannot add specified number of armies.";
+    }
+}
+
+template <class T>
+void Territory<T>::removeArmies(int number)
+{
+    if (number > 0 && number <= 18 && (armyCount - number > 0))
+    {
+        armyCount = armyCount - number;
+    }
+    else
+    {
+        std::cout << "Cannot remove specified number of armies.";
+    }
+}
+
+template <class T>
+int Territory<T>::getArmyCount()
+{
+    return armyCount;
+}
+
 #pragma endregion territory
 
 #pragma region graph
