@@ -146,7 +146,6 @@
     <ClCompile Include="BiddingFacility.cpp" />
     <ClCompile Include="BiddingFacilityDriver.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerDriver.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

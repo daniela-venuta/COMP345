@@ -6,10 +6,14 @@
 
 
 using std::string;
-using std::vector;
+
 
 class Player
 {
+private: 
+	BiddingFacility* BidFacility; 
+
+
 public:
 	Player();
 	
