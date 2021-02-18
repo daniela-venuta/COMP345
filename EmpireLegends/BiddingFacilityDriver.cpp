@@ -14,7 +14,6 @@ int main() {
 	vector <Player*> myPlayers; 
 	BiddingFacility BiddingFacility(); 
 
-
 	cout << "--------------------------" << endl;
 	cout << "Eight-Minute-Empire Game" << endl; 
 	cout << "--------------------------" << endl;
@@ -63,7 +62,7 @@ int main() {
 	}
 	
 	// place bid 
-	BiddingFacility::PlaceBid(myPlayers);
+	//BiddingFacility::PlaceBid(myPlayers);
 		
 	
 	

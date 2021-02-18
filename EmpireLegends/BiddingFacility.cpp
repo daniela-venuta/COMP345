@@ -1,15 +1,17 @@
 #include "Player.h"
 #include "BiddingFacility.h"
 #include <iostream>
+#include <vector>
 
 // default constructor 
 BiddingFacility::BiddingFacility(){
-    
+    BiddingFacility::ptrbid = new int(0);
 }
 
 // copy Constructor 
 BiddingFacility::BiddingFacility(const BiddingFacility& obj) {
-    
+    ptrbid = obj.ptrbid; 
+
 }
 
 // destructor 
@@ -30,6 +32,7 @@ int BiddingFacility::getBids() {
 
 // stream insertion operator 
 ostream& operator<<(ostream& output, const BiddingFacility& BDF) {
+    cout << "works";
 
 }
 
@@ -38,13 +41,12 @@ BiddingFacility& BiddingFacility::operator=(const BiddingFacility& rhs) {
 
 }
 
-// method to let player place their bid
-//PlaceBid(vector<Player*>& myPlayers)
-int BiddingFacility:: PlaceBid(vector<Player*>& myPlayers) {
-    int bid; 
+// method to place and compare bids per player
+int BiddingFacility::PlaceBid(vector <Player*> myPlayers) {
     
+    int bid;
     for (int i = 0; i < myPlayers.size(); i++) {
-        cout << myPlayers[i]->getName()<<  "Place your bid: "; // player will need to place a bid
+        cout << myPlayers[i]->getName() << "Place your bid: "; // player will need to place a bid
         cin >> bid;
 
         void ClearScreen();
@@ -53,7 +55,10 @@ int BiddingFacility:: PlaceBid(vector<Player*>& myPlayers) {
         }
     }
 
-    return bid; 
+    return bid;
+
+
+
+
+
 }
-
-

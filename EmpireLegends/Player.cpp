@@ -17,3 +17,7 @@ Player::Player(string username, int PlayerCoins) {
 string Player::getName() {
 	return name; 
 }
+
+Player::~Player() {
+	delete BidFacility; 
+}

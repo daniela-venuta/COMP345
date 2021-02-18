@@ -1,9 +1,8 @@
 #pragma once
 #include "Player.h"
 #include <string>
+#include <vector>
 using namespace std;
-
-//class player;
 
 class BiddingFacility {
 
@@ -28,8 +27,8 @@ public:
 	BiddingFacility& operator=(const BiddingFacility& rhs);
 
 	// method to place and compare bids per player
-	int PlaceBid(vector<Player*>& myPlayers);
-	
+	int PlaceBid(vector<Player*> myPlayers);
+
 	int getBids();
 	
 	void setBids(const int bids);

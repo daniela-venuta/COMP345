@@ -10,6 +10,7 @@ using std::string;
 class Player
 {
 private: 
+
 	BiddingFacility* BidFacility; 
 	string name;
 
