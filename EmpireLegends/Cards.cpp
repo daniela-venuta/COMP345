@@ -158,8 +158,8 @@ ostream& operator>>(ostream& os, const Hand& hand)
 	return os;
 }
 
-
 //======= CARD METHODS =======//
+
 Card::Card(const string goodDesc, const string actionDesc)
 {
 	// initialize card

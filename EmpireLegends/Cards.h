@@ -11,6 +11,7 @@ using std::ostream;
 
 class Card {
 public:
+	Card() = default;
 	Card(const string goodDesc,const string actionDesc);
 	~Card() = default;
 
@@ -60,6 +61,7 @@ private:
 
 class Deck {
 public:
+	Deck() = default;
 	Deck(const vector<Card*> playingCards);
 	~Deck();
 
