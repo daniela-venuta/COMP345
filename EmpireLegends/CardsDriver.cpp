@@ -42,7 +42,13 @@ int main() {
 	const Card* exchangeCard2 = deckHand->exchange(2, 0); // unsuccessful exchange, exchangeCard2 is a nullptr
 
 	std::cout << "Exchanged card: " << *exchangeCard1 << std::endl;
-	
 
+	// delete cards created CHECK
+	for(Card* card : cardVector)
+	{
+		delete card;
+		card = nullptr;
+	}
+	
 	return 0;
 }

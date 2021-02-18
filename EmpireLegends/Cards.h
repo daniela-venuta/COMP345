@@ -73,7 +73,7 @@ public:
 	// assignment operator
 	Deck& operator = (const Deck& deck);
 
-	void draw(int count);
+	void draw(const int count);
 	Hand* getHand() const;
 private:
 	vector<Card*> cardDeck;

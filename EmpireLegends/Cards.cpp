@@ -13,7 +13,13 @@ Deck::~Deck()
 	cardDeck.clear();
 }
 
-void Deck::draw(int count)
+Deck::Deck(const Deck& otherDeck)
+{
+	this->cardDeck = otherDeck.cardDeck;
+	this->hand = new Hand(*(otherDeck.hand));
+}
+
+void Deck::draw(const int count)
 {
 	for(int i=0; i< count; i++)
 	{
@@ -68,6 +74,11 @@ Hand::~Hand()
 {
 	// clear the vector
 	handCards.clear();
+}
+
+Hand::Hand(const Hand& otherHand)
+{
+	this->handCards = otherHand.handCards;
 }
 
 //Hand& Hand::operator=(const Hand& hand)
@@ -132,7 +143,7 @@ ostream& operator<<(ostream& os, const Hand& hand)
 
 ostream& operator>>(ostream& os, const Hand& hand)
 {
-	string s = "The following cards remain in the hand: ";;
+	string s = "The following cards remain in the hand: ";
 
 	for (const Card* card : hand.handCards)
 	{
@@ -153,8 +164,8 @@ Card::Card(const string goodDesc, const string actionDesc)
 
 Card::Card(const Card& otherCard)
 {
-	goods = otherCard.goods;
-	action = otherCard.action;
+	this->goods = otherCard.goods;
+	this->action = otherCard.action;
 }
 
 ostream& operator<<(ostream& os, const Card& card)
