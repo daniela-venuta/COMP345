@@ -65,9 +65,12 @@ ostream& operator>>(ostream& os, const Deck& deck)
 	return os;
 }
 
-//Deck& Deck::operator=(const Deck& deck)
-//{
-//}
+Deck& Deck::operator=(const Deck& deck)
+{
+	this->cardDeck = deck.cardDeck;
+	this->hand = new Hand(*(deck.hand));
+	return *this;
+}
 
 //======= HAND METHODS =======//
 Hand::~Hand()
@@ -81,9 +84,11 @@ Hand::Hand(const Hand& otherHand)
 	this->handCards = otherHand.handCards;
 }
 
-//Hand& Hand::operator=(const Hand& hand)
-//{
-//}
+Hand& Hand::operator=(const Hand& hand)
+{
+	this->handCards = hand.handCards;
+	return *this;
+}
 
 Card* Hand::exchange(int rowPosition, int cost)
 {
@@ -180,9 +185,12 @@ ostream& operator>>(ostream& os, const Card& card)
 	return os;
 }
 
-//Card& Card::operator=(const Card& card)
-//{
-//}
+Card& Card::operator=(const Card& card)
+{
+	this->goods = card.goods;
+	this->action = card.action;
+	return *this;
+}
 
 string Card::getAction() const
 {
