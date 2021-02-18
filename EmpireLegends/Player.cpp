@@ -4,20 +4,25 @@
 
 using namespace std; 
 
-
 //default constructor 
 Player::Player() {
-	BidFacility = new BiddingFacility(); 
+	name = name; 
+	coins = coins;
 }
 
 Player::Player(string username, int PlayerCoins) {
-	BidFacility = new BiddingFacility();
+	name = username; 
+	coins = PlayerCoins;
 }
 
 string Player::getName() {
-	return name; 
+	return name;
 }
 
-Player::~Player() {
-	delete BidFacility; 
+int Player::getCoins(){
+	return coins; 
+}
+
+BiddingFacility* Player::getBidFacility() {
+	return BiddingFac;
 }

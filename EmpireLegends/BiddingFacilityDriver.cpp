@@ -12,7 +12,7 @@ int main() {
 	int PlayerCoins;
 	string username; 
 	vector <Player*> myPlayers; 
-	BiddingFacility BiddingFacility(); 
+	BiddingFacility* bidFac = new BiddingFacility();
 
 	cout << "--------------------------" << endl;
 	cout << "Eight-Minute-Empire Game" << endl; 
@@ -61,13 +61,8 @@ int main() {
 		myPlayers.push_back(p);
 	}
 	
-	// place bid 
-	int a = BiddingFacility::PlaceBid(myPlayers);
-		
-	
-	
-	
-	// compare the bids 
+	// Players place bids
+	bidFac->placeBid(myPlayers);
 
 	return 0; 
 }
