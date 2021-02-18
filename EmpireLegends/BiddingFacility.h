@@ -7,7 +7,7 @@ using namespace std;
 class BiddingFacility {
 
 private: 
-	int* ptrbid; 
+	int bidwinner; 
 
 public: 
 

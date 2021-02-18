@@ -5,35 +5,34 @@
 
 // default constructor 
 BiddingFacility::BiddingFacility(){
-    BiddingFacility::ptrbid = new int(0);
+   
 }
 
 // copy Constructor 
 BiddingFacility::BiddingFacility(const BiddingFacility& obj) {
-    ptrbid = obj.ptrbid; 
+    
 
 }
 
 // destructor 
 BiddingFacility::~BiddingFacility() {
-    delete ptrbid;
+    
 }
 
 
 // set method of bid
 void BiddingFacility::setBids(const int bids) {
-    *ptrbid = bids;
+    
 }
 
 // get method of bid
 int BiddingFacility::getBids() {
-    return *ptrbid;
+    
 }
 
 // stream insertion operator 
 ostream& operator<<(ostream& output, const BiddingFacility& BDF) {
-    cout << "works";
-
+    
 }
 
 // Assignment operator
