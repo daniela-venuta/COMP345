@@ -1,5 +1,6 @@
 #include "Cards.h"
 
+#pragma region Deck
 //======= DECK METHODS =======//
 Deck::Deck(const vector<Card*> playingCards)
 {
@@ -13,7 +14,13 @@ Deck::~Deck()
 	cardDeck.clear();
 }
 
-void Deck::draw(int count)
+Deck::Deck(const Deck& otherDeck)
+{
+	this->cardDeck = otherDeck.cardDeck;
+	this->hand = new Hand(*(otherDeck.hand));
+}
+
+void Deck::draw(const int count)
 {
 	for(int i=0; i< count; i++)
 	{
@@ -59,10 +66,15 @@ ostream& operator>>(ostream& os, const Deck& deck)
 	return os;
 }
 
-//Deck& Deck::operator=(const Deck& deck)
-//{
-//}
+Deck& Deck::operator=(const Deck& deck)
+{
+	this->cardDeck = deck.cardDeck;
+	this->hand = new Hand(*(deck.hand));
+	return *this;
+}
+#pragma endregion Deck
 
+#pragma region Hand
 //======= HAND METHODS =======//
 Hand::~Hand()
 {
@@ -70,9 +82,16 @@ Hand::~Hand()
 	handCards.clear();
 }
 
-//Hand& Hand::operator=(const Hand& hand)
-//{
-//}
+Hand::Hand(const Hand& otherHand)
+{
+	this->handCards = otherHand.handCards;
+}
+
+Hand& Hand::operator=(const Hand& hand)
+{
+	this->handCards = hand.handCards;
+	return *this;
+}
 
 Card* Hand::exchange(int rowPosition, int cost)
 {
@@ -132,7 +151,7 @@ ostream& operator<<(ostream& os, const Hand& hand)
 
 ostream& operator>>(ostream& os, const Hand& hand)
 {
-	string s = "The following cards remain in the hand: ";;
+	string s = "The following cards remain in the hand: ";
 
 	for (const Card* card : hand.handCards)
 	{
@@ -141,9 +160,11 @@ ostream& operator>>(ostream& os, const Hand& hand)
 	os << s << std::endl;
 	return os;
 }
+#pragma endregion Hand
 
-
+#pragma region Card
 //======= CARD METHODS =======//
+
 Card::Card(const string goodDesc, const string actionDesc)
 {
 	// initialize card
@@ -153,8 +174,8 @@ Card::Card(const string goodDesc, const string actionDesc)
 
 Card::Card(const Card& otherCard)
 {
-	goods = otherCard.goods;
-	action = otherCard.action;
+	this->goods = otherCard.goods;
+	this->action = otherCard.action;
 }
 
 ostream& operator<<(ostream& os, const Card& card)
@@ -169,9 +190,12 @@ ostream& operator>>(ostream& os, const Card& card)
 	return os;
 }
 
-//Card& Card::operator=(const Card& card)
-//{
-//}
+Card& Card::operator=(const Card& card)
+{
+	this->goods = card.goods;
+	this->action = card.action;
+	return *this;
+}
 
 string Card::getAction() const
 {
@@ -182,4 +206,6 @@ string Card::getGoods() const
 {
 	return goods;
 }
+
+#pragma endregion Card
 
