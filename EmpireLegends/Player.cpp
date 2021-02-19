@@ -9,14 +9,86 @@
 Player::Player(const string username)
 {
 	// verify that this is not a duplicate username for the current players in game
-	playerName = username;
+	setName(username);
 	totalCoins = 9;
 	unplacedCities = 3;
 	placedCities = 0;
     unplacedArmies = 18;
     placedArmies = 0;
 	// define a bidingFacility
-	std::cout << "Created new player: " << username << std::endl;
+	std::cout << "Created new player: " << getName() << std::endl;
+}
+
+// Default constructor
+Player::~Player()
+{
+	setName("playerName");
+	totalCoins = 9;
+	unplacedCities = 3;
+	placedCities = 0;
+	unplacedArmies = 18;
+	placedArmies = 0;
+	// define a bidingFacility
+	std::cout << "Created new player: " << getName() << std::endl;
+}
+
+// Copy constructor
+Player::Player(const Player& otherPlayer)
+{
+	setName(otherPlayer.playerName);
+	this->totalCoins = otherPlayer.totalCoins;
+	this->unplacedCities = otherPlayer.unplacedCities;
+	this->placedCities = otherPlayer.placedArmies;
+	this->unplacedArmies = otherPlayer.unplacedArmies;
+	this->placedArmies = otherPlayer.placedArmies;
+	// this.bidingFacility = otherPlayer.bidingFacility
+}
+
+// Stream insertion operator overload
+ostream& operator<<(ostream& os, Player& player)
+{
+	string s = "The following player remains in the game";
+
+	s += player.getName()+ " ";
+	os << s << std::endl;
+
+	return os;
+}
+
+// Assignment operator
+Player& Player::operator=(Player& player)
+{
+	setName(player.playerName);
+	this->totalCoins = player.totalCoins;
+	this->unplacedCities = player.unplacedCities;
+	this->placedCities = player.placedArmies;
+	this->unplacedArmies = player.unplacedArmies;
+	this->placedArmies = player.placedArmies;
+	// this.bidingFacility = player.bidingFacility
+
+	return *this;
+}
+
+ostream& operator>>(ostream& os, Player& player)
+{
+	string s = "The following player remains in the game";
+
+	s += player.getName() + " ";
+	os << s << std::endl;
+
+	return os;
+}
+
+// Get player name
+string Player::getName()
+{
+	std::cout << playerName;
+}
+
+// Set player name to specified one
+void Player::setName(string name)
+{
+	playerName = name;
 }
 
 // Player pays coins (to buy card)
@@ -24,7 +96,7 @@ void Player::PayCoin(const int price)
 {
 	if (price > 0 && (totalCoins - price) >= 0)
 	{
-		totalCoins = totalCoins - price;
+		setBalance(totalCoins - price);
 		std::cout << "Removed " << price << " coins from player total." << std::endl;
 		std::cout << "New total: " << totalCoins <<  " coins" << std::endl;
 	}
@@ -38,6 +110,12 @@ void Player::PayCoin(const int price)
 int Player::getBalance()
 {
 	return totalCoins;
+}
+
+// Set player balance
+void Player::setBalance(int newBalance)
+{
+	totalCoins = newBalance;
 }
 
 // Player moves from one territory to another

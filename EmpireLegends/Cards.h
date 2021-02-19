@@ -11,6 +11,7 @@ using std::ostream;
 
 class Card {
 public:
+	Card() = default;
 	Card(const string goodDesc,const string actionDesc);
 	~Card() = default;
 
@@ -60,6 +61,7 @@ private:
 
 class Deck {
 public:
+	Deck() = default;
 	Deck(const vector<Card*> playingCards);
 	~Deck();
 
@@ -73,7 +75,7 @@ public:
 	// assignment operator
 	Deck& operator = (const Deck& deck);
 
-	void draw(int count);
+	void draw(const int count);
 	Hand* getHand() const;
 private:
 	vector<Card*> cardDeck;
