@@ -6,22 +6,17 @@
 //// default constructor 
 BiddingFacility::BiddingFacility(){}
 
-//// copy Constructor 
-//BiddingFacility::BiddingFacility(const BiddingFacility& obj) {
-//    
-//
-//}
-//
-//// destructor 
-//BiddingFacility::~BiddingFacility() {
-//    
-//}
+// copy Constructor 
+BiddingFacility::BiddingFacility(const BiddingFacility& obj) {
+    bid = obj.bid; 
+}
 
 //// stream insertion operator 
 //ostream& operator<<(ostream& output, const BiddingFacility& BDF) {
-//    
+//    output << "The bid is : " << BDF.getBids() ;
+//    return output;
 //}
-//
+
 //// Assignment operator
 //BiddingFacility& BiddingFacility::operator=(const BiddingFacility& rhs) {
 //
@@ -59,7 +54,9 @@ void BiddingFacility::placeBid(vector <Player*> myPlayers) {
         
     }
 
-    cout << "Bids of players and who will go first:" << endl;
+    cout << "--------------------------" << endl;
+    cout << "WHO WILL GO FIRST??:" << endl;
+    cout << "--------------------------\n" << endl;
 
     // checks if bids are equivalent or all zero
     for (int i = 0; i < myPlayers.size(); i++) {
@@ -71,18 +68,14 @@ void BiddingFacility::placeBid(vector <Player*> myPlayers) {
             temp2 = myPlayers[j]->getBidFac()->getBids();
 
             // checks if bids are equivalent or all bids are zero 
-            if (temp1 == temp2 ) {
+            if (temp1 == temp2 || (temp1 == 0 && temp2 == 0) ) {
                 temp3 = 2; 
-            }
-            if (temp1 == 0 && temp2 == 0) {
-
             }
         }       
     }
 
    // puts in alphabetical order 
     if (temp3 == 2) {
-
         for ( int i = 0; i < myPlayers.size(); i++) {
             for ( int j = 0; j < myPlayers.size(); j++) {
                 if (myPlayers[i]->getName().at(0) < myPlayers[j]->getName().at(0)) {
@@ -92,7 +85,8 @@ void BiddingFacility::placeBid(vector <Player*> myPlayers) {
                 }
             }
         }    
-        cout << "The play to go first " << myPlayers[0]->getName();
+
+        cout << "\nThe player to go first is " << tmp;       
     }
 
     else {
@@ -103,21 +97,13 @@ void BiddingFacility::placeBid(vector <Player*> myPlayers) {
             }
         }
 
-        cout << "The player with the highest bid is " << myPlayers[temp4]->getName();
+        cout << "\nThe player with the highest bid is " << myPlayers[temp4]->getName();
         supply1 = myPlayers[temp4]->getCoins(); 
-        supply2 = myPlayers[temp4]->getBidFac()->getBids();
+        supply2 = myPlayers[temp4]->getBidFac()->getBids(); 
         supply3 = supply1 - supply2; 
         myPlayers[temp4]->setCoins(supply3);
-        cout << "\n"<<myPlayers[temp4]->getName() << " now has " << myPlayers[temp4]->getCoins() << " coins."; 
-    
+        cout << "\n"<<myPlayers[temp4]->getName() << " now has " << supply3 << " coins.";
     }
-
 }
-
-
-
-
-
-
 
 
