@@ -3,26 +3,28 @@
 #include <iostream>
 #include <vector>
 
-//// default constructor 
-BiddingFacility::BiddingFacility(){}
+// default constructor 
+BiddingFacility::BiddingFacility() {
+    bid = bid; 
+}
 
 // copy Constructor 
 BiddingFacility::BiddingFacility(const BiddingFacility& obj) {
     bid = obj.bid; 
 }
 
-//// stream insertion operator 
-//ostream& operator<<(ostream& output, const BiddingFacility& BDF) {
-//    output << "The bid is : " << BDF.getBids() ;
-//    return output;
-//}
+// stream insertion operator 
+ostream& operator<<(ostream& output, const BiddingFacility& BDF) {
+    output << "The bid is : " << BDF.getBids() ;
+    return output;
+}
 
-//// Assignment operator
-//BiddingFacility& BiddingFacility::operator=(const BiddingFacility& rhs) {
-//
-//}
+// Assignment operator
+BiddingFacility& BiddingFacility::operator=(const BiddingFacility& rhs) {
+    return *this;
+}
 
-int BiddingFacility::getBids() {
+int BiddingFacility::getBids() const {
     return bid;
 }
 
@@ -78,14 +80,18 @@ void BiddingFacility::placeBid(vector <Player*> myPlayers) {
     if (temp3 == 2) {
         for ( int i = 0; i < myPlayers.size(); i++) {
             for ( int j = 0; j < myPlayers.size(); j++) {
+                int k = 0; 
+                if (myPlayers[i]->getName().at(k) == myPlayers[j]->getName().at(k)) {
+
+                }
                 if (myPlayers[i]->getName().at(0) < myPlayers[j]->getName().at(0)) {
                     tmp = myPlayers[i]->getName();
+                    cout << tmp << "\n";
                     myPlayers[i]->getName() = myPlayers[j]->getName();
                     myPlayers[j]->getName() = tmp;
-                }
+                }               
             }
         }    
-
         cout << "\nThe player to go first is " << tmp;       
     }
 

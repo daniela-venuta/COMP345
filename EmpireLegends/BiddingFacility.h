@@ -13,7 +13,7 @@ private:
 public: 
 	
 	 void placeBid(vector <Player*> myPlayers);
-	 int getBids();
+	 int getBids() const;
 	 void setBids(int bid); 
 
 	// default constructor 
