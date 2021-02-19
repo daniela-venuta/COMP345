@@ -19,19 +19,6 @@ Player::Player(const string username)
 	std::cout << "Created new player: " << getName() << std::endl;
 }
 
-// Default constructor
-Player::~Player()
-{
-	setName("playerName");
-	totalCoins = 9;
-	unplacedCities = 3;
-	placedCities = 0;
-	unplacedArmies = 18;
-	placedArmies = 0;
-	// define a bidingFacility
-	std::cout << "Created new player: " << getName() << std::endl;
-}
-
 // Copy constructor
 Player::Player(const Player& otherPlayer)
 {
@@ -55,6 +42,16 @@ ostream& operator<<(ostream& os, Player& player)
 	return os;
 }
 
+ostream& operator>>(ostream& os, Player& player)
+{
+	string s = "The following player remains in the game";
+
+	s += player.getName() + " ";
+	os << s << std::endl;
+
+	return os;
+}
+
 // Assignment operator
 Player& Player::operator=(Player& player)
 {
@@ -69,20 +66,10 @@ Player& Player::operator=(Player& player)
 	return *this;
 }
 
-ostream& operator>>(ostream& os, Player& player)
-{
-	string s = "The following player remains in the game";
-
-	s += player.getName() + " ";
-	os << s << std::endl;
-
-	return os;
-}
-
 // Get player name
 string Player::getName()
 {
-	std::cout << playerName;
+	return playerName;
 }
 
 // Set player name to specified one
