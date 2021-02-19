@@ -22,14 +22,28 @@ TerritoryNotFoundException::TerritoryNotFoundException(const std::string& territ
 
 #pragma endregion exceptions
 
+#pragma region location
+
+std::string Location::getName() const
+{
+    return this->name;
+}
+
+void Location::setName(const std::string& newName)
+{
+    this->name = newName;
+}
+
+#pragma endregion location
+
 #pragma region region
 
-Region::Region(const Region& region) : Location(region.name)
+Region::Region(const Region& region) : Location(region.getName())
 {}
 
 Region& Region::operator=(Region region)
 {
-    this->name = region.name;
+    this->setName(region.getName());
     return *this;
 }
 
@@ -62,7 +76,7 @@ std::string Territory<T>::toString() const
 template <class T>
 std::string Territory<T>::getName() const
 {
-    return value->name;
+    return static_cast<Location*>(value)->getName();
 }
 
 template <class T>
@@ -93,8 +107,6 @@ Territory<T>::~Territory()
         return;
     }
 	
-    std::cout << "\nDeleting territory: " << this->getName() << std::endl;
-
     this->adjacency.clear();
     delete this->value;
     this->value = nullptr;
@@ -116,8 +128,11 @@ int Territory<T>::getTravelCostWithVisits(Territory<T>* destination, std::vector
     {
         if (itr->second == destination)
         {
+        	// Stop recursion
             return itr->first * visited.size();
         }
+
+    	// Continue recursion
         cost += itr->second->getTravelCostWithVisits(destination, visited);
     }
 
@@ -142,7 +157,7 @@ int Territory<T>::getTravelCost(Territory<T>* destination)
 		{
             return itr->first;
 		}
-		
+		// Start recursion
         cost += itr->second->getTravelCostWithVisits(destination, visited);
 	}
 
@@ -178,7 +193,7 @@ void Territory<T>::removeArmies(int number)
 }
 
 template <class T>
-int Territory<T>::getArmyCount()
+int Territory<T>::getArmyCount() const
 {
     return armyCount;
 }
@@ -202,7 +217,7 @@ void Graph<T>::addTerritory(Territory<T>* terr)
         terrs[name] = terr;
         return;
     }
-    throw TerritoryInGraphException(terr->getName(), this->name);
+    throw TerritoryInGraphException(terr->getName(), this->getName());
 }
 
 template <class T>
@@ -218,7 +233,7 @@ void Graph<T>::addEdge(const std::string& first, const std::string& second, int 
 	{
 		if (itr->second->getName() == s->getName())
 		{
-            throw EdgeInGraphException(f->getName(), s->getName(), this->name);
+            throw EdgeInGraphException(f->getName(), s->getName(), this->getName());
 		}
 	}
 
@@ -227,7 +242,7 @@ void Graph<T>::addEdge(const std::string& first, const std::string& second, int 
 }
 
 template <class T>
-Graph<T>::Graph(const Graph<T>& graph) : Location(graph.name)
+Graph<T>::Graph(const Graph<T>& graph) : Location(graph.getName())
 {	
 	for(auto itr = graph.terrs.begin(); itr != graph.terrs.end(); ++itr)
 	{
@@ -277,7 +292,7 @@ Territory<T>* Graph<T>::findTerritory(std::string name)
             return itr->second;
     	}
     }
-    throw TerritoryNotFoundException(name, this->name);
+    throw TerritoryNotFoundException(name, this->getName());
 }
 
 template<class T>
@@ -301,7 +316,6 @@ Graph<T>::~Graph()
         return;
     }
 	
-    std::cout << "\nDeleting graph: " << this->name << std::endl;
 	//Deleting all territories in the graph
     for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
@@ -342,7 +356,7 @@ int Continent::getBestCost(Territory<Region>* terr)
 std::string GameMap::toString() const
 {
 	std::string s;
-    s.append(this->name);
+    s.append(this->getName());
     s.append("\n");
     for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
@@ -362,7 +376,7 @@ void GameMap::validateContinent(std::vector<std::string>& keys, std::map<std::st
 	{
         if (std::empty(terrItr->second->adjacency))
         {
-            throw InvalidMapException(this->name, "'" + terrItr->first + "' is not connected to any other region\n");
+            throw InvalidMapException(this->getName(), "'" + terrItr->first + "' is not connected to any other region\n");
         }
 		
 		// If the key is not in the keys vector
@@ -372,7 +386,7 @@ void GameMap::validateContinent(std::vector<std::string>& keys, std::map<std::st
 			keys.push_back(terrItr->first);
 		} else
 		{
-			throw InvalidMapException(this->name, "'" + terrItr->first + "' is in multiple continents\n");
+			throw InvalidMapException(this->getName(), "'" + terrItr->first + "' is in multiple continents\n");
 		}
 	}
 }
@@ -385,12 +399,12 @@ void GameMap::validate()
     {
         if (std::empty(continentItr->second->adjacency))
         {
-            throw InvalidMapException(this->name, "'" + continentItr->first + "' is not connected to any other continent\n");
+            throw InvalidMapException(this->getName(), "'" + continentItr->first + "' is not connected to any other continent\n");
         }
         validateContinent(keys, continentItr->second->value->terrs);
     }
 
-	std::cout << this->name << " is valid\n" << std::endl;
+	std::cout << this->getName() << " is valid\n" << std::endl;
 }
 
 int GameMap::getTravelCost(Territory<Region>* from, Territory<Region>* to)

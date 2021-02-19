@@ -9,18 +9,21 @@
 /// <summary>
 /// Location class
 /// </summary>
-struct Location
+class Location
 {
     std::string name;
 
+protected:
+    void setName(const std::string& newName);
+
+public:
     /// <summary>
     /// 1-parameter constructor
     /// </summary>
-    /// <param name="name">location name</param>
-    explicit Location(std::string name)
-    {
-        this->name = std::move(name);
-    }
+    /// <param name="_name">location name</param>
+    explicit Location(std::string _name) : name(std::move(_name)) {}
+
+    std::string getName() const;
 };
 
 /// <summary>
@@ -52,6 +55,9 @@ struct Region : Location
 template <class T>
 class Territory
 {
+    int armyCount;
+
+	// Calculating the travel cost recursively
     int getTravelCostWithVisits(Territory<T>* destination, std::vector<Territory<T>*>& visited);
 public:
     typedef std::pair<int, Territory<T>*> TerritoryEdge;
@@ -62,7 +68,7 @@ public:
     /// 1-parameter constructor
     /// </summary>
     /// <param name="value">territory's value</param>
-    explicit Territory(T* value) : value(value) {}
+    explicit Territory(T* value) : armyCount(0), value(value) {}
     /// <summary>
     /// Copy constructor. Does not copy the adjacency vector, since it's the graph's responsibility
     /// </summary>
@@ -100,13 +106,24 @@ public:
     /// <returns>territory's name</returns>
     std::string getName() const;
 
+    /// <summary>
+    /// Calculating the travel cost to the destination
+    /// </summary>
+    /// <param name="destination">territory to travel to</param>
+    /// <returns></returns>
     int getTravelCost(Territory<T>* destination);
+    /// <summary>
+    /// Adding armies to the territory
+    /// </summary>
+    /// <param name="number">number of armies to add</param>
     void addArmies(int number);
+    /// <summary>
+    /// Removing armies from the territory
+    /// </summary>
+    /// <param name="number">number of armies to remove</param>
     void removeArmies(int number);
-    int getArmyCount();
-
-private:
-    int armyCount;
+	
+    int getArmyCount() const;
 };
 
 /// <summary>
@@ -261,13 +278,13 @@ struct MapException : std::exception
     /// 1-parameter constructor
     /// </summary>
     /// <param name="message">exception name</param>
-    MapException(std::string message) : exception((new std::string(message))->c_str()) {}
+    MapException(const std::string& message) : exception((new std::string(message))->c_str()) {}
 
     /// <summary>
     /// Stream insertion operator overload
     /// </summary>
     /// <param name="os">stream to write to</param>
-    /// <param name="graph">graph to add to the stream</param>
+    /// <param name="e">exception to print in the stream</param>
     /// <returns>stream with the graph's string representation added</returns>
     friend std::ostream& operator<<(std::ostream& os, MapException e) {
         return os << std::string(e.what());
