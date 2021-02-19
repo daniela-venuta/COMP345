@@ -15,6 +15,8 @@ public:
 	 void placeBid(vector <Player*> myPlayers);
 	 int getBids() const;
 	 void setBids(int bid); 
+	 vector<string> alphabaticallySort(vector<string> a); 
+	 bool mycomp(string a, string b); 
 
 	// default constructor 
 	BiddingFacility();

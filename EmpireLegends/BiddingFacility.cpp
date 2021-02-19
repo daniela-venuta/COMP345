@@ -2,6 +2,7 @@
 #include "BiddingFacility.h"
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 // default constructor 
 BiddingFacility::BiddingFacility() {
@@ -32,6 +33,15 @@ void BiddingFacility::setBids(int bid) {
     BiddingFacility::bid = bid;
 }
 
+bool BiddingFacility::mycomp(string a, string b) {
+    return a < b;
+}
+vector<string> BiddingFacility::alphabaticallySort(vector<string> a) {
+    int n = a.size();
+    sort(a.begin(), a.end(), mycomp());
+    return a; 
+}
+
 void BiddingFacility::placeBid(vector <Player*> myPlayers) {
 
     int bid; 
@@ -39,6 +49,10 @@ void BiddingFacility::placeBid(vector <Player*> myPlayers) {
     int maxbid = 0; 
     int supply1 = 0, supply2 = 0 , supply3 =0;
     string tmp; 
+    string name;
+    vector<string> names;
+
+   
 
     // each players places their bid
     for (int i = 0; i < myPlayers.size(); i++) { 
@@ -72,41 +86,27 @@ void BiddingFacility::placeBid(vector <Player*> myPlayers) {
             // checks if bids are equivalent or all bids are zero 
             if (temp1 == temp2 || (temp1 == 0 && temp2 == 0)) {
                 temp3 = 1; 
-            }
-               
-            
+            }     
         }       
     }
             
     switch (temp3) {
-    case 1: 
+    case 1:        
         for (int i = 0; i < myPlayers.size(); i++) {
-            for (int j = 1; j < myPlayers.size(); j++) {
-                int k = 0;
-
-                if (myPlayers[i]->getName().at(k) == myPlayers[j]->getName().at(k)) {
-                    k++;
-                    if (myPlayers[i]->getName().at(k) < myPlayers[j]->getName().at(k)) {
-                        tmp = myPlayers[i]->getName();
-                        cout << tmp << "\n";
-                        myPlayers[i]->getName() = myPlayers[j]->getName();
-                        myPlayers[j]->getName() = tmp;
-                    }
-                }
-            }
+            string name = myPlayers[i]->getName();
+            names.push_back(name); 
         }
-        cout << "\nThe player to go first is " << tmp;
+        names = alphabaticallySort(names); 
+        cout << "\nThe player to go first is " << names[0];
         break; 
 
     default: 
-        
         for (int i = 0; i < myPlayers.size(); i++) {
             if (maxbid < myPlayers[i]->getBidFac()->getBids()) {
                 maxbid = myPlayers[i]->getBidFac()->getBids();
                 temp4 = i;
             }
         }
-
         cout << "\nThe player with the highest bid is " << myPlayers[temp4]->getName();
 
         supply3 = myPlayers[temp4]->getCoins() - myPlayers[temp4]->getBidFac()->getBids();
@@ -123,7 +123,22 @@ void BiddingFacility::placeBid(vector <Player*> myPlayers) {
     
         
     
+/*for (int i = 0; i < myPlayers.size(); i++) {
+           for (int j = 1; j < myPlayers.size(); j++) {
+               int k = 0;
 
+               if (myPlayers[i]->getName().at(k) == myPlayers[j]->getName().at(k)) {
+                   k++;
+                   if (myPlayers[i]->getName().at(k) < myPlayers[j]->getName().at(k)) {
+                       tmp = myPlayers[i]->getName();
+                       cout << tmp << "\n";
+                       myPlayers[i]->getName() = myPlayers[j]->getName();
+                       myPlayers[j]->getName() = tmp;
+                   }
+               }
+           }
+       }
+       */
     
 
 
