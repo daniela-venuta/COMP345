@@ -78,7 +78,6 @@ void BiddingFacility::placeBid(vector <Player*> myPlayers) {
         }       
     }
             
-
     switch (temp3) {
     case 1: 
         for (int i = 0; i < myPlayers.size(); i++) {
@@ -100,6 +99,7 @@ void BiddingFacility::placeBid(vector <Player*> myPlayers) {
         break; 
 
     default: 
+        
         for (int i = 0; i < myPlayers.size(); i++) {
             if (maxbid < myPlayers[i]->getBidFac()->getBids()) {
                 maxbid = myPlayers[i]->getBidFac()->getBids();
@@ -114,9 +114,7 @@ void BiddingFacility::placeBid(vector <Player*> myPlayers) {
         myPlayers[temp4]->setCoins(supply3);
         cout << "\n" << myPlayers[temp4]->getName() << " now has " << supply3 << " coins.";
     }
-
-
-    }
+}
 
 
 
