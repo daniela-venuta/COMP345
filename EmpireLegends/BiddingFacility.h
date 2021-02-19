@@ -1,13 +1,14 @@
 #pragma once
-#include "Player.h"
 #include <string>
 #include <vector>
 using namespace std;
 
+class Player;
+
 class BiddingFacility {
 
 private: 
-	int bids; 
+	int bid; 
 
 public: 
 	
@@ -16,7 +17,7 @@ public:
 	 void setBids(int bid); 
 
 	//// default constructor 
-	//BiddingFacility();
+	BiddingFacility();
 
 	//// destructor 
 	//~BiddingFacility();

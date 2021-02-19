@@ -13,6 +13,7 @@ Player::Player() {
 Player::Player(string username, int PlayerCoins) {
 	name = username; 
 	coins = PlayerCoins;
+	Bidding = new BiddingFacility();
 }
 
 string Player::getName() {
@@ -22,7 +23,11 @@ string Player::getName() {
 int Player::getCoins(){
 	return coins; 
 }
-
-BiddingFacility* Player::getBidFacility() {
-	return BiddingFac;
+void Player::setCoins(int coins) {
+	coins = coins; 
 }
+
+BiddingFacility* Player::getBidFac() {
+	return Bidding;
+}
+

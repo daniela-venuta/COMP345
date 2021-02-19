@@ -4,9 +4,7 @@
 #include <vector>
 
 //// default constructor 
-//BiddingFacility::BiddingFacility(){
-//   
-//}
+BiddingFacility::BiddingFacility(){}
 
 //// copy Constructor 
 //BiddingFacility::BiddingFacility(const BiddingFacility& obj) {
@@ -30,47 +28,96 @@
 //}
 
 int BiddingFacility::getBids() {
-    return BiddingFacility::bids; 
+    return bid;
 }
 
 void BiddingFacility::setBids(int bid) {
-    bid = bid; 
+    BiddingFacility::bid = bid;
 }
 
 void BiddingFacility::placeBid(vector <Player*> myPlayers) {
-   
-    int bid;
 
-    for (int i = 0; i < myPlayers.size(); i++) {
-        cout << myPlayers[i]->getName() << " Place your bid: "; // player will need to place a bid
-        cin >> bid;
+    int bid; 
+    int temp1 = 0, temp2 = 0, temp3 = 0, temp4 = 0;
+    int maxbid = 0; 
+    int supply1 = 0, supply2 = 0 , supply3 =0;
+    string tmp; 
 
-        while (bid > myPlayers[i]->getCoins() || bid < 0) {
-            cout << " Place your bid: ";
-            cout << myPlayers[i]->getName() << " Place your bid: ";
-        }
-       
+    // each players places their bid
+    for (int i = 0; i < myPlayers.size(); i++) { 
+        
+        do {
+            cout << "\n" << myPlayers[i]->getName() << " Place your bid: ";
+            cin >> bid;
+        } while (bid > myPlayers[i]->getCoins() || bid < 0);
+        
         void ClearScreen();
         {
             cout << string(150, '\n');
         }
+        myPlayers[i]->getBidFac()->setBids(bid); // sets each player w/ a bid
+        
     }
-    // reveals the bid of each player
+
+    cout << "Bids of players and who will go first:" << endl;
+
+    // checks if bids are equivalent or all zero
     for (int i = 0; i < myPlayers.size(); i++) {
-        cout << "Bids placed by each player: ";
-        cout << "Player "<< myPlayers[i]->getName() << "\tBid: " << myPlayers[i]->getBidFacility()->getBids();
+       
+        temp1 = myPlayers[i]->getBidFac()->getBids(); 
+        
+        for (int j = i+1; j < myPlayers.size(); j++) {
+           
+            temp2 = myPlayers[j]->getBidFac()->getBids();
+
+            // checks if bids are equivalent or all bids are zero 
+            if (temp1 == temp2 ) {
+                temp3 = 2; 
+            }
+            if (temp1 == 0 && temp2 == 0) {
+
+            }
+        }       
+    }
+
+   // puts in alphabetical order 
+    if (temp3 == 2) {
+
+        for ( int i = 0; i < myPlayers.size(); i++) {
+            for ( int j = 0; j < myPlayers.size(); j++) {
+                if (myPlayers[i]->getName().at(0) < myPlayers[j]->getName().at(0)) {
+                    tmp = myPlayers[i]->getName();
+                    myPlayers[i]->getName() = myPlayers[j]->getName();
+                    myPlayers[j]->getName() = tmp;
+                }
+            }
+        }    
+        cout << "The play to go first " << myPlayers[0]->getName();
+    }
+
+    else {
+        for (int i = 0; i < myPlayers.size(); i++) {
+            if (maxbid < myPlayers[i]->getBidFac()->getBids()) {
+                maxbid = myPlayers[i]->getBidFac()->getBids(); 
+                temp4 = i; 
+            }
+        }
+
+        cout << "The player with the highest bid is " << myPlayers[temp4]->getName();
+        supply1 = myPlayers[temp4]->getCoins(); 
+        supply2 = myPlayers[temp4]->getBidFac()->getBids();
+        supply3 = supply1 - supply2; 
+        myPlayers[temp4]->setCoins(supply3);
+        cout << "\n"<<myPlayers[temp4]->getName() << " now has " << myPlayers[temp4]->getCoins() << " coins."; 
     
     }
 
-    // checks to see who put the highest bid and reveals 
-    for (int i = 0; i < myPlayers.size(); i++) {
-        int max = 0; 
-
-
-    }
-
-
-
-
-
 }
+
+
+
+
+
+
+
+

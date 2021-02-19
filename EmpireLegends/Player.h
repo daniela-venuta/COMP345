@@ -1,5 +1,5 @@
 #pragma once
-
+#include "BiddingFacility.h"
 #include <string>
 #include <vector>
 
@@ -11,9 +11,10 @@ private:
 	
 	string name;
 	int coins; 
-	BiddingFacility* BiddingFac;
+	BiddingFacility* Bidding;
 
 public:
+
 	Player();
 
 	Player(string username, int coins);
@@ -22,7 +23,9 @@ public:
 
 	int getCoins(); 
 
-	BiddingFacility* getBidFacility();
+	void setCoins(int coins); 
+
+	BiddingFacility* getBidFac();
 
 };
 	

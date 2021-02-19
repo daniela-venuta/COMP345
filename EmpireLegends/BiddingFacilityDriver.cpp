@@ -9,7 +9,7 @@ int main() {
 
 	// variables 
 	int numofPlayers;
-	int PlayerCoins;
+	int PlayerCoins = 0;
 	string username; 
 	vector <Player*> myPlayers; 
 	BiddingFacility* bidFac = new BiddingFacility();
@@ -48,7 +48,7 @@ int main() {
 	}
 	
 	// enable the player objects and store in vector 
-	cout << "Who will be playing the game: " << endl; 
+	cout << "\nWho will be playing the game: " << endl; 
 	for (int i = 0; i < numofPlayers; i++) {
 		cout << "Player: "; 
 		cin >> username; 
