@@ -32,14 +32,14 @@
     <ClCompile Include="MapUtility.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="MapUtility.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="CardsDriver.cpp">
       <Filter>Driver Files</Filter>
     </ClCompile>
     <ClCompile Include="PlayerDriver.cpp">
       <Filter>Driver Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MapUtility.cpp">
+      <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
