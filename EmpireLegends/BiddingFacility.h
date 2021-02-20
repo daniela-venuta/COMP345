@@ -7,16 +7,15 @@ class Player;
 
 class BiddingFacility {
 
-private: 
-	int bid; 
+private:
+	int bid;
+	//string name;
 
-public: 
-	
-	 void placeBid(vector <Player*> myPlayers);
-	 int getBids() const;
-	 void setBids(int bid); 
-	 vector<string> alphabaticallySort(vector<string> a); 
-	 bool mycomp(string a, string b); 
+public:
+
+	void placeBid(vector <Player*> myPlayers);
+	int getBids() const;
+	void setBids(int bid);
 
 	// default constructor 
 	BiddingFacility();
@@ -27,6 +26,7 @@ public:
 	// stream insertion operator 
 	friend ostream& operator<<(ostream& output, const BiddingFacility& BDF);
 
-	//// Assignment operator
+	// Assignment operator
 	BiddingFacility& operator=(const BiddingFacility& rhs);
+
 };

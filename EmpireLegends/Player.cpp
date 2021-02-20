@@ -20,6 +20,10 @@ string Player::getName() {
 	return name;
 }
 
+void Player::setName(string Name) {
+	name = Name; 
+}
+
 int Player::getCoins(){
 	return coins; 
 }
@@ -30,4 +34,6 @@ void Player::setCoins(int coins) {
 BiddingFacility* Player::getBidFac() {
 	return Bidding;
 }
+
+
 

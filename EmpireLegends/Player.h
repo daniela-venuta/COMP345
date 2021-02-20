@@ -20,8 +20,10 @@ public:
 	Player(string username, int coins);
 
 	string getName();
+	void setName(string name); 
 
 	int getCoins(); 
+	
 
 	void setCoins(int coins); 
 

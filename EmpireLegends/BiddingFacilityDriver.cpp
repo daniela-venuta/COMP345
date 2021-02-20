@@ -2,6 +2,7 @@
 #include <vector>
 #include "Player.h"
 #include "BiddingFacility.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -13,6 +14,7 @@ int main() {
 	string username; 
 	vector <Player*> myPlayers; 
 	BiddingFacility* bidFac = new BiddingFacility();
+	Player* pl = new Player(); 
 
 	cout << "--------------------------" << endl;
 	cout << "Eight-Minute-Empire Game" << endl; 
