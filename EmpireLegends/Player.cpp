@@ -6,29 +6,30 @@ using namespace std;
 
 //default constructor 
 Player::Player() {
-	name = name; 
-	coins = coins;
+	playerName = playerName;
+	totalCoins = totalCoins;
 }
 
+// parametrized constructor
 Player::Player(string username, int PlayerCoins) {
-	name = username; 
-	coins = PlayerCoins;
+	playerName = username;
+	totalCoins = PlayerCoins;
 	Bidding = new BiddingFacility();
 }
 
 string Player::getName() {
-	return name;
+	return playerName;
 }
 
 void Player::setName(string Name) {
-	name = Name; 
+	playerName = Name;
 }
 
 int Player::getCoins(){
-	return coins; 
+	return totalCoins;
 }
 void Player::setCoins(int coins) {
-	coins = coins; 
+	totalCoins = coins;
 }
 
 BiddingFacility* Player::getBidFac() {

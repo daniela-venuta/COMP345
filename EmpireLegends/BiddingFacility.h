@@ -9,7 +9,7 @@ class BiddingFacility {
 
 private:
 	int bid;
-	//string name;
+	
 
 public:
 
