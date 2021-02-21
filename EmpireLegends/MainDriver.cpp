@@ -303,8 +303,8 @@ void driveCards()
 
 	// Example of printing goods and actions of cards
 	std::cout << "Printing cards: \n";
-	std::cout << *cardOne;
-	std::cout << *cardTwo;
+	std::cout << *cardOne << std::endl;;
+	std::cout << *cardTwo << std::endl;;
 	std::cout << *cardThree << std::endl;
 
 	// add Cards to a vector
@@ -319,7 +319,7 @@ void driveCards()
 	// Create deck and add cards (this creates a card hand as well)
 	std::cout << "Printing deck: \n";
 	Deck* deck = new Deck(cardVector);
-	std::cout << *deck;
+	std::cout << *deck << std::endl;;
 
 	// Draw cards from deck and add them to the hand
 	deck->draw(4);
