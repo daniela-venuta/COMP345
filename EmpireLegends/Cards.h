@@ -62,7 +62,7 @@ private:
 class Deck {
 public:
 	Deck() = default;
-	Deck(const vector<Card*> playingCards);
+	Deck(const vector<Card*>& playingCards);
 	~Deck();
 
 	// copy constructor

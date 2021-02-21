@@ -143,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="jsoncpp.cpp" />
+    <ClCompile Include="MainDriver.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapDriver.cpp" />
   </ItemGroup>
@@ -173,6 +174,13 @@
     <None Include="invalid_map_missing_name_field.json" />
     <None Include="valid_map_1.json" />
     <None Include="valid_map_2.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BiddingFacility.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BiddingFacility.cpp" />
+    <ClCompile Include="BiddingFacilityDriver.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
