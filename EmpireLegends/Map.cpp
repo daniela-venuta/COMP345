@@ -22,14 +22,28 @@ TerritoryNotFoundException::TerritoryNotFoundException(const std::string& territ
 
 #pragma endregion exceptions
 
+#pragma region location
+
+std::string Location::getName() const
+{
+    return this->name;
+}
+
+void Location::setName(const std::string& newName)
+{
+    this->name = newName;
+}
+
+#pragma endregion location
+
 #pragma region region
 
-Region::Region(const Region& region) : Location(region.name)
+Region::Region(const Region& region) : Location(region.getName())
 {}
 
 Region& Region::operator=(Region region)
 {
-    this->name = region.name;
+    this->setName(region.getName());
     return *this;
 }
 
@@ -62,7 +76,7 @@ std::string Territory<T>::toString() const
 template <class T>
 std::string Territory<T>::getName() const
 {
-    return value->name;
+    return static_cast<Location*>(value)->getName();
 }
 
 template <class T>
@@ -93,11 +107,95 @@ Territory<T>::~Territory()
         return;
     }
 	
-    std::cout << "\nDeleting territory: " << this->getName() << std::endl;
-
     this->adjacency.clear();
     delete this->value;
     this->value = nullptr;
+}
+
+template <class T>
+int Territory<T>::getTravelCostWithVisits(Territory<T>* destination, std::vector<Territory<T>*>& visited)
+{
+    if (std::find(visited.begin(), visited.end(), this) != visited.end())
+    {
+        return 0;
+    }
+
+    auto cost = 0;
+
+    visited.push_back(this);
+
+    for (auto itr = this->adjacency.begin(); itr != this->adjacency.end(); ++itr)
+    {
+        if (itr->second == destination)
+        {
+        	// Stop recursion
+            return itr->first * visited.size();
+        }
+
+    	// Continue recursion
+        cost += itr->second->getTravelCostWithVisits(destination, visited);
+    }
+
+    return cost;
+}
+
+template <class T>
+int Territory<T>::getTravelCost(Territory<T>* destination)
+{
+	if (this == destination)
+	{
+        return 0;
+	}
+
+    auto visited = std::vector<Territory<T>*>();
+    visited.push_back(this);
+    auto cost = 0;
+
+	for (auto itr = this->adjacency.begin(); itr != this->adjacency.end(); ++itr)
+	{
+		if (itr->second == destination)
+		{
+            return itr->first;
+		}
+		// Start recursion
+        cost += itr->second->getTravelCostWithVisits(destination, visited);
+	}
+
+    visited.clear();
+
+    return cost;
+}
+
+template <class T>
+void Territory<T>::addArmies(int number)
+{
+    if (number > 0 && number <= 18 && (armyCount + number) <= 72)
+    {
+        armyCount = armyCount + number;
+    }
+    else
+    {
+        std::cout << "Cannot add specified number of armies.";
+    }
+}
+
+template <class T>
+void Territory<T>::removeArmies(int number)
+{
+    if (number > 0 && number <= 18 && (armyCount - number > 0))
+    {
+        armyCount = armyCount - number;
+    }
+    else
+    {
+        std::cout << "Cannot remove specified number of armies.";
+    }
+}
+
+template <class T>
+int Territory<T>::getArmyCount() const
+{
+    return armyCount;
 }
 
 #pragma endregion territory
@@ -119,14 +217,14 @@ void Graph<T>::addTerritory(Territory<T>* terr)
         terrs[name] = terr;
         return;
     }
-    throw TerritoryInGraphException(terr->getName(), this->name);
+    throw TerritoryInGraphException(terr->getName(), this->getName());
 }
 
 template <class T>
 void Graph<T>::addEdge(const std::string& first, const std::string& second, int cost)
 {
-    Territory<T>* f = terrs.find(first)->second;
-    Territory<T>* s = terrs.find(second)->second;
+    auto* f = terrs[first];
+    auto* s = terrs[second];
     std::pair<int, Territory<T>*> edgeFirst = std::make_pair(cost, f);
     std::pair<int, Territory<T>*> edgeSecond = std::make_pair(cost, s);
 	// Creating the undirected edge by adding each territory to the other's adjacency vector
@@ -135,7 +233,7 @@ void Graph<T>::addEdge(const std::string& first, const std::string& second, int 
 	{
 		if (itr->second->getName() == s->getName())
 		{
-            throw EdgeInGraphException(f->getName(), s->getName(), this->name);
+            throw EdgeInGraphException(f->getName(), s->getName(), this->getName());
 		}
 	}
 
@@ -144,7 +242,7 @@ void Graph<T>::addEdge(const std::string& first, const std::string& second, int 
 }
 
 template <class T>
-Graph<T>::Graph(const Graph<T>& graph) : Location(graph.name)
+Graph<T>::Graph(const Graph<T>& graph) : Location(graph.getName())
 {	
 	for(auto itr = graph.terrs.begin(); itr != graph.terrs.end(); ++itr)
 	{
@@ -194,7 +292,7 @@ Territory<T>* Graph<T>::findTerritory(std::string name)
             return itr->second;
     	}
     }
-    throw TerritoryNotFoundException(name, this->name);
+    throw TerritoryNotFoundException(name, this->getName());
 }
 
 template<class T>
@@ -218,7 +316,6 @@ Graph<T>::~Graph()
         return;
     }
 	
-    std::cout << "\nDeleting graph: " << this->name << std::endl;
 	//Deleting all territories in the graph
     for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
@@ -232,12 +329,34 @@ Graph<T>::~Graph()
 
 #pragma endregion graph
 
+
+#pragma region continent
+
+bool Continent::contains(Territory<Region>* terr)
+{
+    return this->terrs.find(terr->getName()) != this->terrs.end();
+}
+
+int Continent::getBestCost(Territory<Region>* terr)
+{
+    auto first = this->terrs.begin()->second;
+    auto last = this->terrs.rbegin()->second;
+	// Getting cost when using the first territory
+    auto travelCostFirst = terr->getTravelCost(first);
+    // Getting cost when using the last territory
+    auto travelCostLast = terr->getTravelCost(last);
+
+    return travelCostFirst <= travelCostLast ? travelCostFirst : travelCostLast;
+}
+
+#pragma endregion continent
+
 #pragma region gameMap
 
 std::string GameMap::toString() const
 {
 	std::string s;
-    s.append(this->name);
+    s.append(this->getName());
     s.append("\n");
     for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
@@ -251,11 +370,15 @@ std::string GameMap::toString() const
     return s;
 }
 
-void GameMap::checkForKeyDuplicates(std::vector<std::string>& keys, std::map<std::string, Territory<Continent>*>::iterator continentItr)
+void GameMap::validateContinent(std::vector<std::string>& keys, std::map<std::string, Territory<Region>*> continentTerrs) const
 {
-	auto continentTerrs = continentItr->second->value->terrs;
 	for (auto terrItr = continentTerrs.begin(); terrItr != continentTerrs.end(); ++terrItr)
 	{
+        if (std::empty(terrItr->second->adjacency))
+        {
+            throw InvalidMapException(this->getName(), "'" + terrItr->first + "' is not connected to any other region\n");
+        }
+		
 		// If the key is not in the keys vector
 		if (find(keys.begin(), keys.end(), terrItr->first) == keys.end())
 		{
@@ -263,7 +386,7 @@ void GameMap::checkForKeyDuplicates(std::vector<std::string>& keys, std::map<std
 			keys.push_back(terrItr->first);
 		} else
 		{
-			throw InvalidMapException(this->name, "'" + terrItr->first + "' is in multiple continents\n");
+			throw InvalidMapException(this->getName(), "'" + terrItr->first + "' is in multiple continents\n");
 		}
 	}
 }
@@ -274,10 +397,55 @@ void GameMap::validate()
     // Check that all regions from all continents are never found twice in the keys vector 
     for (auto continentItr = terrs.begin(); continentItr != terrs.end(); ++continentItr)
     {
-        checkForKeyDuplicates(keys, continentItr);
+        if (std::empty(continentItr->second->adjacency))
+        {
+            throw InvalidMapException(this->getName(), "'" + continentItr->first + "' is not connected to any other continent\n");
+        }
+        validateContinent(keys, continentItr->second->value->terrs);
     }
 
-	std::cout << this->name << " is valid\n" << std::endl;
+	std::cout << this->getName() << " is valid\n" << std::endl;
+}
+
+int GameMap::getTravelCost(Territory<Region>* from, Territory<Region>* to)
+{
+    auto cost = from->getTravelCost(to);
+
+	// Both territories are in the same continent
+	if (cost > 0)
+	{
+        return cost;
+	}
+
+    Territory<Continent>* continentFrom = nullptr;
+    Territory<Continent>* continentTo = nullptr;
+
+	// Find both continents the territories belong to
+	for (auto itr = this->terrs.begin(); itr != this->terrs.end(); ++itr)
+	{
+        auto* tempContinent = itr->second;
+		
+		// Stop when both continents are found
+		if (continentFrom != nullptr && continentTo != nullptr)
+		{
+            break;
+		}
+        if (continentFrom == nullptr && tempContinent->value->contains(from))
+        {
+            continentFrom = tempContinent;
+            continue;
+        }
+        if (continentTo == nullptr && tempContinent->value->contains(to))
+        {
+            continentTo = tempContinent;
+        }
+	}
+
+    cost += continentFrom->value->getBestCost(from);
+    cost += continentFrom->getTravelCost(continentTo);
+    cost += continentTo->value->getBestCost(to);
+	
+    return cost;
 }
 
 #pragma endregion gameMap

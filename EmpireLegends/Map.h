@@ -2,22 +2,28 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <iostream>
+
+// *** The graph structure used is inspired by the vector-based graph example shown in the Graphs DS zip found on the course's Moodle ***
 
 /// <summary>
 /// Location class
 /// </summary>
-struct Location
+class Location
 {
     std::string name;
 
+protected:
+    void setName(const std::string& newName);
+
+public:
     /// <summary>
     /// 1-parameter constructor
     /// </summary>
-    /// <param name="name">location name</param>
-    explicit Location(std::string name)
-    {
-        this->name = std::move(name);
-    }
+    /// <param name="_name">location name</param>
+    explicit Location(std::string _name) : name(std::move(_name)) {}
+
+    std::string getName() const;
 };
 
 /// <summary>
@@ -47,8 +53,13 @@ struct Region : Location
 /// Generic territory class that acts as a graph node and stores a value
 /// </summary>
 template <class T>
-struct Territory
+class Territory
 {
+    int armyCount;
+
+	// Calculating the travel cost recursively
+    int getTravelCostWithVisits(Territory<T>* destination, std::vector<Territory<T>*>& visited);
+public:
     typedef std::pair<int, Territory<T>*> TerritoryEdge;
     std::vector<TerritoryEdge> adjacency;
     T* value;
@@ -57,7 +68,7 @@ struct Territory
     /// 1-parameter constructor
     /// </summary>
     /// <param name="value">territory's value</param>
-    explicit Territory(T* value) : value(value) {}
+    explicit Territory(T* value) : armyCount(0), value(value) {}
     /// <summary>
     /// Copy constructor. Does not copy the adjacency vector, since it's the graph's responsibility
     /// </summary>
@@ -94,6 +105,25 @@ struct Territory
     /// </summary>
     /// <returns>territory's name</returns>
     std::string getName() const;
+
+    /// <summary>
+    /// Calculating the travel cost to the destination
+    /// </summary>
+    /// <param name="destination">territory to travel to</param>
+    /// <returns></returns>
+    int getTravelCost(Territory<T>* destination);
+    /// <summary>
+    /// Adding armies to the territory
+    /// </summary>
+    /// <param name="number">number of armies to add</param>
+    void addArmies(int number);
+    /// <summary>
+    /// Removing armies from the territory
+    /// </summary>
+    /// <param name="number">number of armies to remove</param>
+    void removeArmies(int number);
+	
+    int getArmyCount() const;
 };
 
 /// <summary>
@@ -176,6 +206,19 @@ public:
     /// </summary>
     /// <param name="name">continent's name</param>
     explicit Continent(std::string name): Graph<Region>(name) {}
+
+    /// <summary>
+    /// Gets the best cost to travel to the region (either from the first or from the last)
+    /// </summary>
+    /// <param name="terr">target region territory</param>
+    /// <returns>cost of traveling to the region territory</returns>
+    int getBestCost(Territory<Region>* terr);
+    /// <summary>
+    /// Checks whether a region is in the continent
+    /// </summary>
+    /// <param name="terr">checked region territory</param>
+    /// <returns>whether the region is in the continent</returns>
+    bool contains(Territory<Region>* terr);
 };
 
 /// <summary>
@@ -183,10 +226,12 @@ public:
 /// </summary>
 class GameMap : public Graph<Continent>
 {
-    /// <summary>
-    /// Checks that there are no duplicated keys found in a continent iterator. Throws InvalidMapException if a duplication is found.
+	/// <summary>
+    /// Checks that a continent is valid. Throws InvalidMapException if a duplication is found or a region is unconnected.
     /// </summary>
-	void checkForKeyDuplicates(std::vector<std::string>& keys, std::map<std::string, Territory<Continent>*>::iterator continentTerrs);
+	/// <param name="keys">already validated territories</param>
+	/// <param name="continentTerrs">continent territories</param>
+	void validateContinent(std::vector<std::string>& keys, std::map<std::string, Territory<Region>*> continentTerrs) const;
 public:
     /// <summary>
     /// 1-parameter constructor
@@ -203,6 +248,13 @@ public:
     /// Validates the map. If the map is invalid, it throws an InvalidMapException
     /// </summary>
     void validate();
+    /// <summary>
+    /// Get the travel cost between two regions
+    /// </summary>
+    /// <param name="from">first region territory</param>
+    /// <param name="to">second region territory</param>
+    /// <returns></returns>
+    int getTravelCost(Territory<Region>* from, Territory<Region>* to);
 };
 
 #pragma region aliases
@@ -226,13 +278,13 @@ struct MapException : std::exception
     /// 1-parameter constructor
     /// </summary>
     /// <param name="message">exception name</param>
-    MapException(std::string message) : exception((new std::string(message))->c_str()) {}
+    MapException(const std::string& message) : exception((new std::string(message))->c_str()) {}
 
     /// <summary>
     /// Stream insertion operator overload
     /// </summary>
     /// <param name="os">stream to write to</param>
-    /// <param name="graph">graph to add to the stream</param>
+    /// <param name="e">exception to print in the stream</param>
     /// <returns>stream with the graph's string representation added</returns>
     friend std::ostream& operator<<(std::ostream& os, MapException e) {
         return os << std::string(e.what());
