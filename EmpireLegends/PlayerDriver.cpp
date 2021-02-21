@@ -4,10 +4,10 @@
 
 int main() {
 	// Create player pointers
-	Player* p1 = new Player("player1");
-	Player* p2 = new Player("player2");
-	Player* p3 = new Player("player3");
-	Player* p4 = new Player("player4");
+	auto* p1 = new Player("player1");
+	auto* p2 = new Player("player2");
+	auto* p3 = new Player("player3");
+	auto* p4 = new Player("player4");
 
 	std::cout << std::endl;
 	std::cout << "P1 balance: " << p1->getBalance() << " coins." << std::endl;
@@ -103,7 +103,7 @@ int main() {
 		p1->BuildCity(t1); // should output error message (exceeds city count)
 		p2->BuildCity(t3); // should output error message (no armies present; cannot place city)
 	}
-	catch (TerritoryNotFoundException e)
+	catch (TerritoryNotFoundException& e)
 	{
 		std::cout << e << std::endl;
 	}

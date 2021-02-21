@@ -2,7 +2,7 @@
 
 #pragma region Deck
 //======= DECK METHODS =======//
-Deck::Deck(const vector<Card*> playingCards)
+Deck::Deck(const vector<Card*>& playingCards)
 {
 	hand = new Hand();
 	cardDeck = playingCards;
