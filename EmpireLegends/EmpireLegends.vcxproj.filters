@@ -21,6 +21,9 @@
     <ClInclude Include="Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MapLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map.cpp">
@@ -38,8 +41,17 @@
     <ClCompile Include="PlayerDriver.cpp">
       <Filter>Driver Files</Filter>
     </ClCompile>
+    <ClCompile Include="MapLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MapLoaderDriver.cpp">
+      <Filter>Driver Files</Filter>
+    </ClCompile>
+    <ClCompile Include="jsoncpp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="MapUtility.cpp">
-      <Filter>Resource Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -61,5 +73,22 @@
     <ClInclude Include="Cards.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="valid_map_1.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="valid_map_2.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="invalid_map_disconnected.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="invalid_map_missing_name_field.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="invalid_map_missing_edges_field.json">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

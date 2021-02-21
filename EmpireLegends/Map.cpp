@@ -223,8 +223,8 @@ void Graph<T>::addTerritory(Territory<T>* terr)
 template <class T>
 void Graph<T>::addEdge(const std::string& first, const std::string& second, int cost)
 {
-    Territory<T>* f = terrs.find(first)->second;
-    Territory<T>* s = terrs.find(second)->second;
+    auto* f = terrs[first];
+    auto* s = terrs[second];
     std::pair<int, Territory<T>*> edgeFirst = std::make_pair(cost, f);
     std::pair<int, Territory<T>*> edgeSecond = std::make_pair(cost, s);
 	// Creating the undirected edge by adding each territory to the other's adjacency vector

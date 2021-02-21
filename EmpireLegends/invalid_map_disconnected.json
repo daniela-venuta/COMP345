@@ -1,0 +1,98 @@
+{
+  "name": "Map 2",
+  "edges": [
+    {
+      "first": "Continent 1",
+      "second": "Continent 2"
+    }
+  ],
+  "continents": [
+    {
+      "name": "Continent 1",
+      "regions": [
+        {
+          "name": "Region 1"
+        },
+        {
+          "name": "Region 2"
+        },
+        {
+          "name": "Region 3"
+        }
+      ],
+      "edges": [
+        {
+          "first": "Region 1",
+          "second": "Region 2"
+        },
+        {
+          "first": "Region 1",
+          "second": "Region 3"
+        },
+        {
+          "first": "Region 2",
+          "second": "Region 3"
+        }
+      ]
+    },
+    {
+      "name": "Continent 2",
+      "regions": [
+        {
+          "name": "Region 4"
+        },
+        {
+          "name": "Region 5"
+        },
+        {
+          "name": "Region 6"
+        }
+      ],
+      "edges": [
+        {
+          "first": "Region 4",
+          "second": "Region 5"
+        },
+        {
+          "first": "Region 5",
+          "second": "Region 6"
+        }
+      ]
+    },
+    {
+      "name": "Continent 3",
+      "regions": [
+        {
+          "name": "Region 7"
+        },
+        {
+          "name": "Region 8"
+        },
+        {
+          "name": "Region 9"
+        },
+        {
+          "name": "Region 10"
+        }
+      ],
+      "edges": [
+        {
+          "first": "Region 7",
+          "second": "Region 8"
+        },
+        {
+          "first": "Region 8",
+          "second": "Region 9"
+        },
+        {
+          "first": "Region 7",
+          "second": "Region 10"
+        },
+        {
+          "first": "Region 9",
+          "second": "Region 10"
+        }
+      ]
+    }
+  ]
+}

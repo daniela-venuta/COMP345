@@ -1,0 +1,43 @@
+{
+  "name":  "Invalid fields", 
+  "continents": [
+    {
+      "name": "Continent 1",
+      "regions": [
+        {
+          "name": "Region 1"
+        },
+        {
+          "name": "Region 2"
+        },
+        {
+          "name": "Region 3"
+        }
+      ]
+    },
+    {
+      "name": "Continent 2",
+      "regions": [
+        {
+          "name": "Region 4"
+        },
+        {
+          "name": "Region 5"
+        },
+        {
+          "name": "Region 6"
+        }
+      ],
+      "edges": [
+        {
+          "first": "Region 4",
+          "second": "Region 5"
+        },
+        {
+          "first": "Region 5",
+          "second": "Region 6"
+        }
+      ]
+    }
+  ]
+}
