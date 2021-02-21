@@ -1,3 +1,9 @@
+// Tommy Andrews 40094870
+// Émilie Martin 40095423
+// Amélie Singoye 40094316
+// Vithya Nagamuthu 40077465
+// Daniela Venuta 40099441
+
 #include "MapLoader.h"
 #include <iostream>
 #include <iostream>
