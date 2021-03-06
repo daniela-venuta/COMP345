@@ -46,7 +46,7 @@ ostream& operator<<(ostream& os, const Deck& deck)
 
 	for (const Card* card : deck.cardDeck)
 	{
-		s += card->getGoods() + " ";
+		s += card->getName() + " ";
 	}
 	os << s << std::endl;
 
@@ -59,7 +59,7 @@ ostream& operator>>(ostream& os, const Deck& deck)
 
 	for (const Card* card : deck.cardDeck)
 	{
-		s += card->getGoods() + " ";
+		s += card->getName() + " ";
 	}
 	os << s << std::endl;
 	
@@ -142,7 +142,7 @@ ostream& operator<<(ostream& os, const Hand& hand)
 
 	for(const Card* card : hand.handCards)
 	{
-		s += card->getGoods() +" ";
+		s += card->getName() +" ";
 	}
 	os << s << std::endl;
 	
@@ -155,7 +155,7 @@ ostream& operator>>(ostream& os, const Hand& hand)
 
 	for (const Card* card : hand.handCards)
 	{
-		s += card->getGoods() + " ";
+		s += card->getName() + " ";
 	}
 	os << s << std::endl;
 	return os;
@@ -165,36 +165,45 @@ ostream& operator>>(ostream& os, const Hand& hand)
 #pragma region Card
 //======= CARD METHODS =======//
 
-Card::Card(const string goodDesc, const string actionDesc)
+Card::Card(const string nameStr, const string goodDesc, const string actionDesc)
 {
 	// initialize card
+	name = nameStr;
 	goods = goodDesc;
 	action = actionDesc;
 }
 
 Card::Card(const Card& otherCard)
 {
+	this->name = otherCard.name;
 	this->goods = otherCard.goods;
 	this->action = otherCard.action;
 }
 
 ostream& operator<<(ostream& os, const Card& card)
 {
-	os << "Card action: " << card.getAction() << ", Card good: " << card.getGoods() << std::endl;
+	os << "Card name: "<< card.getName() << std::endl;
 	return os;
 }
 
 ostream& operator>>(ostream& os, const Card& card)
 {
-	os << "Card action: " << card.getAction() << ", Card good: " << card.getGoods() << std::endl;
+	os << "Card name: " << card.getName() << std::endl;
 	return os;
 }
 
 Card& Card::operator=(const Card& card)
 {
+	this->name = card.name;
 	this->goods = card.goods;
 	this->action = card.action;
+	
 	return *this;
+}
+
+string Card::getName() const
+{
+	return name;
 }
 
 string Card::getAction() const

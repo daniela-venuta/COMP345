@@ -12,7 +12,7 @@ using std::ostream;
 class Card {
 public:
 	Card() = default;
-	Card(const string goodDesc,const string actionDesc);
+	Card(const string nameStr, const string goodDesc,const string actionDesc);
 	~Card() = default;
 
 	// copy constructor
@@ -26,10 +26,12 @@ public:
 	Card& operator = (const Card& card);
 
 	// getters and setters
+	string getName() const;
 	string getGoods() const;
 	string getAction() const;
 
 private:
+	string name;
 	string goods;
 	string action;
 };

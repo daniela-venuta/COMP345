@@ -393,3 +393,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+.vs/COMP345/v16/.suo
+.vs/COMP345/v16/Browse.VC.db
