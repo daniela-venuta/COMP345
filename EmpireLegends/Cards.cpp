@@ -35,6 +35,10 @@ void Deck::draw(const int count)
 	}
 }
 
+void Deck::shuffle()
+{
+}
+
 Hand* Deck::getHand() const
 {
 	return hand;

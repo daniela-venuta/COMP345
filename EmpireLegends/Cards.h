@@ -78,6 +78,8 @@ public:
 	Deck& operator = (const Deck& deck);
 
 	void draw(const int count);
+	void shuffle();
+	
 	Hand* getHand() const;
 private:
 	vector<Card*> cardDeck;
