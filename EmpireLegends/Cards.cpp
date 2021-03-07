@@ -2,7 +2,7 @@
 
 #pragma region Deck
 //======= DECK METHODS =======//
-Deck::Deck(const vector<Card*> playingCards)
+Deck::Deck(const vector<Card*>& playingCards)
 {
 	hand = new Hand();
 	cardDeck = playingCards;
@@ -10,6 +10,7 @@ Deck::Deck(const vector<Card*> playingCards)
 
 Deck::~Deck()
 {
+	delete hand;
 	hand = nullptr;
 	cardDeck.clear();
 }
@@ -169,7 +170,7 @@ ostream& operator>>(ostream& os, const Hand& hand)
 #pragma region Card
 //======= CARD METHODS =======//
 
-Card::Card(const string nameStr, const string goodDesc, const string actionDesc)
+Card::Card(string nameStr, string goodDesc,  string actionDesc)
 {
 	// initialize card
 	name = nameStr;
