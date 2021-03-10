@@ -31,6 +31,8 @@ public:
 /// </summary>
 struct Region : Location
 {
+
+    ~Region() = default;
     /// <summary>
     /// 1-parameter constructor
     /// </summary>
@@ -153,7 +155,7 @@ public:
     /// </summary>
     /// <param name="graph">graph to assign to this instance</param>
     /// <returns>Graph copied from parameter region</returns>
-    Graph<T>& operator=(Graph<T> graph);
+    Graph<T>& operator=(const Graph<T> graph);
 	
     /// <summary>
     /// Destructor

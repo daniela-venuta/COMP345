@@ -82,6 +82,7 @@ std::string Territory<T>::getName() const
 template <class T>
 Territory<T>::Territory(const Territory<T>& territory)
 {
+    this->armyCount = 0;
     this->value = new T(*territory.value);
 }
 
@@ -102,12 +103,7 @@ Territory<T>& Territory<T>::operator=(Territory<T> territory)
 template <class T>
 Territory<T>::~Territory()
 {
-    if (this->value == nullptr || this->adjacency.empty())
-    {
-        return;
-    }
-	
-    this->adjacency.clear();
+    adjacency.clear();
     delete this->value;
     this->value = nullptr;
 }
@@ -243,37 +239,36 @@ void Graph<T>::addEdge(const std::string& first, const std::string& second, int 
 
 template <class T>
 Graph<T>::Graph(const Graph<T>& graph) : Location(graph.getName())
-{	
-	for(auto itr = graph.terrs.begin(); itr != graph.terrs.end(); ++itr)
-	{
-        Territory<T>* currentTerritoryCopy = new Territory<T>(*itr->second);
-
+{
+	// Adding territories
+    for (auto itr = graph.terrs.begin(); itr != graph.terrs.end(); ++itr)
+    {
         try
         {
-            this->addTerritory(currentTerritoryCopy);
+            this->addTerritory(new Territory<T>(*itr->second));
         }
         catch (TerritoryInGraphException&) {}
+    }
 
-		// Copying edges
-        for (auto terrItr = itr->second->adjacency.begin(); terrItr != itr->second->adjacency.end(); ++terrItr)
+    // Adding edges
+    for (auto itr = graph.terrs.begin(); itr != graph.terrs.end(); ++itr)
+    {
+        Territory<T>* terr1 = itr->second;
+
+    	// Copying edges
+        for (auto terrItr = terr1->adjacency.begin(); terrItr != itr->second->adjacency.end(); ++terrItr)
         {
-            Territory<T>* innerTerritoryCopy = new Territory<T>(*terrItr->second);
+            Territory<T>* terr2 = terrItr->second;
 
             try
             {
-                // Adding other territory if not already in the graph
-                this->addTerritory(innerTerritoryCopy);
-            }
-            catch (TerritoryInGraphException&) {}
-
-            try
-            {
+                findTerritory(terr2->getName());
                 // Adding edge if not already defined
-                this->addEdge(currentTerritoryCopy->getName(), innerTerritoryCopy->getName(), terrItr->first);
+                this->addEdge(terr1->getName(), terr2->getName(), terrItr->first);
             }
-            catch (EdgeInGraphException&) {}
+            catch (MapException&) {}
         }
-	}
+    }
 }
 
 template <class T>
@@ -316,15 +311,11 @@ Graph<T>::~Graph()
         return;
     }
 	
-	//Deleting all territories in the graph
-    for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
+    for (std::pair<const std::string, Territory<T>*>& pair : terrs)
     {
-    	if (itr->second->value != nullptr && !itr->second->adjacency.empty())
-    	{
-            delete itr->second;
-    	}
+	    delete pair.second;
+	    pair.second = nullptr;
     }
-    terrs.clear();
 }
 
 #pragma endregion graph
@@ -339,8 +330,8 @@ bool Continent::contains(Territory<Region>* terr)
 
 int Continent::getBestCost(Territory<Region>* terr)
 {
-    auto first = this->terrs.begin()->second;
-    auto last = this->terrs.rbegin()->second;
+    auto* first = this->terrs.begin()->second;
+    auto* last = this->terrs.rbegin()->second;
 	// Getting cost when using the first territory
     auto travelCostFirst = terr->getTravelCost(first);
     // Getting cost when using the last territory
@@ -430,7 +421,7 @@ int GameMap::getTravelCost(Territory<Region>* from, Territory<Region>* to)
 		{
             break;
 		}
-        if (continentFrom == nullptr && tempContinent->value->contains(from))
+		if (continentFrom == nullptr && tempContinent->value->contains(from))
         {
             continentFrom = tempContinent;
             continue;
