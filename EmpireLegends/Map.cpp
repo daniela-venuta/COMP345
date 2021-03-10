@@ -272,8 +272,14 @@ Graph<T>::Graph(const Graph<T>& graph) : Location(graph.getName())
 }
 
 template <class T>
-Graph<T>& Graph<T>::operator=(Graph<T> graph)
+Graph<T>& Graph<T>::operator=(const Graph<T>& graph)
 {
+    auto* copy = new Graph<T>(graph);
+
+    this->setName(graph.getName());
+	this->terrs = copy->terrs;
+
+    delete copy;
     return *this;
 }
 
