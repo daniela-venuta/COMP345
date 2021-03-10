@@ -10,6 +10,7 @@ Deck::Deck(const vector<Card*>& playingCards)
 
 Deck::~Deck()
 {
+	delete hand;
 	hand = nullptr;
 	cardDeck.clear();
 }
@@ -22,7 +23,7 @@ Deck::Deck(const Deck& otherDeck)
 
 void Deck::draw(const int count)
 {
-	for(int i=0; i< count; i++)
+	for (int i = 0; i < count; i++)
 	{
 		// get card to add to the hand
 		Card* drawCard = cardDeck.at(cardDeck.size() - 1);
@@ -33,6 +34,10 @@ void Deck::draw(const int count)
 		// add card to card space (deck hand)
 		hand->addCard(drawCard);
 	}
+}
+
+void Deck::shuffle()
+{
 }
 
 Hand* Deck::getHand() const
@@ -46,7 +51,7 @@ ostream& operator<<(ostream& os, const Deck& deck)
 
 	for (const Card* card : deck.cardDeck)
 	{
-		s += card->getGoods() + " ";
+		s += card->getName() + " ";
 	}
 	os << s << std::endl;
 
@@ -59,10 +64,10 @@ ostream& operator>>(ostream& os, const Deck& deck)
 
 	for (const Card* card : deck.cardDeck)
 	{
-		s += card->getGoods() + " ";
+		s += card->getName() + " ";
 	}
 	os << s << std::endl;
-	
+
 	return os;
 }
 
@@ -98,7 +103,7 @@ Card* Hand::exchange(int rowPosition, int cost)
 	const int cardCost = getCardCost(rowPosition);
 	Card* exchangeCard = nullptr;
 
-	if(cost == cardCost)
+	if (cost == cardCost)
 	{
 		exchangeCard = handCards.at(rowPosition - 1);
 
@@ -109,7 +114,7 @@ Card* Hand::exchange(int rowPosition, int cost)
 	{
 		std::cout << "Incorrect amount of coins entered. Operation failed" << std::endl;
 	}
-	
+
 	return exchangeCard;
 }
 
@@ -122,10 +127,10 @@ void Hand::addCard(Card* card)
 int Hand::getCardCost(int position)
 {
 	int cardCost;
-	switch(position)
+	switch (position)
 	{
 	case 1:cardCost = 0; break;
-	case 2: 
+	case 2:
 	case 3:cardCost = 1; break;
 	case 4:
 	case 5:cardCost = 2; break;
@@ -140,12 +145,12 @@ ostream& operator<<(ostream& os, const Hand& hand)
 {
 	string s = "The following cards remain in the hand: ";
 
-	for(const Card* card : hand.handCards)
+	for (const Card* card : hand.handCards)
 	{
-		s += card->getGoods() +" ";
+		s += card->getName() + " ";
 	}
 	os << s << std::endl;
-	
+
 	return os;
 }
 
@@ -155,7 +160,7 @@ ostream& operator>>(ostream& os, const Hand& hand)
 
 	for (const Card* card : hand.handCards)
 	{
-		s += card->getGoods() + " ";
+		s += card->getName() + " ";
 	}
 	os << s << std::endl;
 	return os;
@@ -165,36 +170,45 @@ ostream& operator>>(ostream& os, const Hand& hand)
 #pragma region Card
 //======= CARD METHODS =======//
 
-Card::Card(const string goodDesc, const string actionDesc)
+Card::Card(string nameStr, string goodDesc,  string actionDesc)
 {
 	// initialize card
+	name = nameStr;
 	goods = goodDesc;
 	action = actionDesc;
 }
 
 Card::Card(const Card& otherCard)
 {
+	this->name = otherCard.name;
 	this->goods = otherCard.goods;
 	this->action = otherCard.action;
 }
 
 ostream& operator<<(ostream& os, const Card& card)
 {
-	os << "Card action: " << card.getAction() << ", Card good: " << card.getGoods() << std::endl;
+	os << "Card name: " << card.getName() << std::endl;
 	return os;
 }
 
 ostream& operator>>(ostream& os, const Card& card)
 {
-	os << "Card action: " << card.getAction() << ", Card good: " << card.getGoods() << std::endl;
+	os << "Card name: " << card.getName() << std::endl;
 	return os;
 }
 
 Card& Card::operator=(const Card& card)
 {
+	this->name = card.name;
 	this->goods = card.goods;
 	this->action = card.action;
+
 	return *this;
+}
+
+string Card::getName() const
+{
+	return name;
 }
 
 string Card::getAction() const
