@@ -81,9 +81,12 @@ public:
 	void shuffle();
 	
 	Hand* getHand() const;
+
 private:
 	vector<Card*> cardDeck;
 	Hand* hand;
+
+	void swap(int indexOne, int indexTwo);
 };
 
 

@@ -1,4 +1,6 @@
 #include "Cards.h"
+#include <stdlib.h>
+#include <time.h> 
 
 #pragma region Deck
 //======= DECK METHODS =======//
@@ -38,6 +40,14 @@ void Deck::draw(const int count)
 
 void Deck::shuffle()
 {
+	std::srand(time(0));
+	
+	int numCards = cardDeck.capacity();
+	for(int i=0; i< numCards; i++)
+	{
+		int rand = i + (std::rand() % (numCards)-i);
+		this->swap(rand, i);
+	}
 }
 
 Hand* Deck::getHand() const
@@ -76,6 +86,13 @@ Deck& Deck::operator=(const Deck& deck)
 	this->cardDeck = deck.cardDeck;
 	this->hand = new Hand(*(deck.hand));
 	return *this;
+}
+
+void Deck::swap(int indexOne, int indexTwo)
+{
+	Card* temp = cardDeck[indexOne];
+	cardDeck[indexOne] = cardDeck[indexTwo];
+	cardDeck[indexTwo] = temp;
 }
 #pragma endregion Deck
 
