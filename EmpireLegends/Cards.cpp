@@ -98,17 +98,19 @@ Hand& Hand::operator=(const Hand& hand)
 	return *this;
 }
 
-Card* Hand::exchange(int rowPosition, int cost)
+Card* Hand::exchange(int rowPosition, Player* player)
 {
 	const int cardCost = getCardCost(rowPosition);
 	Card* exchangeCard = nullptr;
 
-	if (cost == cardCost)
+	if (player->getBalance() >= cardCost)
 	{
 		exchangeCard = handCards.at(rowPosition - 1);
 
 		// remove card from Hand
 		handCards.erase(handCards.begin() + rowPosition);
+
+		player->PayCoin(cardCost);
 	}
 	else
 	{

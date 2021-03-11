@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include "Player.h"
 
 using std::string;
 using std::vector;
@@ -51,7 +52,7 @@ public:
 	//assignment operator
 	Hand& operator = (const Hand& hand);
 
-	Card* exchange(int rowPosition, int cost);
+	Card* exchange(int rowPosition, Player* player);
 	void addCard(Card* card);
 
 private:
