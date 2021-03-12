@@ -3,12 +3,13 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "Player.h"
+
 
 using std::string;
 using std::vector;
 using std::ostream;
 
+class Player;
 
 class Card {
 public:

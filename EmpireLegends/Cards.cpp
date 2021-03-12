@@ -1,4 +1,5 @@
 #include "Cards.h"
+#include "Player.h"
 
 #pragma region Deck
 //======= DECK METHODS =======//
