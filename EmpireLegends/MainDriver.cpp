@@ -298,6 +298,8 @@ void driveMapLoader()
 
 void driveCards()
 {
+	Player* p1 = new Player("A", 10);
+	Player* p2 = new Player("B", 0);
 	// Create Card pointers
 	Card* cardOne = new Card("Dire dragon", "Dire dragon", "Place 3 armies and destroy one army");
 	Card* cardTwo = new Card("Dire giant", "Immune to attack", "Place 3 armies and destroy army");
@@ -335,8 +337,8 @@ void driveCards()
 	std::cout << *deckHand << std::endl;
 
 	// Demo exchange method on hand
-	const Card* exchangeCard1 = deckHand->exchange(2, 1); // successful exchange
-	const Card* exchangeCard2 = deckHand->exchange(2, 0); // unsuccessful exchange, exchangeCard2 is a nullptr
+	const Card* exchangeCard1 = deckHand->exchange(2, p1 ); // successful exchange
+	const Card* exchangeCard2 = deckHand->exchange(2, p2); // unsuccessful exchange, exchangeCard2 is a nullptr
 
 	std::cout << "Exchanged card: " << *exchangeCard1 << std::endl;
 
@@ -346,6 +348,12 @@ void driveCards()
 		delete card;
 		card = nullptr;
 	}
+
+	// delete players
+	delete p1;
+	delete p2;
+	p1 = nullptr;
+	p2 = nullptr;
 }
 
 void driveBidding()
