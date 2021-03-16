@@ -56,9 +56,9 @@ public:
 	Card* exchange(int rowPosition, Player* player);
 	void addCard(Card* card);
 
-private:
 	static int getCardCost(int position);
 
+private:
 	vector<Card*> handCards;
 };
 
