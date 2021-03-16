@@ -38,6 +38,7 @@ int main()
 
 	myPlayers.push_back(new Player("John", 11));
 	myPlayers.push_back(new Player("Bob", 11));
+	myPlayers.push_back(new Player("Jack", 11));
 
 	MainGame* mainGameL = new MainGame(nullptr, nullptr, cardDeck, myPlayers);
 
@@ -49,6 +50,11 @@ int main()
 		card = nullptr;
 	}
 
+	for (Player* player : myPlayers)
+	{
+		delete player;
+	}
+		
 	return 0;
 }
 

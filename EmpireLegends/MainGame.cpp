@@ -1,5 +1,6 @@
 #include "MainGame.h"
 #include "Cards.h"
+#include "Player.h"
 
 PlayerRotation::PlayerRotation(const vector<Player*>& players)
 {
@@ -56,27 +57,22 @@ void MainGame::maingameloop(vector<Card*> cardDeck, vector<Player*> myPlayers) {
 		} while (cardpos > 6 || cardpos < 1);
 
 		std::cout << "\n";
+		
+		Hand* deckHand = deck->getHand();
+		int cardcost = deckHand->getCardCost(cardpos);
+		
+		myPlayers[i]->PayCoin(cardcost);
+		
+		int cardDeckPos = cardpos - 1;
+		Card* facecard = cardDeck[cardDeckPos];
 
-		myPlayers[i]->setCoins(faceupCards(cardDeck, cardpos, myPlayers[i]->getCoins()));
-		std::cout << "The remaining coins of " << myPlayers[i]->getName() << " is " << myPlayers[i]->getCoins() << std::endl;
+		std::cout << "Players card good : " << facecard->getGoods() << std::endl;
+		std::cout << "Players card action : " << facecard->getAction() << std::endl;
 	}
 }
 
-int MainGame::faceupCards(vector<Card*> cardDeck, int cardpos, int coins) {
 
-	Hand* deckHand = deck->getHand();
-	int cardcost = deckHand->getCardCost(cardpos);
 
-	int cardDeckPos = cardpos - 1;
-	Card* facecard = cardDeck[cardDeckPos];
 
-	std::cout << "The cost of the card is " << cardcost << std::endl;
-	int coinsRemaining = coins - cardcost;
-
-	std::cout << "Players card good : " << facecard->getGoods() << std::endl;
-	std::cout << "Players card action : " << facecard->getAction() << std::endl;
-
-	return coinsRemaining;
-}
 
 
