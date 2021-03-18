@@ -15,6 +15,10 @@ Player::Player() {
 Player::Player(string name, int coins) {
 	playerName = name;
 	pResources.totalCoins = coins;
+
+	// set other player resources to default values
+	pResources.unplacedCities = TOTAL_NUM_CITIES;
+	pResources.unplacedArmies = TOTAL_NUM_ARMIES;
 }
 
 string Player::getName() const{

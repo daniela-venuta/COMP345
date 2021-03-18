@@ -50,16 +50,16 @@ void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 	string temp;
 
 	// each players places their bid
-	for (auto& myPlayer : biddingPlayers)
+	for (auto& player : biddingPlayers)
 	{
 		do {
-			std::cout << "\n" << myPlayer->getName() << " Place your bid: ";
+			std::cout << "\n" << player->getName() << " place your bid: ";
 			std::cin >> playerBid;
-		} while (playerBid > myPlayer->getCoins() || playerBid < 0);
+		} while (playerBid > player->getCoins() || playerBid < 0);
 
 		system("cls");
 
-		this->addPlayerBid(myPlayer, playerBid);
+		this->addPlayerBid(player, playerBid);
 	}
 
 	std::cout << "--------------------------" << std::endl;
@@ -67,18 +67,17 @@ void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 	std::cout << "--------------------------\n" << std::endl;
 
 	std::cout << "Bids placed by players: " << std::endl;
-	// checks if bids are equivalent or all zero
-	for (auto& myPlayer : biddingPlayers)
+	for (Player* myPlayer : biddingPlayers)
 	{
-		std::cout << "Player: " << myPlayer->getName() << "\t" << "Bids: " << this->getPlayerBid(myPlayer) << std::endl;
+		std::cout << "Player " << myPlayer->getName() << "\t" << "bids " << this->getPlayerBid(myPlayer) << " coins." << std::endl;
 	}
 
 	vector<Player*> maxBidders;
 	auto maxBid = 0;
 
-	for (auto& myPlayer : biddingPlayers)
+	for (Player* player : biddingPlayers)
 	{
-		const auto currentPlayerBid = this->getPlayerBid(myPlayer);
+		const auto currentPlayerBid = this->getPlayerBid(player);
 		if (maxBid <= currentPlayerBid) {
 			// New max bid
 			if (maxBid < currentPlayerBid)
@@ -86,7 +85,7 @@ void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 				maxBid = currentPlayerBid;
 				maxBidders.clear(); // Clearing max bidders vector for new max bid
 			}
-			maxBidders.push_back(myPlayer);
+			maxBidders.push_back(player);
 		}
 	}
 
@@ -99,24 +98,27 @@ void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 		{
 			std::cout << "\nThere is a tie for highest bidder at " << maxBid << "." << std::endl;
 		}
-		// Sorting max bidders by alphabetical last name order
+
+		std::cout << "\nThe winner will be chosen by alphabetical last name order." << std::endl;
+
 		std::sort(maxBidders.begin(), maxBidders.end(), [](const auto lhs, const auto rhs)
 		{
 			auto lowerCaseLeft = lhs->getName();
 			std::transform(lowerCaseLeft.begin(), lowerCaseLeft.end(), lowerCaseLeft.begin(), ::tolower);
+
 			auto lowerCaseRight = rhs->getName();
 			std::transform(lowerCaseRight.begin(), lowerCaseRight.end(), lowerCaseRight.begin(), ::tolower);
+
 			return lowerCaseLeft.compare(lowerCaseRight) >= 0;
 		});
-
-		std::cout << "\nThe winner will be chosen by alphabetical last name order." << std::endl;
 	}
 
-	auto* maxBidder = maxBidders.front();
+	Player* maxBidder = maxBidders.front();
 	
-	const auto supply = maxBidder->getCoins() - maxBid;
+	const int supply = maxBidder->getCoins() - maxBid;
 
 	maxBidder->setCoins(supply);
 	this->setCurrentBid(maxBid);
+
 	std::cout << "\nThe player to start is " << maxBidder->getName() << "! They now have " << maxBidder->getCoins() << " coins.\n";
 }
