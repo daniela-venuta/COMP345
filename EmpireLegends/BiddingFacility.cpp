@@ -101,22 +101,20 @@ void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 
 		std::cout << "\nThe winner will be chosen by alphabetical last name order." << std::endl;
 
-		std::sort(maxBidders.begin(), maxBidders.end(), [](const auto lhs, const auto rhs)
+		std::sort(maxBidders.begin(), maxBidders.end(), [](const Player* player1, const Player* player2)
 		{
-			auto lowerCaseLeft = lhs->getName();
-			std::transform(lowerCaseLeft.begin(), lowerCaseLeft.end(), lowerCaseLeft.begin(), ::tolower);
+			auto playerName1 = player1->getName();
+			std::transform(playerName1.begin(), playerName1.end(), playerName1.begin(), ::tolower);
 
-			auto lowerCaseRight = rhs->getName();
-			std::transform(lowerCaseRight.begin(), lowerCaseRight.end(), lowerCaseRight.begin(), ::tolower);
+			auto playerName2 = player2->getName();
+			std::transform(playerName2.begin(), playerName2.end(), playerName2.begin(), ::tolower);
 
-			return lowerCaseLeft.compare(lowerCaseRight) >= 0;
+			return playerName1.compare(playerName2) >= 0;
 		});
 	}
 
-	Player* maxBidder = maxBidders.front();
-	
+	Player* maxBidder = maxBidders.back();
 	const int supply = maxBidder->getCoins() - maxBid;
-
 	maxBidder->setCoins(supply);
 	this->setCurrentBid(maxBid);
 
