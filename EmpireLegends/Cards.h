@@ -4,10 +4,12 @@
 #include <vector>
 #include <iostream>
 
+
 using std::string;
 using std::vector;
 using std::ostream;
 
+class Player;
 
 class Card {
 public:
@@ -51,7 +53,7 @@ public:
 	//assignment operator
 	Hand& operator = (const Hand& hand);
 
-	Card* exchange(int rowPosition, int cost);
+	Card* exchange(int rowPosition, Player* player);
 	void addCard(Card* card);
 
 private:

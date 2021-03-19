@@ -62,7 +62,7 @@ Player::Player(const Player& otherPlayer)
 }
 
 // Stream insertion operator overload
-ostream& operator<<(ostream& os, Player& player)
+ostream& operator<<(ostream& os, const Player& player)
 {
 	string s = "The following player remains in the game";
 
@@ -72,7 +72,7 @@ ostream& operator<<(ostream& os, Player& player)
 	return os;
 }
 
-ostream& operator>>(ostream& os, Player& player)
+ostream& operator>>(ostream& os, const Player& player)
 {
 	string s = "The following player remains in the game";
 

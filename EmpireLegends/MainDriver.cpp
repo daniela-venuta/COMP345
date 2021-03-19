@@ -4,12 +4,14 @@
 //// Vithya Nagamuthu 40077465
 //// Daniela Venuta 40099441
 //
+//#include "MapLoader.h"
+//#include <iostream>
 //#include <iostream>
 //#include <vector>
-//#include "MapLoader.h"
-//#include "MapUtility.h"
 //#include "Player.h"
 //#include "BiddingFacility.h"
+//#include "MapUtility.h"
+//
 //
 //void drivePlayer()
 //{
@@ -168,10 +170,10 @@
 //	c2->addEdge("Region 7", "Region 8", 1);
 //
 //	//Adding t3 so that it's duplicated in m2
-//	c3->addTerritory(t3);
-//	c3->addTerritory(t4);
-//	c3->addTerritory(t5);
-//	c3->addTerritory(t6);
+//	c3->addTerritory(new Territory<Region>(*t3));
+//	c3->addTerritory(new Territory<Region>(*t4));
+//	c3->addTerritory(new Territory<Region>(*t5));
+//	c3->addTerritory(new Territory<Region>(*t6));
 //
 //	auto* m1 = new GameMap("Map 1");
 //	auto* m2 = new GameMap("Map 2");
@@ -183,10 +185,11 @@
 //	m1->addTerritory(t10);
 //	m1->addEdge("Continent 1", "Continent 2", 3);
 //
-//	m2->addTerritory(t9);
+//	Territory<Continent>* t9Copy = new Territory<Continent>(*t9);
+//	m2->addTerritory(t9Copy);
 //	m2->addTerritory(t11);
 //	m2->addEdge("Continent 1", "Continent 3", 3);
-//
+//	
 //	std::cout << "----------------------------------------------------------------------------------" << std::endl;
 //	std::cout << "\nTravel cost (1->2): " << m1->getTravelCost(t1, t3) << std::endl; // Should be 1
 //	std::cout << "----------------------------------------------------------------------------------" << std::endl;
@@ -202,7 +205,7 @@
 //	std::cout << "----------------------------------------------------------------------------------" << std::endl;
 //	std::cout << *t1 << std::endl; //Testing territory stream operator overload
 //	std::cout << "----------------------------------------------------------------------------------" << std::endl;
-//	auto copiedM1 = *m1; //Testing map copy constructor (which uses all other copy constructors)
+//	GameMap copiedM1 = *m1; //Testing map copy constructor (which uses all other copy constructors)
 //	std::cout << "\nPrinting copied map:" << std::endl;
 //	std::cout << copiedM1 << std::endl;
 //
@@ -287,10 +290,16 @@
 //	{
 //		std::cout << e << std::endl;
 //	}
+//
+//	delete validMap1;
+//	delete validMap2;
+//	delete mapLoader;
 //}
 //
 //void driveCards()
 //{
+//	Player* p1 = new Player("A", 10);
+//	Player* p2 = new Player("B", 0);
 //	// Create Card pointers
 //	Card* cardOne = new Card("Dire dragon", "Dire dragon", "Place 3 armies and destroy one army");
 //	Card* cardTwo = new Card("Dire giant", "Immune to attack", "Place 3 armies and destroy army");
@@ -328,8 +337,8 @@
 //	std::cout << *deckHand << std::endl;
 //
 //	// Demo exchange method on hand
-//	const Card* exchangeCard1 = deckHand->exchange(2, 1); // successful exchange
-//	const Card* exchangeCard2 = deckHand->exchange(2, 0); // unsuccessful exchange, exchangeCard2 is a nullptr
+//	const Card* exchangeCard1 = deckHand->exchange(2, p1 ); // successful exchange
+//	const Card* exchangeCard2 = deckHand->exchange(2, p2); // unsuccessful exchange, exchangeCard2 is a nullptr
 //
 //	std::cout << "Exchanged card: " << *exchangeCard1 << std::endl;
 //
@@ -339,6 +348,12 @@
 //		delete card;
 //		card = nullptr;
 //	}
+//
+//	// delete players
+//	delete p1;
+//	delete p2;
+//	p1 = nullptr;
+//	p2 = nullptr;
 //}
 //
 //void driveBidding()
