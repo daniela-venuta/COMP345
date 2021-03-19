@@ -59,11 +59,14 @@ public:
 	void BuildCity(Territory<Region>*territory);
 
 	const Resources getResources() const;
+	void setNumofcards();
+	int  getNumofcards();
 
 private:
 	string playerName;
 	vector<Territory<Region>> playerTerritories;
 	Hand playerHand;
+	int NumCards; 
 
 	Resources pResources;
 

@@ -38,11 +38,13 @@ int main()
 
 	myPlayers.push_back(new Player("John", 11));
 	myPlayers.push_back(new Player("Bob", 11));
-	myPlayers.push_back(new Player("Jack", 11));
 
 	MainGame* mainGameL = new MainGame(nullptr, nullptr, cardDeck, myPlayers);
 
-	mainGameL->maingameloop(cardVector, myPlayers);
+	
+		mainGameL->maingameloop(cardVector, myPlayers);
+	
+	
 
 	for (Card* card : cardVector)
 	{

@@ -199,3 +199,10 @@ const Resources Player::getResources() const
 	return pResources;
 }
 
+void Player::setNumofcards(){
+	NumCards++; 
+}
+int Player::getNumofcards() {
+	return NumCards; 
+}
+

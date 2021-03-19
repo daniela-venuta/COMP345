@@ -21,7 +21,8 @@ class MainGame
 	GameMap* map;
 	Deck* deck;
 	PlayerRotation* players;
-	vector<Player*> myPlayers; 
+	vector<Player*> myPlayers;
+	vector<Card*> cardDeck; 
 
 public:
 
@@ -29,4 +30,5 @@ public:
 	void afterAction();
 	Player* getCurrentPlayer();
 	void maingameloop(vector<Card*> cardVector, vector<Player*> myPlayers);
+	void PlayerFaceCard(Card* cardDeck, Player* myPlayers);
 };
