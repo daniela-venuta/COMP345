@@ -7,7 +7,20 @@
 using std::string;
 using std::vector;
 
-enum Colour { none, red, green, blue, yellow };
+enum class Colour { none, red, green, blue, yellow };
+
+struct ColourAvailability
+{
+	ColourAvailability();
+	
+	static bool yellow;
+	static bool blue;
+	static bool green;
+	static bool red;
+
+	static bool getColourAvailability(Colour col);
+	static void setColourAvailability(Colour col, bool isAvailable);
+};
 
 struct Resources
 {
@@ -15,10 +28,12 @@ struct Resources
 	Resources() = default;
 
 	// player resources
-	Colour playerColour = none;
-	int unplacedCities;
-	int unplacedArmies;
-	int totalCoins;
+	Colour playerColour = Colour::none;
+	int unplacedCities = 0;
+	int unplacedArmies = 0;
+	int totalCoins = 0;
+
+	static Colour parseColour(string colour);
 };
 
 class Player
@@ -28,7 +43,7 @@ public:
 	Player(string name, int coins);
 	Player(string username);
 	
-	~Player() = default;
+	~Player();
 
 	// copy constructor
 	Player(const Player & otherPlayer);
@@ -58,14 +73,14 @@ public:
 	void DestroyArmy(int number, Territory<Region>*location);
 	void BuildCity(Territory<Region>*territory);
 
-	const Resources getResources() const;
+	Resources* getResources() const;
 
 private:
 	string playerName;
 	vector<Territory<Region>> playerTerritories;
 	Hand playerHand;
 
-	Resources pResources;
+	Resources* pResources;
 
 	static const int TOTAL_NUM_ARMIES = 18;
 	static const int TOTAL_NUM_CITIES = 3;

@@ -38,16 +38,24 @@ void Deck::draw(const int count)
 	}
 }
 
-void Deck::shuffle()
+bool Deck::shuffle()
 {
-	std::srand(time(0));
-	
-	int numCards = cardDeck.capacity();
-	for(int i=0; i< numCards; i++)
+	bool success = false;
+	if(!this->isEmpty())
 	{
-		int rand = i + (std::rand() % (numCards)-i);
-		this->swap(rand, i);
+		std::srand(time(0));
+
+		int numCards = cardDeck.capacity();
+		for (int i = 0; i < numCards; i++)
+		{
+			int rand = i + (std::rand() % (numCards)-i);
+			this->swap(rand, i);
+		}
+
+		success = true;
 	}
+	
+	return success;
 }
 
 Hand* Deck::getHand() const
@@ -93,6 +101,11 @@ void Deck::swap(int indexOne, int indexTwo)
 	Card* temp = cardDeck[indexOne];
 	cardDeck[indexOne] = cardDeck[indexTwo];
 	cardDeck[indexTwo] = temp;
+}
+
+bool Deck::isEmpty() const
+{
+	return (cardDeck.capacity() > 0) ? false : true;
 }
 #pragma endregion Deck
 
