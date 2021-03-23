@@ -70,8 +70,7 @@ void MainGame::maingameloop(vector<Card*> cardDeck, vector<Player*> myPlayers) {
 
                 std::cout << "The number of cards for " << myPlayers[1]->getName() << " is " << myPlayers[1]->getNumofcards() << std::endl;
                 myPlayers[i]->addGoods(facecard->getGood());
-                std::cout << "Players card good : " << *(facecard->getGood()) << std::endl;
-                std::cout << "Players card action : " << facecard->getAction() << std::endl;
+                PlayerFaceCard(facecard, myPlayers[i]);
 
                 if (myPlayers[i]->getNumofcards() == 13)
                 {
@@ -100,15 +99,10 @@ int MainGame::PickACard() {
     return cardposition;
 }
 
-			std::cout << "The number of cards for " << myPlayers[1]->getName() << " is " << myPlayers[1]->getNumofcards() << std::endl;
-		
-		} while (myPlayers[0]->getNumofcards() < 13 || myPlayers[1]->getNumofcards() < 13);	
-
-		std::cout << "The Game is Over!! " << std::endl; 
-}
+	
 
 void MainGame::PlayerFaceCard(Card* facecard, Player* myPlayers) {
 		
-	std::cout << "Players card good : " << facecard->getGoods() << std::endl;
+	std::cout << "Players card good : " << facecard->getGood() << std::endl;
 	std::cout << "Players card action : " << facecard->getAction() << std::endl;		
 }
