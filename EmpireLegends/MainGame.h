@@ -21,7 +21,8 @@ class MainGame
 	GameMap* map;
 	Deck* deck;
 	PlayerRotation* players;
-	vector<Player*> myPlayers; 
+	vector<Player*> myPlayers;
+	vector<Card*> cardDeck; 
 
 public:
 

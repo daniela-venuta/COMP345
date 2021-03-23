@@ -100,7 +100,15 @@ int MainGame::PickACard() {
     return cardposition;
 }
 
+			std::cout << "The number of cards for " << myPlayers[1]->getName() << " is " << myPlayers[1]->getNumofcards() << std::endl;
+		
+		} while (myPlayers[0]->getNumofcards() < 13 || myPlayers[1]->getNumofcards() < 13);	
 
+		std::cout << "The Game is Over!! " << std::endl; 
+}
 
-
-
+void MainGame::PlayerFaceCard(Card* facecard, Player* myPlayers) {
+		
+	std::cout << "Players card good : " << facecard->getGoods() << std::endl;
+	std::cout << "Players card action : " << facecard->getAction() << std::endl;		
+}

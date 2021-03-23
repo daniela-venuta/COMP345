@@ -41,7 +41,10 @@ int main()
 
 	MainGame* mainGameL = new MainGame(nullptr, nullptr, cardDeck, myPlayers);
 
-	mainGameL->maingameloop(cardVector, myPlayers);
+	
+		mainGameL->maingameloop(cardVector, myPlayers);
+	
+	
 
 
 	for (Card* card : cardVector)
