@@ -86,8 +86,6 @@ void MainGame::maingameloop(vector<Card*> cardDeck, vector<Player*> myPlayers) {
     } 
 }
 
-
-
 int MainGame::PickACard() {
 
     int cardposition;
