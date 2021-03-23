@@ -72,7 +72,6 @@ void MainGame::maingameloop(vector<Card*> cardDeck, vector<Player*> myPlayers) {
             std::cout << "Players card action : " << facecard->getAction() << std::endl;
                 
             std::cout << "The number of cards for " << myPlayers[0]->getName() << " is " << myPlayers[0]->getNumofcards() << std::endl;
-
             std::cout << "The number of cards for " << myPlayers[1]->getName() << " is " << myPlayers[1]->getNumofcards() << std::endl;   
 
             if (myPlayers[i]->getNumofcards() == 13)
