@@ -45,44 +45,45 @@ void MainGame::afterAction()
 
 void MainGame::maingameloop(vector<Card*> cardDeck, vector<Player*> myPlayers) {
 
-        int cardpos;
-        while (myPlayers[0]->getNumofcards() != 13|| myPlayers[1]->getNumofcards() != 13) {
+    int cardpos;
+    while (myPlayers[0]->getNumofcards() != 13|| myPlayers[1]->getNumofcards() != 13) {
 
 
-            for (int i = 0; i < myPlayers.size(); i++) {
+        for (int i = 0; i < myPlayers.size(); i++) {
 
-                std::cout << "\n\nPlayer " << myPlayers[i]->getName() << std::endl;
+            std::cout << "\n\nPlayer " << myPlayers[i]->getName() << std::endl;
 
-                int cardposition = PickACard();
-                myPlayers[i]->setNumofcards(); // adds a card to the player when a  card is picked
+            int cardposition = PickACard();
+            myPlayers[i]->setNumofcards(); // adds a card to the player when a  card is picked
 
-                std::cout << "\n";
+            std::cout << "\n";
 
-                Hand* deckHand = deck->getHand();
-                int cardcost = deckHand->getCardCost(cardposition);
+            Hand* deckHand = deck->getHand();
+            int cardcost = deckHand->getCardCost(cardposition);
 
-                myPlayers[i]->PayCoin(cardcost);
+            myPlayers[i]->PayCoin(cardcost);
 
-                int cardDeckPos = (cardposition);
-                Card* facecard = cardDeck[cardDeckPos];
+            int cardDeckPos = (cardposition);
+            Card* facecard = cardDeck[cardDeckPos];
 
-                std::cout << "The number of cards for " << myPlayers[0]->getName() << " is " << myPlayers[0]->getNumofcards() << std::endl;
+            myPlayers[i]->addGoods(facecard->getGood());
 
-                std::cout << "The number of cards for " << myPlayers[1]->getName() << " is " << myPlayers[1]->getNumofcards() << std::endl;
-                myPlayers[i]->addGoods(facecard->getGood());
-                PlayerFaceCard(facecard, myPlayers[i]);
+            std::cout << "Players card good : " << *facecard->getGood() << std::endl;
+            std::cout << "Players card action : " << facecard->getAction() << std::endl;
+                
+            std::cout << "The number of cards for " << myPlayers[0]->getName() << " is " << myPlayers[0]->getNumofcards() << std::endl;
 
-                if (myPlayers[i]->getNumofcards() == 13)
-                {
-                    std::cout << "The Game is Over!! " << std::endl;
-                    exit(0);
-                }
+            std::cout << "The number of cards for " << myPlayers[1]->getName() << " is " << myPlayers[1]->getNumofcards() << std::endl;   
 
+            if (myPlayers[i]->getNumofcards() == 13)
+            {
+                std::cout << "The Game is Over!! " << std::endl;
+                exit(0);
             }
 
-        };
+        }
 
-    
+    } 
 }
 
 
@@ -99,10 +100,3 @@ int MainGame::PickACard() {
     return cardposition;
 }
 
-	
-
-void MainGame::PlayerFaceCard(Card* facecard, Player* myPlayers) {
-		
-	std::cout << "Players card good : " << facecard->getGood() << std::endl;
-	std::cout << "Players card action : " << facecard->getAction() << std::endl;		
-}
