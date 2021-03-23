@@ -1,24 +1,42 @@
 #pragma once
-#include "Map.h"
-#include "Cards.h"
+
 #include <string>
 #include <vector>
+#include "Map.h"
+#include "Cards.h"
 
 using std::string;
 using std::vector;
+using std::map;
+using std::ostream;
 
-enum Colour { none, red, green, blue, yellow };
+enum Color { none, red, green, blue, yellow };
 
 struct Resources
 {
 	// default constructor
 	Resources() = default;
 
+	// Copy constructor
+	Resources(const Resources& otherResources);
+
+	Resources& operator=(const Resources& resources);
+
 	// player resources
-	Colour playerColour = none;
-	int unplacedCities;
-	int unplacedArmies;
-	int totalCoins;
+	Color playerColor = none;
+	int unplacedCities{};
+	int unplacedArmies{};
+	int totalCoins{};
+	
+	// Abilities
+	int extraMoves{};
+	int extraArmies{};
+	int flying{};
+	int elixir{};
+	int coinVPs{};
+	map<CardSet, bool> setNameVPs;
+	map<CardSet, bool> completeSetVPs;
+	bool immune = false;
 };
 
 class Player
@@ -28,7 +46,7 @@ public:
 	Player(string name, int coins);
 	Player(string username);
 	
-	~Player() = default;
+	~Player();
 
 	// copy constructor
 	Player(const Player & otherPlayer);
@@ -57,15 +75,20 @@ public:
 	void MoveArmies(int number, Territory<Region>*from, Territory<Region>*to, GameMap * map);
 	void DestroyArmy(int number, Territory<Region>*location);
 	void BuildCity(Territory<Region>*territory);
-
-	const Resources getResources() const;
+	int getNumofcards();
+	void setNumofcards();
+	vector<Good*> getListGoods();
+	void addGoods(Good* addedGood);
+	Resources* getResources() const;
 
 private:
 	string playerName;
 	vector<Territory<Region>> playerTerritories;
-	Hand playerHand;
+	Hand* playerHand;
+	int NumCards;
+	vector<Good*> playerGoods;
 
-	Resources pResources;
+	Resources* pResources;
 
 	static const int TOTAL_NUM_ARMIES = 18;
 	static const int TOTAL_NUM_CITIES = 3;

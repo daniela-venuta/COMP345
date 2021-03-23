@@ -45,32 +45,60 @@ void MainGame::afterAction()
 
 void MainGame::maingameloop(vector<Card*> cardDeck, vector<Player*> myPlayers) {
 
-	int cardpos;
+        int cardpos;
+        while (myPlayers[0]->getNumofcards() != 13|| myPlayers[1]->getNumofcards() != 13) {
 
-	for (int i = 0; i < myPlayers.size(); i++) {
 
-		std::cout << "\n\nPlayer " << myPlayers[i]->getName() << std::endl;
+            for (int i = 0; i < myPlayers.size(); i++) {
 
-		do {
-			std::cout << "Pick a position (1-6): ";
-			std::cin >> cardpos;
-		} while (cardpos > 6 || cardpos < 1);
+                std::cout << "\n\nPlayer " << myPlayers[i]->getName() << std::endl;
 
-		std::cout << "\n";
-		
-		Hand* deckHand = deck->getHand();
-		int cardcost = deckHand->getCardCost(cardpos);
-		
-		myPlayers[i]->PayCoin(cardcost);
-		
-		int cardDeckPos = cardpos - 1;
-		Card* facecard = cardDeck[cardDeckPos];
+                int cardposition = PickACard();
+                myPlayers[i]->setNumofcards(); // adds a card to the player when a  card is picked
 
-		std::cout << "Players card good : " << facecard->getGoods() << std::endl;
-		std::cout << "Players card action : " << facecard->getAction() << std::endl;
-	}
+                std::cout << "\n";
+
+                Hand* deckHand = deck->getHand();
+                int cardcost = deckHand->getCardCost(cardposition);
+
+                myPlayers[i]->PayCoin(cardcost);
+
+                int cardDeckPos = (cardposition);
+                Card* facecard = cardDeck[cardDeckPos];
+
+                std::cout << "The number of cards for " << myPlayers[0]->getName() << " is " << myPlayers[0]->getNumofcards() << std::endl;
+
+                std::cout << "The number of cards for " << myPlayers[1]->getName() << " is " << myPlayers[1]->getNumofcards() << std::endl;
+                myPlayers[i]->addGoods(facecard->getGood());
+                std::cout << "Players card good : " << *(facecard->getGood()) << std::endl;
+                std::cout << "Players card action : " << facecard->getAction() << std::endl;
+
+                if (myPlayers[i]->getNumofcards() == 13)
+                {
+                    std::cout << "The Game is Over!! " << std::endl;
+                    exit(0);
+                }
+
+            }
+
+        };
+
+    
 }
 
+
+
+int MainGame::PickACard() {
+
+    int cardposition;
+
+    do {
+        std::cout << "Pick a position (1-6): ";
+        std::cin >> cardposition;
+    } while (cardposition > 6  || cardposition < 1);
+
+    return cardposition;
+}
 
 
 

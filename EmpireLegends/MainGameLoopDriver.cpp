@@ -10,12 +10,12 @@ int main()
 	vector<Card*> cardVector;
 	vector<Player*> myPlayers;
 
-	Card* cardOne = new Card("card1", "Dire dragon", "Place 3 armies and destroy one army");
-	Card* cardTwo = new Card("card2", "Dire giant", "Place 3 armies and destroy army");
-	Card* cardThree = new Card("card3", "Dire eye", "Place 4 armies");
-	Card* cardFour = new Card("card4", "Dire Ogre", "Move 2 armies");
-	Card* cardFive = new Card("card5", "Lake", "Place 2 armies and move 3 armies");
-	Card* cardSix = new Card("card6", "Noble Hills", "Place 3 armies");
+	Card* cardOne = new Card("Dire dragon", new Flying, "Place 3 armies and destroy one army");
+	Card* cardTwo = new Card("Dire giant", new Immune, "Place 3 armies and destroy army");
+	Card* cardThree = new Card("Dire eye", new Flying, "Place 4 armies");
+	Card* cardFour = new Card("Dire Ogre", new CoinVPs, "Move 2 armies");
+	Card* cardFive = new Card("Lake", new SetNameVPs(CardSet::forest), "Place 2 armies and move 3 armies");
+	Card* cardSix = new Card("Noble Hills", new CompleteSetVPs(3, CardSet::noble), "Place 3 armies");
 
 	cardVector.push_back(cardOne);
 	cardVector.push_back(cardTwo);
@@ -38,11 +38,11 @@ int main()
 
 	myPlayers.push_back(new Player("John", 11));
 	myPlayers.push_back(new Player("Bob", 11));
-	myPlayers.push_back(new Player("Jack", 11));
 
 	MainGame* mainGameL = new MainGame(nullptr, nullptr, cardDeck, myPlayers);
 
 	mainGameL->maingameloop(cardVector, myPlayers);
+
 
 	for (Card* card : cardVector)
 	{
@@ -54,9 +54,7 @@ int main()
 	{
 		delete player;
 	}
-		
+
 	return 0;
 }
-
-
 

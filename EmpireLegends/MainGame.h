@@ -28,5 +28,6 @@ public:
 	explicit MainGame(BiddingFacility* biddingFacility, GameMap* map, Deck* deck, vector<Player*> players);
 	void afterAction();
 	Player* getCurrentPlayer();
-	void maingameloop(vector<Card*> cardVector, vector<Player*> myPlayers);
+	void maingameloop(vector<Card*> cardDeck, vector<Player*> myPlayers);
+	int PickACard();
 };
