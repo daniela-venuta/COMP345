@@ -170,14 +170,13 @@ int StartingPhase::setNumberOfCoins(int numofPlayers)
 
 string StartingPhase::getRandomContinent()
 {
-	string continent = "Continent 3";
 	/* initialize random seed: */
 	srand(time(nullptr));
 
 	/* generate secret number between 0 and 2: */
 	int rand = std::rand() % 3;
 
-	continent = rand == 0 ? "Continent 1" : "Continent 2";
+	string continent = rand == 0 ? "Continent 1" : "Continent 2";
 
 	return continent;
 }
