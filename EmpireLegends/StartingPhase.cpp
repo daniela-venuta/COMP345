@@ -6,17 +6,9 @@
 
 static const int NUM_ARMIES_TO_PLACE = 10;
 
-ColorUtilities::ColorUtilities()
-{
-	yellow = true;
-	green = true;
-	blue = true;
-	red = true;
-}
-
 bool ColorUtilities::getColorAvailability(string color)
 {
-	bool isAvailable = false;
+	bool isAvailable;
 	Color col = parseColor(color);
 
 	if (col == Color::blue)
@@ -116,6 +108,7 @@ StartingPhase::StartingPhase()
 {
 	nonPlayer = new Player("CPU", 0);
 	biddingFacility = new BiddingFacility();
+	colorUtilities = new ColorUtilities();
 	cardDeck = nullptr;
 	numOfPlayers = 0;
 
@@ -128,6 +121,7 @@ StartingPhase::~StartingPhase()
 {
 	delete nonPlayer;
 	delete biddingFacility;
+	delete colorUtilities;
 
 	delete map;
 }
@@ -265,11 +259,11 @@ void StartingPhase::populatePlayers()
 		std::cin >> color;
 
 
-		Color col = ColorUtilities::parseColor(color);
+		Color col = colorUtilities->parseColor(color);
 		resources->playerColor = col;
 
 		// mark color as unavailable
-		ColorUtilities::setColorAvailability(color, false);
+		colorUtilities->setColorAvailability(color, false);
 	}
 }
 
@@ -283,18 +277,10 @@ void StartingPhase::setupStartingTerritories()
 		// edit
 		player->PlaceNewArmies(4, startingRegion);
 	}
-
-	// get unassigned color
-	// assign CPU color
-	nonPlayer->getResources()->playerColor = ColorUtilities::getNewColor();
 }
 
 void StartingPhase::placeArmiesOnMap()
 {
-	// get unassigned color
-	// assign CPU color
-	nonPlayer->getResources()->playerColor = ColorUtilities::getNewColor();
-
 	string continentName;
 	string territoryName;
 	Territory<Region>* destination;
@@ -330,7 +316,7 @@ void StartingPhase::setupNonPlayer()
 {
 	// get unassigned color
 	// assign CPU color
-	nonPlayer->getResources()->playerColor = ColorUtilities::getNewColor();
+	nonPlayer->getResources()->playerColor = colorUtilities->getNewColor();
 }
 
 void StartingPhase::startBidding()

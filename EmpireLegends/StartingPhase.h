@@ -2,20 +2,23 @@
 #include "BiddingFacility.h"
 #include "Player.h"
 
+#ifndef COLOR_UTILITIES
+#define COLOR_UTILITIES
 struct ColorUtilities
 {
-	ColorUtilities();
+	ColorUtilities() = default;
 
-	static bool yellow;
-	static bool blue;
-	static bool green;
-	static bool red;
+	bool yellow = true;
+	bool blue = true;
+	bool green = true;
+	bool red = true;
 
-	static bool getColorAvailability(string color);
-	static void setColorAvailability(string color, bool isAvailable);
-	static Color getNewColor();
-	static Color parseColor(string color);
+	bool getColorAvailability(string color);
+	void setColorAvailability(string color, bool isAvailable);
+	Color getNewColor();
+	Color parseColor(string color);
 };
+#endif
 
 class StartingPhase
 {
@@ -43,4 +46,5 @@ private:
 	Player* nonPlayer;
 	BiddingFacility* biddingFacility;
 	GameMap* map;
+	ColorUtilities* colorUtilities;
 };
