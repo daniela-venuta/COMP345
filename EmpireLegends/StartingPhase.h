@@ -34,6 +34,8 @@ private:
 	void startBidding();
 
 	int setNumberOfCoins(int numofPlayers);
+	string getRandomContinent();
+	string getRandomTerritory();
 
 	int numOfPlayers = 0;
 	Deck* cardDeck;

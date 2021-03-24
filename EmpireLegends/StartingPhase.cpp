@@ -1,6 +1,8 @@
 #include "StartingPhase.h"
 #include <algorithm>
 #include "MapLoader.h"
+#include <stdlib.h>
+#include <time.h> 
 
 static const int NUM_ARMIES_TO_PLACE = 10;
 
@@ -166,6 +168,41 @@ int StartingPhase::setNumberOfCoins(int numofPlayers)
 	return playerCoins;
 }
 
+string StartingPhase::getRandomContinent()
+{
+	string continent = "Continent 3";
+	/* initialize random seed: */
+	srand(time(nullptr));
+
+	/* generate secret number between 0 and 2: */
+	int rand = std::rand() % 3;
+
+	continent = rand == 0 ? "Continent 1" : "Continent 2";
+
+	return continent;
+}
+
+string StartingPhase::getRandomTerritory()
+{
+	string territory = "Region 3";
+	/* initialize random seed: */
+	srand(time(nullptr));
+
+	/* generate secret number between 0 and 2: */
+	int rand = std::rand() % 3;
+
+	if(rand == 0)
+	{
+		territory = "Region 1";
+	}
+	else if(rand == 1)
+	{
+		territory = "Region 2";
+	}
+	
+	return territory;
+}
+
 void StartingPhase::setupCardDeck()
 {
 	// set up cards
@@ -258,6 +295,7 @@ void StartingPhase::placeArmiesOnMap()
 
 	string continentName;
 	string territoryName;
+	Territory<Region>* destination;
 
 	// place armies
 	for (int i = 0; i < NUM_ARMIES_TO_PLACE; i++)
@@ -266,7 +304,11 @@ void StartingPhase::placeArmiesOnMap()
 
 		if (index == 3)
 		{
-			nonPlayer->PlaceNewArmies(1, nullptr);
+			continentName = getRandomContinent();
+			territoryName = getRandomTerritory();
+			
+			destination = map->findTerritory(continentName)->value->findTerritory(territoryName);
+			nonPlayer->PlaceNewArmies(1, destination);
 		}
 		else
 		{
@@ -276,7 +318,7 @@ void StartingPhase::placeArmiesOnMap()
 			std::cout << "Enter region: ";
 			std::cin >> territoryName;
 
-			Territory<Region>* destination = map->findTerritory(continentName)->value->findTerritory(territoryName);
+			destination = map->findTerritory(continentName)->value->findTerritory(territoryName);
 			players[i]->PlaceNewArmies(1, destination);
 		}
 	}
