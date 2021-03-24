@@ -1,42 +1,24 @@
 #pragma once
-
-#include <string>
-#include <vector>
 #include "Map.h"
 #include "Cards.h"
+#include <string>
+#include <vector>
 
 using std::string;
 using std::vector;
-using std::map;
-using std::ostream;
 
-enum Color { none, red, green, blue, yellow };
+enum class Color { none, red, green, blue, yellow };
 
 struct Resources
 {
 	// default constructor
 	Resources() = default;
 
-	// Copy constructor
-	Resources(const Resources& otherResources);
-
-	Resources& operator=(const Resources& resources);
-
 	// player resources
-	Color playerColor = none;
-	int unplacedCities{};
-	int unplacedArmies{};
-	int totalCoins{};
-	
-	// Abilities
-	int extraMoves{};
-	int extraArmies{};
-	int flying{};
-	int elixir{};
-	int coinVPs{};
-	map<CardSet, bool> setNameVPs;
-	map<CardSet, bool> completeSetVPs;
-	bool immune = false;
+	Color playerColor = Color::none;
+	int unplacedCities = 0;
+	int unplacedArmies = 0;
+	int totalCoins = 0;
 };
 
 class Player
@@ -81,7 +63,7 @@ public:
 private:
 	string playerName;
 	vector<Territory<Region>> playerTerritories;
-	Hand* playerHand;
+	Hand playerHand;
 
 	Resources* pResources;
 

@@ -45,8 +45,5 @@
 //		std::cout << e << std::endl;
 //	}
 //
-//	delete validMap1;
-//	delete validMap2;
-//	delete mapLoader;
 //    return 0;
 //}

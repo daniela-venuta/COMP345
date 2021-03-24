@@ -46,30 +46,16 @@ GameMap* MapLoader::load(const std::string& fileName) const
 		for (const auto& continentNode : continentsNode)
 		{
 			auto* territory = new Territory<Continent>(this->loadContinent(continentNode));
-
-			try
-			{
-				map->addTerritory(territory);
-			}
-			catch (TerritoryInGraphException&)
-			{
-				delete territory;
-				throw;
-			}
+			map->addTerritory(territory);
 		}
 
 		loadEdgesMap(map, root, 3);
-
-		map->validate();
 	} catch (Json::Exception& e)
 	{
-		delete map;
 		std::cout << e.what() << std::endl;
-	} catch (std::exception&)
-	{
-		delete map;
-		throw;
 	}
+
+	map->validate();
 
 	return map;
 }
@@ -95,25 +81,10 @@ Continent* MapLoader::loadContinent(const Json::Value& continentNode)
 	for (const auto& regionNode : regionsNode)
 	{
 		auto* territory = new Territory<Region>(loadRegion(regionNode));
-		try
-		{
-			continent->addTerritory(territory);
-		} catch (MapException&)
-		{
-			delete continent;
-			delete territory;
-			throw;
-		}
+		continent->addTerritory(territory);
 	}
 
-	try
-	{
-		loadEdgesContinent(continent, continentNode, 1);
-	} catch (MapException&)
-	{
-		delete continent;
-		throw;
-	}
+	loadEdgesContinent(continent, continentNode, 1);
 
 	return continent;
 }

@@ -82,7 +82,6 @@ std::string Territory<T>::getName() const
 template <class T>
 Territory<T>::Territory(const Territory<T>& territory)
 {
-    this->armyCount = 0;
     this->value = new T(*territory.value);
 }
 
@@ -103,7 +102,12 @@ Territory<T>& Territory<T>::operator=(Territory<T> territory)
 template <class T>
 Territory<T>::~Territory()
 {
-    adjacency.clear();
+    if (this->value == nullptr || this->adjacency.empty())
+    {
+        return;
+    }
+	
+    this->adjacency.clear();
     delete this->value;
     this->value = nullptr;
 }
@@ -239,47 +243,42 @@ void Graph<T>::addEdge(const std::string& first, const std::string& second, int 
 
 template <class T>
 Graph<T>::Graph(const Graph<T>& graph) : Location(graph.getName())
-{
-	// Adding territories
-    for (auto itr = graph.terrs.begin(); itr != graph.terrs.end(); ++itr)
-    {
+{	
+	for(auto itr = graph.terrs.begin(); itr != graph.terrs.end(); ++itr)
+	{
+        Territory<T>* currentTerritoryCopy = new Territory<T>(*itr->second);
+
         try
         {
-            this->addTerritory(new Territory<T>(*itr->second));
+            this->addTerritory(currentTerritoryCopy);
         }
         catch (TerritoryInGraphException&) {}
-    }
 
-    // Adding edges
-    for (auto itr = graph.terrs.begin(); itr != graph.terrs.end(); ++itr)
-    {
-        Territory<T>* terr1 = itr->second;
-
-    	// Copying edges
-        for (auto terrItr = terr1->adjacency.begin(); terrItr != itr->second->adjacency.end(); ++terrItr)
+		// Copying edges
+        for (auto terrItr = itr->second->adjacency.begin(); terrItr != itr->second->adjacency.end(); ++terrItr)
         {
-            Territory<T>* terr2 = terrItr->second;
+            Territory<T>* innerTerritoryCopy = new Territory<T>(*terrItr->second);
 
             try
             {
-                findTerritory(terr2->getName());
-                // Adding edge if not already defined
-                this->addEdge(terr1->getName(), terr2->getName(), terrItr->first);
+                // Adding other territory if not already in the graph
+                this->addTerritory(innerTerritoryCopy);
             }
-            catch (MapException&) {}
+            catch (TerritoryInGraphException&) {}
+
+            try
+            {
+                // Adding edge if not already defined
+                this->addEdge(currentTerritoryCopy->getName(), innerTerritoryCopy->getName(), terrItr->first);
+            }
+            catch (EdgeInGraphException&) {}
         }
-    }
+	}
 }
 
 template <class T>
-Graph<T>& Graph<T>::operator=(const Graph<T>& graph)
+Graph<T>& Graph<T>::operator=(Graph<T> graph)
 {
-    auto* copy = new Graph<T>(graph);
-
-    this->setName(graph.getName());
-	this->terrs = copy->terrs;
-
-    delete copy;
     return *this;
 }
 
@@ -317,11 +316,15 @@ Graph<T>::~Graph()
         return;
     }
 	
-    for (std::pair<const std::string, Territory<T>*>& pair : terrs)
+	//Deleting all territories in the graph
+    for (auto itr = terrs.begin(); itr != terrs.end(); ++itr)
     {
-	    delete pair.second;
-	    pair.second = nullptr;
+    	if (itr->second->value != nullptr && !itr->second->adjacency.empty())
+    	{
+            delete itr->second;
+    	}
     }
+    terrs.clear();
 }
 
 #pragma endregion graph
@@ -336,8 +339,8 @@ bool Continent::contains(Territory<Region>* terr)
 
 int Continent::getBestCost(Territory<Region>* terr)
 {
-    auto* first = this->terrs.begin()->second;
-    auto* last = this->terrs.rbegin()->second;
+    auto first = this->terrs.begin()->second;
+    auto last = this->terrs.rbegin()->second;
 	// Getting cost when using the first territory
     auto travelCostFirst = terr->getTravelCost(first);
     // Getting cost when using the last territory
@@ -427,7 +430,7 @@ int GameMap::getTravelCost(Territory<Region>* from, Territory<Region>* to)
 		{
             break;
 		}
-		if (continentFrom == nullptr && tempContinent->value->contains(from))
+        if (continentFrom == nullptr && tempContinent->value->contains(from))
         {
             continentFrom = tempContinent;
             continue;

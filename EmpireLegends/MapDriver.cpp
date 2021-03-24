@@ -48,10 +48,10 @@
 //	c2->addEdge("Region 7", "Region 8", 1);
 //
 //	//Adding t3 so that it's duplicated in m2
-//	c3->addTerritory(new Territory<Region>(*t3));
-//	c3->addTerritory(new Territory<Region>(*t4));
-//	c3->addTerritory(new Territory<Region>(*t5));
-//	c3->addTerritory(new Territory<Region>(*t6));
+//	c3->addTerritory(t3);
+//	c3->addTerritory(t4);
+//	c3->addTerritory(t5);
+//	c3->addTerritory(t6);
 //
 //	auto* m1 = new GameMap("Map 1");
 //	auto* m2 = new GameMap("Map 2");
@@ -63,11 +63,10 @@
 //	m1->addTerritory(t10);
 //	m1->addEdge("Continent 1", "Continent 2", 3);
 //
-//	Territory<Continent>* t9Copy = new Territory<Continent>(*t9);
-//	m2->addTerritory(t9Copy);
+//	m2->addTerritory(t9);
 //	m2->addTerritory(t11);
 //	m2->addEdge("Continent 1", "Continent 3", 3);
-//	
+//
 //	std::cout << "----------------------------------------------------------------------------------" << std::endl;
 //	std::cout << "\nTravel cost (1->2): " << m1->getTravelCost(t1, t3) << std::endl; // Should be 1
 //	std::cout << "----------------------------------------------------------------------------------" << std::endl;
@@ -83,7 +82,7 @@
 //	std::cout << "----------------------------------------------------------------------------------" << std::endl;
 //	std::cout << *t1 << std::endl; //Testing territory stream operator overload
 //	std::cout << "----------------------------------------------------------------------------------" << std::endl;
-//	GameMap copiedM1 = *m1; //Testing map copy constructor (which uses all other copy constructors)
+//	auto copiedM1 = *m1; //Testing map copy constructor (which uses all other copy constructors)
 //	std::cout << "\nPrinting copied map:" << std::endl;
 //	std::cout << copiedM1 << std::endl;
 //

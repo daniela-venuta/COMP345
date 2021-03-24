@@ -12,14 +12,12 @@ Player::Player() {
 	pResources = new Resources();
 	
 	playerName = "";
-	pResources = new Resources;
 	pResources->totalCoins = 0;
 }
 
 // parametrized constructor
 Player::Player(string name, int coins) {
 	playerName = name;
-	pResources = new Resources;
 	pResources->totalCoins = coins;
 }
 
@@ -42,7 +40,7 @@ Player::Player(const string username)
 {
 	// verify that this is not a duplicate username for the current players in game
 	setName(username);
-	pResources = new Resources;
+
 	// set player resources to default values
 	pResources->totalCoins = TOTAL_NUM_COINS;
 	pResources->unplacedCities = TOTAL_NUM_CITIES;
@@ -55,80 +53,53 @@ Player::Player(const string username)
 Player::~Player()
 {
 	delete pResources;
-	delete playerHand;
 	pResources = nullptr;
-	playerHand = nullptr;
-}
-
-Resources::Resources(const Resources& otherResources)
-{
-	this->totalCoins = otherResources.totalCoins;
-	this->unplacedCities = otherResources.unplacedCities;
-	this->unplacedArmies = otherResources.unplacedArmies;
-	this->extraMoves = otherResources.extraMoves;
-	this->extraArmies = otherResources.extraArmies;
-	this->flying = otherResources.flying;
-	this->elixir = otherResources.elixir;
-	this->coinVPs = otherResources.coinVPs;
-	this->setNameVPs = otherResources.setNameVPs;
-	this->completeSetVPs = otherResources.completeSetVPs;
-	this->immune = otherResources.immune;
-}
-
-Resources& Resources::operator=(const Resources& resources)
-{
-	this->totalCoins = resources.totalCoins;
-	this->unplacedCities = resources.unplacedCities;
-	this->unplacedArmies = resources.unplacedArmies;
-	this->extraMoves = resources.extraMoves;
-	this->extraArmies = resources.extraArmies;
-	this->flying = resources.flying;
-	this->elixir = resources.elixir;
-	this->coinVPs = resources.coinVPs;
-	this->setNameVPs = resources.setNameVPs;
-	this->completeSetVPs = resources.completeSetVPs;
-	this->immune = resources.immune;
-
-	return *this;
 }
 
 // Copy constructor
 Player::Player(const Player& otherPlayer)
 {
+	const Resources* playerResources = otherPlayer.getResources();
+	
 	this->playerName = otherPlayer.playerName;
-	this->pResources = new Resources;
-	*this->pResources = *otherPlayer.getResources();
+	this->pResources->totalCoins = playerResources->totalCoins;
+	this->pResources->unplacedCities = playerResources->unplacedCities;
+	this->pResources->unplacedArmies = playerResources->unplacedArmies;
+}
+
+// Stream insertion operator overload
+ostream& operator<<(ostream& os, Player& player)
+{
+	string s = "The following player remains in the game";
+
+	s += player.getName() + " ";
+	os << s << std::endl;
+
+	return os;
+}
+
+ostream& operator>>(ostream& os, Player& player)
+{
+	string s = "The following player remains in the game";
+
+	s += player.getName() + " ";
+	os << s << std::endl;
+
+	return os;
 }
 
 // Assignment operator
 Player& Player::operator=(const Player& player)
 {
-	this->setName(player.getName());
-	this->pResources = new Resources;
-	*this->pResources = *player.getResources();
+	const Resources* playerResources = player.getResources();
+	
+	setName(player.playerName);
+	
+	this->pResources->totalCoins = playerResources->totalCoins;
+	this->pResources->unplacedCities = playerResources->unplacedCities;
+	this->pResources->unplacedArmies = playerResources->unplacedArmies;
 
 	return *this;
-}
-
-// Stream insertion operator overload
-ostream& operator<<(ostream& os, const Player& player)
-{
-	string s = "The following player remains in the game";
-
-	s += player.getName() + " ";
-	os << s << std::endl;
-
-	return os;
-}
-
-ostream& operator>>(ostream& os, const Player& player)
-{
-	string s = "The following player remains in the game";
-
-	s += player.getName() + " ";
-	os << s << std::endl;
-
-	return os;
 }
 
 // Player pays coins (to buy card)
