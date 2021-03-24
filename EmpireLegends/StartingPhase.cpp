@@ -229,7 +229,7 @@ void StartingPhase::populatePlayers()
 		std::cin >> color;
 
 
-		Color col = Resources::parseColor(color);
+		Color col = ColorUtilities::parseColor(color);
 		resources->playerColor = col;
 	}
 }
