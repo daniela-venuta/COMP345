@@ -267,6 +267,9 @@ void StartingPhase::populatePlayers()
 
 		Color col = ColorUtilities::parseColor(color);
 		resources->playerColor = col;
+
+		// mark color as unavailable
+		ColorUtilities::setColorAvailability(color, false);
 	}
 }
 
