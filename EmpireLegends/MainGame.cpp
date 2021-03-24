@@ -48,40 +48,41 @@ void MainGame::maingameloop(vector<Card*> cardDeck, vector<Player*> myPlayers) {
     int cardposition = 0;
     while (myPlayers[0]->getNumofcards() != 13|| myPlayers[1]->getNumofcards() != 13) {
 
-
         for (int i = 0; i < myPlayers.size(); i++) {
 
             std::cout << "\n\nPlayer " << myPlayers[i]->getName() << std::endl;
 
             cardposition = PickACard();
-            myPlayers[i]->setNumofcards(); // adds a card to the player when a  card is picked
+            myPlayers[i]->setNumofcards(); 
 
             std::cout << "\n";
 
             Hand* deckHand = deck->getHand();
             int cardcost = deckHand->getCardCost(cardposition);
 
-            myPlayers[i]->PayCoin(cardcost);
-
-            int cardDeckPos = (cardposition);
+            int cardDeckPos = (cardposition - 1);
             Card* facecard = cardDeck[cardDeckPos];
-
-            myPlayers[i]->addGoods(facecard->getGood());
-
-            std::cout << "Players card good : " << *facecard->getGood() << std::endl;
-            std::cout << "Players card action : " << facecard->getAction() << std::endl;
-                
-            std::cout << "The number of cards for " << myPlayers[0]->getName() << " is " << myPlayers[0]->getNumofcards() << std::endl;
-            std::cout << "The number of cards for " << myPlayers[1]->getName() << " is " << myPlayers[1]->getNumofcards() << std::endl;   
-
+                              
+            if (myPlayers[i]->getBalance() >= cardcost) {
+               
+                myPlayers[i]->PayCoin(cardcost);
+                myPlayers[i]->addGoods(facecard->getGood());
+                                            
+                std::cout << "Players card good : " << *facecard->getGood() << std::endl;
+                std::cout << "Players card action : " << facecard->getAction() << std::endl;
+                std::cout << "The number of cards for " << myPlayers[0]->getName() << " is " << myPlayers[0]->getNumofcards() << std::endl;
+                std::cout << "The number of cards for " << myPlayers[1]->getName() << " is " << myPlayers[1]->getNumofcards() << std::endl;
+            }
+            else {
+                std::cout << "Card not added to player" << std::endl; 
+            }
+          
             if (myPlayers[i]->getNumofcards() == 13)
             {
                 std::cout << "The Game is Over!! " << std::endl;
                 exit(0);
             }
-
         }
-
     } 
 }
 
