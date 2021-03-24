@@ -15,23 +15,23 @@ ColorUtilities::ColorUtilities()
 bool ColorUtilities::getColorAvailability(string color)
 {
 	bool isAvailable = false;
-	Color col = ColorUtilities::parseColor(color);
+	Color col = parseColor(color);
 
 	if (col == Color::blue)
 	{
-		isAvailable = ColorUtilities::blue;
+		isAvailable = blue;
 	}
 	else if (col == Color::yellow)
 	{
-		isAvailable = ColorUtilities::yellow;
+		isAvailable = yellow;
 	}
 	else if (col == Color::red)
 	{
-		isAvailable = ColorUtilities::red;
+		isAvailable = red;
 	}
 	else
 	{
-		isAvailable = ColorUtilities::green;
+		isAvailable = green;
 	}
 
 	return isAvailable;
@@ -39,42 +39,42 @@ bool ColorUtilities::getColorAvailability(string color)
 
 void ColorUtilities::setColorAvailability(string color, bool isAvailable)
 {
-	Color col = ColorUtilities::parseColor(color);
+	Color col = parseColor(color);
 
 	if (col == Color::blue)
 	{
-		ColorUtilities::blue = isAvailable;
+		blue = isAvailable;
 	}
 	else if (col == Color::yellow)
 	{
-		ColorUtilities::yellow = isAvailable;
+		yellow = isAvailable;
 	}
 	else if (col == Color::red)
 	{
-		ColorUtilities::red = isAvailable;
+		red = isAvailable;
 	}
 	else
 	{
-		ColorUtilities::green = isAvailable;
+		green = isAvailable;
 	}
 }
 
 Color ColorUtilities::getNewColor()
 {
 	Color freeColor = Color::none;
-	if (ColorUtilities::blue)
+	if (blue)
 	{
 		freeColor = Color::blue;
 	}
-	else if (ColorUtilities::yellow)
+	else if (yellow)
 	{
 		freeColor = Color::yellow;
 	}
-	else if (ColorUtilities::red)
+	else if (red)
 	{
 		freeColor = Color::yellow;
 	}
-	else if (ColorUtilities::green)
+	else if (green)
 	{
 		freeColor = Color::green;
 	}
