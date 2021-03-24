@@ -144,7 +144,7 @@ ostream& operator>>(ostream& os, const Player& player)
 // Player pays coins (to buy card)
 void Player::PayCoin(const int price)
 {
-	if (price > 0 && (pResources->totalCoins - price) >= 0)
+	if (price > -1 && (pResources->totalCoins - price) >= 0)
 	{
 		setBalance(pResources->totalCoins - price);
 		std::cout << "Removed " << price << " coins from "+ getName() + "'s total." << std::endl;
