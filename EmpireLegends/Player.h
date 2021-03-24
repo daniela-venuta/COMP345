@@ -7,20 +7,7 @@
 using std::string;
 using std::vector;
 
-enum class Colour { none, red, green, blue, yellow };
-
-struct ColourAvailability
-{
-	ColourAvailability();
-	
-	static bool yellow;
-	static bool blue;
-	static bool green;
-	static bool red;
-
-	static bool getColourAvailability(Colour col);
-	static void setColourAvailability(Colour col, bool isAvailable);
-};
+enum class Color { none, red, green, blue, yellow };
 
 struct Resources
 {
@@ -28,12 +15,10 @@ struct Resources
 	Resources() = default;
 
 	// player resources
-	Colour playerColour = Colour::none;
+	Color playerColor = Color::none;
 	int unplacedCities = 0;
 	int unplacedArmies = 0;
 	int totalCoins = 0;
-
-	static Colour parseColour(string colour);
 };
 
 class Player

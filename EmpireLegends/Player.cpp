@@ -1,7 +1,5 @@
 #include "Player.h"
 
-#include <algorithm>
-
 #include "Map.h"
 
 #include <iostream>
@@ -209,70 +207,4 @@ void Player::BuildCity(Territory<Region>* location)
 Resources* Player::getResources() const
 {
 	return pResources;
-}
-
-#pragma region Resources
-Colour Resources::parseColour(string colour)
-{
-	// set string to lower case
-	std::transform(colour.begin(), colour.end(), colour.begin(),
-		[](unsigned char c) { return std::tolower(c); });
-
-	Colour col = Colour::none;
-
-	if(colour.compare("blue") == 0)
-	{
-		col = Colour::blue;
-	}
-	else if(colour.compare("red") == 0)
-	{
-		col = Colour::red;
-	}
-	else if (colour.compare("green") == 0)
-	{
-		col = Colour::green;
-	}
-	else if (colour.compare("yellow") == 0)
-	{
-		col = Colour::yellow;
-	}
-
-	return col;
-}
-#pragma endregion Resources
-
-ColourAvailability::ColourAvailability()
-{
-	yellow = true;
-	green = true;
-	blue = true;
-	red = true;
-}
-
-static bool getColourAvailability(Colour col)
-{
-	bool isAvailable = false;
-	
-	if(col == Colour::blue)
-	{
-		isAvailable = ColourAvailability::blue;
-	}
-	else if(col == Colour::yellow)
-	{
-		isAvailable = ColourAvailability::yellow;
-	}
-	else if (col == Colour::red)
-	{
-		isAvailable = ColourAvailability::red;
-	}
-	else
-	{
-		isAvailable = ColourAvailability::green;
-	}
-
-	return isAvailable;
-}
-static void setColourAvailability(Colour col, bool isAvailable)
-{
-	
 }
