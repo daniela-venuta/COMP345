@@ -173,9 +173,14 @@ public:
    * Construct an item in-place at pointer P.
    */
   template <typename... Args> void construct(pointer p, Args&&... args) {
-    // construct using "placement new" and "perfect forwarding"
-    ::new (static_cast<void*>(p)) T(std::forward<Args>(args)...);
-  }
+      // construct using "placement new" and "perfect forwarding"
+	#ifdef new
+		#undef new::new (static_cast<void*>(p)) T(std::forward<Args>(args)...);
+		#define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
+	#endif
+	#ifndef new::new (static_cast<void*>(p)) T(std::forward<Args>(args)...);
+	#endif
+  	}
 
   size_type max_size() const { return size_t(-1) / sizeof(T); }
 
