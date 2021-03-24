@@ -36,16 +36,6 @@ void Player::setCoins(int coins) {
 	pResources->totalCoins = coins;
 }
 
-int Player::getId() const
-{
-	return playerId;
-}
-
-void Player::setId() 
-{
-	idGenerator += 1;
-	playerId = idGenerator;
-}
 
 Player::Player(const string username)
 {
@@ -56,7 +46,6 @@ Player::Player(const string username)
 	pResources->totalCoins = TOTAL_NUM_COINS;
 	pResources->unplacedCities = TOTAL_NUM_CITIES;
 	pResources->unplacedArmies = TOTAL_NUM_ARMIES;
-	setId();
 	
 	// define a bidingFacility
 	std::cout << "Created new player: " << getName() << std::endl;
@@ -198,7 +187,11 @@ void Player::MoveArmies(int number, Territory<Region>* from, Territory<Region>* 
 			from->removeArmies(number);
 			to->addArmies(number);
 			int count = 0;
-			for (int it = 0; count != number && it<playerArmies.size(); ++it) {
+			for (int it = 0; it< playerArmies.size(); ++it) {
+				if (count == number)
+				{
+					break;
+				}
 				if (playerArmies[it]->getName() == from->getName())
 				{
 					playerArmies[it] = to;
@@ -206,6 +199,7 @@ void Player::MoveArmies(int number, Territory<Region>* from, Territory<Region>* 
 				}
 			}
 			std::cout << "This action will cost " << cost << " travel points" << std::endl;
+			PayCoin(cost);
 			std::cout << getName() + " moved " << number << " armies." << std::endl;
 		}
 		else
@@ -243,7 +237,10 @@ void Player::PlaceNewArmies(int number, Territory<Region>* location)
 		{
 		    pResources->unplacedArmies -= number;
 			location->addArmies(number);
-			playerArmies.push_back(location);
+			for (int i = 0; i < number; i++) 
+			{
+				playerArmies.push_back(location);
+			}
 			std::cout << getName() + " added " << number << " armies at " << location->getName() << std::endl;
 		}
 		else
@@ -263,28 +260,77 @@ void Player::PlaceNewArmies(int number, Territory<Region>* location)
 }
 
 // Destroy all enemy armies found at the specified location
-void Player::DestroyArmy(int number, Territory<Region>* location)
+void Player::DestroyArmy(int number, Territory<Region>* location, vector<Player*> currentPlayers)
 {
 	// check that there are other armies at the specified location
 	// destroy specified number of armies found at the specified location
 	// identify original owner of territory and reduce number of placedArmies > increase number of unplacedArmies
-	if (number > 0 && location->getArmyCount() - number > 0)
+	int numOfYourArmy = 0;
+
+	//auto check = *value;
+	for (auto it : playerArmies) {
+		if (it->getName() == location->getName())
+		{
+			numOfYourArmy += 1;
+		}
+	}
+
+
+	int check = location->getArmyCount() - number;
+	if (numOfYourArmy > 0 && number > 0 && numOfYourArmy >= check && check > 0)
 	{
 		location->removeArmies(number);
-		int count = 0;
-		for (auto it = 0; count <= number && it < playerArmies.size(); it++) {
-			if (playerArmies[it]->getName() == location->getName())
+		
+		int armyLost = 0;
+		
+
+		//std::cout << "Hewwo" << std::endl;
+		vector<Player*> otherPlayer;
+
+		for (int n = 0; n < currentPlayers.size(); n++) {
+			if (currentPlayers[n]->getName() != getName())
 			{
-				playerArmies.erase(playerArmies.begin() + it);
-				count += 1;
+				otherPlayer.push_back(currentPlayers[n]);
 			}
 		}
-		pResources->unplacedArmies += number;
-		std::cout << "Successfully destroyed " << number << " armies at " << location->getName() << " ." << std::endl;
-	} else
-	{
-		std::cout << "Action not permissible (DestroyArmies at " << location->getName() << ")" << std::endl;
+
+		for (auto ennemi : otherPlayer) {
+			
+			std::cout << ennemi->getName() + " has currently " << ennemi->playerArmies.size() << " armies." << std::endl;
+			for (int i = 0; i < ennemi->playerArmies.size(); i++)
+			{
+				auto armyToDestroy = ennemi->playerArmies[i];
+				if (armyToDestroy->getName() == location->getName())
+				{
+					number -=1;
+					armyLost +=1;
+					ennemi->playerArmies.erase(ennemi->playerArmies.begin() + i);
+					i -= 1;
+				}
+				if (number == 0)
+				{
+					break;
+				}
+			}
+
+			
+			std::cout << ennemi->getName() + " lost " << armyLost << " armies." << std::endl;
+			std::cout << ennemi->getName() + " has now " << ennemi->playerArmies.size() << " armies." << std::endl;
+
+			if (number == 0)
+			{
+				break;
+			}
+		
+		}
+		
 	}
+		
+	else 
+	{
+		std::cout << getName() + " couldn't perform this action. (Destroy City)" << std::endl;
+	}
+
 }
 
 // Builds a city at the specified location
@@ -309,7 +355,7 @@ void Player::BuildCity(Territory<Region>* location)
 		pResources->unplacedCities -= 1;
 		// add city at specified location
 
-		playerTerritories.push_back(location);
+		playerTerritories.push_back( location);
 
 		std::cout << getName() + " built a city at " + location->getName() << std::endl;
 	}

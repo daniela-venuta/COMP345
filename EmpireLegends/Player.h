@@ -12,7 +12,6 @@ using std::ostream;
 
 enum Color { none, red, green, blue, yellow };
 static string originRegion = "Region 1";
-static int idGenerator = 0;
 
 struct Resources
 {
@@ -68,9 +67,6 @@ public:
 	int getCoins() const;
 	void setCoins(int coins);
 
-	int getId() const;
-	void setId();
-
 	void PayCoin(int price);
 	int getBalance() const;
 	void setBalance(int newBalance);
@@ -78,7 +74,7 @@ public:
 	int MoveOverLand(Territory<Region>*from, Territory<Region>*to, GameMap * map);
 	void PlaceNewArmies(int number, Territory<Region>*destination);
 	void MoveArmies(int number, Territory<Region>*from, Territory<Region>*to, GameMap * map);
-	void DestroyArmy(int number, Territory<Region>*location);
+	void DestroyArmy(int number, Territory<Region>*location, vector<Player*> currentPlayers);
 	void BuildCity(Territory<Region>*territory);
 	int getNumofcards();
 	void setNumofcards();
@@ -89,7 +85,6 @@ public:
 
 private:
 	string playerName;
-	int playerId;
 	vector<Territory<Region>*> playerTerritories;
 	Hand* playerHand;
 	int NumCards;
