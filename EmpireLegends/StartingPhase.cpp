@@ -205,12 +205,12 @@ string StartingPhase::getRandomTerritory()
 void StartingPhase::setupCardDeck()
 {
 	// set up cards
-	Card* cardOne = new Card("Dire dragon", "", "Place 3 armies and destroy one army");
-	Card* cardTwo = new Card("Dire giant", "Immune to attack", "Place 3 armies and destroy army");
-	Card* cardThree = new Card("Dire eye", "", "Place 4 armies");
-	Card* cardFour = new Card("Dire Ogre", " +1 VP per 3 coins", "Move 2 armies");
-	Card* cardFive = new Card("Lake", " +1 VP per Forest card", "Place 2 armies and move 3 armies");
-	Card* cardSix = new Card("Noble Hills", " Three noble cards = 4 VP", "Place 3 armies");
+	Card* cardOne = new Card("Dire dragon", new Flying, "Place 3 armies and destroy one army");
+	Card* cardTwo = new Card("Dire giant", new Immune, "Place 3 armies and destroy army");
+	Card* cardThree = new Card("Dire eye", new Flying, "Place 4 armies");
+	Card* cardFour = new Card("Dire Ogre", new CoinVPs, "Move 2 armies");
+	Card* cardFive = new Card("Lake", new SetNameVPs(CardSet::forest), "Place 2 armies and move 3 armies");
+	Card* cardSix = new Card("Noble Hills", new CompleteSetVPs(3, CardSet::noble), "Place 3 armies");
 
 	// add Cards to a vector
 	vector<Card*> cardVector;
