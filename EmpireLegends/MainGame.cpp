@@ -62,16 +62,14 @@ void MainGame::maingameloop(vector<Card*> cardDeck, vector<Player*> myPlayers) {
 
             int cardDeckPos = (cardposition - 1);
             Card* facecard = cardDeck[cardDeckPos];
-
-            myPlayers[i]->PayCoin(cardcost); 
-                     
+                              
             if (myPlayers[i]->getBalance() >= cardcost) {
-
+               
+                myPlayers[i]->PayCoin(cardcost);
                 myPlayers[i]->addGoods(facecard->getGood());
-
+                                            
                 std::cout << "Players card good : " << *facecard->getGood() << std::endl;
                 std::cout << "Players card action : " << facecard->getAction() << std::endl;
-
                 std::cout << "The number of cards for " << myPlayers[0]->getName() << " is " << myPlayers[0]->getNumofcards() << std::endl;
                 std::cout << "The number of cards for " << myPlayers[1]->getName() << " is " << myPlayers[1]->getNumofcards() << std::endl;
             }
@@ -84,9 +82,7 @@ void MainGame::maingameloop(vector<Card*> cardDeck, vector<Player*> myPlayers) {
                 std::cout << "The Game is Over!! " << std::endl;
                 exit(0);
             }
-
         }
-
     } 
 }
 
