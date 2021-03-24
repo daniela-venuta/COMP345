@@ -180,6 +180,15 @@ Card::Card(string nameStr, Good* good,  string actionDesc)
 	this->action = std::move(actionDesc);
 }
 
+Card::Card(string nameStr, Good* good, string firstActionDesc, string secondActionDesc)
+{
+	// initialize card w/ 2 actions
+	this->name = std::move(nameStr);
+	this->good = good;
+	this->action = std::move(firstActionDesc);
+	this->secondAction = std::move(secondActionDesc);
+}
+
 Card::~Card()
 {
 	delete good;
@@ -216,6 +225,11 @@ string Card::getName() const
 string Card::getAction() const
 {
 	return action;
+}
+
+string Card::getSecondAction() const
+{
+	return secondAction;
 }
 
 Good* Card::getGood() const

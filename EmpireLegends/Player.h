@@ -11,6 +11,8 @@ using std::map;
 using std::ostream;
 
 enum Color { none, red, green, blue, yellow };
+static string originRegion = "Region 1";
+static int idGenerator = 0;
 
 struct Resources
 {
@@ -28,6 +30,7 @@ struct Resources
 	int unplacedArmies{};
 	int totalCoins{};
 	
+	
 	// Abilities
 	int extraMoves{};
 	int extraArmies{};
@@ -37,6 +40,7 @@ struct Resources
 	map<CardSet, bool> setNameVPs;
 	map<CardSet, bool> completeSetVPs;
 	bool immune = false;
+
 };
 
 class Player
@@ -59,12 +63,13 @@ public:
 	Player& operator=(const Player& player);
 
 	string getName() const;
-
 	void setName(string name);
 
 	int getCoins() const;
-
 	void setCoins(int coins);
+
+	int getId() const;
+	void setId();
 
 	void PayCoin(int price);
 	int getBalance() const;
@@ -80,13 +85,16 @@ public:
 	vector<Good*> getListGoods();
 	void addGoods(Good* addedGood);
 	Resources* getResources() const;
+	string AndOrAction(Card* cardTwoAction);
 
 private:
 	string playerName;
-	vector<Territory<Region>> playerTerritories;
+	int playerId;
+	vector<Territory<Region>*> playerTerritories;
 	Hand* playerHand;
 	int NumCards;
 	vector<Good*> playerGoods;
+	vector<Territory<Region>*> playerArmies;
 
 	Resources* pResources;
 

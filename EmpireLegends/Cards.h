@@ -172,6 +172,7 @@ class Card
 public:
 	Card() = default;
 	Card(string nameStr, Good* good, string actionDesc);
+	Card(string nameStr, Good* good, string firstActionDesc, string secondActionDesc);
 	~Card();
 
 	// copy constructor
@@ -187,11 +188,13 @@ public:
 	string getName() const;
 	Good* getGood() const;
 	string getAction() const;
+	string getSecondAction() const;
 
 private:
 	string name;
 	Good* good;
 	string action;
+	string secondAction;
 };
 
 class Action

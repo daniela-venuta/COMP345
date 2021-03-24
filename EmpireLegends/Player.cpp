@@ -1,9 +1,11 @@
 #include "Player.h"
 #include "Map.h"
+#include <algorithm>
 
 #include <iostream>
 
 using namespace std; 
+
 
 //default constructor 
 Player::Player() {
@@ -34,6 +36,17 @@ void Player::setCoins(int coins) {
 	pResources->totalCoins = coins;
 }
 
+int Player::getId() const
+{
+	return playerId;
+}
+
+void Player::setId() 
+{
+	idGenerator += 1;
+	playerId = idGenerator;
+}
+
 Player::Player(const string username)
 {
 	// verify that this is not a duplicate username for the current players in game
@@ -43,6 +56,7 @@ Player::Player(const string username)
 	pResources->totalCoins = TOTAL_NUM_COINS;
 	pResources->unplacedCities = TOTAL_NUM_CITIES;
 	pResources->unplacedArmies = TOTAL_NUM_ARMIES;
+	setId();
 	
 	// define a bidingFacility
 	std::cout << "Created new player: " << getName() << std::endl;
@@ -130,15 +144,16 @@ ostream& operator>>(ostream& os, const Player& player)
 // Player pays coins (to buy card)
 void Player::PayCoin(const int price)
 {
-	if (price > -1 && (pResources->totalCoins - price) >= 0)
+	if (price > 0 && (pResources->totalCoins - price) >= 0)
 	{
 		setBalance(pResources->totalCoins - price);
-		std::cout << "Removed " << price << " coins from player total." << std::endl;
-		std::cout << "New total: " << pResources->totalCoins << " coins" << std::endl;
+		std::cout << "Removed " << price << " coins from "+ getName() + "'s total." << std::endl;
+		std::cout << "New total of coins of " + getName() + ": " << pResources->totalCoins << " coins" << std::endl;
 	} else
 	{
-		std::cout << "Cannot perform this action (PayCoin)." << std::endl;
+		std::cout << getName() + " cannot perform this action (PayCoin)." << std::endl;
 	}
+
 }
 
 // Get player balance
@@ -159,7 +174,6 @@ int Player::MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap
 	// check that destination territory is valid (graph traversal + valid travel points)
 	GameMap gameMap = *map;
 	int travelCost = gameMap.getTravelCost(from, to);
-	std::cout << "This action will cost " << travelCost << " travel points" << std::endl;
 	return travelCost;
 	// check that travel points in cards are sufficient to move to destination
 }
@@ -168,30 +182,83 @@ int Player::MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap
 void Player::MoveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map)
 {
 	// check that you can call MoveOverLand with the given territories
-	if (number > 0 && number < pResources->unplacedArmies && MoveOverLand(from, to, map) > 0)
+	int cost = MoveOverLand(from, to, map);
+	int numOfArmy = 0;
+	for (auto it : playerArmies) {
+		if (it->getName()==from->getName())
+		{
+			numOfArmy++;
+		}
+	}
+
+	if (number > 0 && number <= pResources->unplacedArmies && cost > 0)
+	{		
+		if (cost <= getCoins() && numOfArmy > 0)
+		{
+			from->removeArmies(number);
+			to->addArmies(number);
+			int count = 0;
+			for (int it = 0; count != number && it<playerArmies.size(); ++it) {
+				if (playerArmies[it]->getName() == from->getName())
+				{
+					playerArmies[it] = to;
+					count++;
+				}
+			}
+			std::cout << "This action will cost " << cost << " travel points" << std::endl;
+			std::cout << getName() + " moved " << number << " armies." << std::endl;
+		}
+		else
+		{
+			std::cout << getName() + " couldn't move any armies due to a lack of coins or of armies" << std::endl;
+		}
+
+	}
+	else
 	{
-		from->removeArmies(number);
-		to->addArmies(number);
-		std::cout << "Moved " << number << " armies." << std::endl;
-	} else
-	{
-		std::cout << "Could not perform action (MoveArmies)" << std::endl;
+		std::cout << "An error made it impossible to perform this action. (MoveArmies)" << std::endl;
 	}
 }
 
 // Place armies at the specified location
 void Player::PlaceNewArmies(int number, Territory<Region>* location)
 {
-	const int unplacedArmies = pResources->unplacedArmies;
+	int unplacedArmies = pResources->unplacedArmies;
+	bool ownsCity = false;
+
+	for (auto value : playerTerritories)
+	{
+		if (location->getName() == value->getName())
+		{
+			ownsCity = true;
+			break;
+		}
+	}
+
 	// check ownership of territory (can place ONLY if your own)
-	if (number > 0 && unplacedArmies - number >= 0 && (TOTAL_NUM_ARMIES - unplacedArmies + number) <= TOTAL_NUM_ARMIES)
+	if (number > 0 && (unplacedArmies - number) >= 0)
 	{
-		pResources->unplacedArmies -= number;
-		location->addArmies(number);
-		std::cout << "Added " << number << " armies at " << location->getName() << std::endl;
-	} else
+
+		if (ownsCity == true || location->getName() == originRegion)
+		{
+		    pResources->unplacedArmies -= number;
+			location->addArmies(number);
+			playerArmies.push_back(location);
+			std::cout << getName() + " added " << number << " armies at " << location->getName() << std::endl;
+		}
+		else
+		{
+			std::cout << getName() + " cannot add armies at " << location->getName() + " because they have no city in this region." << std::endl;
+		}
+
+	}
+	else if (unplacedArmies - number < 0)
 	{
-		std::cout << "You do not have enough armies to perform this action (PlaceNewArmies)." << std::endl;
+		std::cout << getName() + " does not have enough armies to perform this action (PlaceNewArmies)." << std::endl;
+	}
+	else
+	{
+		std::cout << "An error made it impossible to perform this action. (PlaceNewArmies)" << std::endl;
 	}
 }
 
@@ -204,8 +271,15 @@ void Player::DestroyArmy(int number, Territory<Region>* location)
 	if (number > 0 && location->getArmyCount() - number > 0)
 	{
 		location->removeArmies(number);
+		int count = 0;
+		for (auto it = 0; count <= number && it < playerArmies.size(); it++) {
+			if (playerArmies[it]->getName() == location->getName())
+			{
+				playerArmies.erase(playerArmies.begin() + it);
+				count += 1;
+			}
+		}
 		pResources->unplacedArmies += number;
-		
 		std::cout << "Successfully destroyed " << number << " armies at " << location->getName() << " ." << std::endl;
 	} else
 	{
@@ -216,16 +290,36 @@ void Player::DestroyArmy(int number, Territory<Region>* location)
 // Builds a city at the specified location
 void Player::BuildCity(Territory<Region>* location)
 {
-	// check ownership of region (MUST HAVE AT LEAST ONE ARMY THERE)
+	// check ownership of region (MUST HAVE AT LEAST ONE OF YOUR ARMY THERE)
 	const int unplacedCities = pResources->unplacedCities;
-	if (unplacedCities - 1 >= 0 && (TOTAL_NUM_CITIES - unplacedCities + 1) <= TOTAL_NUM_CITIES && location->getArmyCount() > 0)
+	bool haveOwnArmy = false;
+
+	//auto check = *value;
+	for (auto it : playerArmies) {
+		if (it->getName() == location->getName())
+		{
+			haveOwnArmy = true;
+			break;
+		}
+	}
+	
+
+	if (haveOwnArmy && unplacedCities - 1 >= 0 && (TOTAL_NUM_CITIES - unplacedCities + 1) <= TOTAL_NUM_CITIES && location->getArmyCount() > 0)
 	{
 		pResources->unplacedCities -= 1;
 		// add city at specified location
-		std::cout << "Built a city at " << location->getName() << std::endl;
-	} else if (pResources->unplacedCities - 1 < 0 || (TOTAL_NUM_CITIES - unplacedCities + 1) > TOTAL_NUM_CITIES)
+
+		playerTerritories.push_back(location);
+
+		std::cout << getName() + " built a city at " + location->getName() << std::endl;
+	}
+	else if (pResources->unplacedCities - 1 < 0 || (TOTAL_NUM_CITIES - unplacedCities + 1) > TOTAL_NUM_CITIES)
 	{
-		std::cout << "This action is not permissible (BuildCity)." << std::endl;
+		std::cout << "This action is not permissible due to errors (BuildCity)." << std::endl;
+	}
+	else
+	{
+		std::cout << getName() + " cannot built a city at " + location->getName() + " due to not having an army in this region." << std::endl;
 	}
 }
 
@@ -252,3 +346,59 @@ void Player::addGoods(Good* addedGood)
 	playerGoods.push_back(addedGood);
 }
 
+//Give player the possible actions within their turn if they have an "And/Or" card
+string Player::AndOrAction(Card* cardTwoAction) {
+
+	string action1 = cardTwoAction->getAction();
+	string action2 = cardTwoAction->getSecondAction();
+	int option = 0;
+	string chosenAction = "";
+
+	if (action2 == "")
+	{
+		std::cout << "Error: The card entered isn't a card with two actions." << std::endl;
+		return  chosenAction;
+	}
+
+	std::cout << "This card has two actions, " + action1 + " and " + action2 << std::endl;
+
+	do
+	{
+		std::cout << "Please enter the number next to the action you would like to do :" << std::endl;
+		std::cout << "1 : " + action1 << std::endl;
+		std::cout << "2 : " + action2 << std::endl;
+		std::cin >> option;
+
+		switch (option) {
+		case 1:
+			chosenAction = action1;
+			break;
+		case 2:
+			chosenAction = action2;
+			break;
+		default:
+			std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
+		}
+
+	} while (chosenAction == "");
+
+
+	if (chosenAction == "Build City")
+	{
+		std::cout << getName() + " have chosen to build a city." << std::endl;
+	}
+	else if (chosenAction == "Move Armies")
+	{
+		std::cout << getName() + " have chosen to move your armies." << std::endl;
+	}
+	else if (chosenAction == "Destroy Army")
+	{
+		std::cout << getName() + " have chosen to destroy an army" << std::endl;
+	}
+	else if (chosenAction == "Place New Armies")
+	{
+		std::cout << getName() + " have chosen to place new armies" << std::endl;
+	}
+
+	return chosenAction;
+}

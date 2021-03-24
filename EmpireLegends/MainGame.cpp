@@ -45,7 +45,7 @@ void MainGame::afterAction()
 
 void MainGame::maingameloop(vector<Card*> cardDeck, vector<Player*> myPlayers) {
 
-    int cardpos;
+    int cardposition = 0;
     while (myPlayers[0]->getNumofcards() != 13|| myPlayers[1]->getNumofcards() != 13) {
 
 
@@ -53,7 +53,7 @@ void MainGame::maingameloop(vector<Card*> cardDeck, vector<Player*> myPlayers) {
 
             std::cout << "\n\nPlayer " << myPlayers[i]->getName() << std::endl;
 
-            int cardposition = PickACard();
+            cardposition = PickACard();
             myPlayers[i]->setNumofcards(); // adds a card to the player when a  card is picked
 
             std::cout << "\n";

@@ -150,6 +150,7 @@
     <ClCompile Include="MainGameLoopDriver.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapDriver.cpp" />
+    <ClCompile Include="CardActionDriver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MapLoader.h" />
