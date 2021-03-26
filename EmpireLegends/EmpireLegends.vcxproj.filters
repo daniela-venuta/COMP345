@@ -27,6 +27,9 @@
     <ClInclude Include="MainGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameStart.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map.cpp">
@@ -65,11 +68,14 @@
     <ClCompile Include="MainGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameStart.cpp">
-      <Filter>Driver Files</Filter>
-    </ClCompile>
     <ClCompile Include="AfterActionDriver.cpp">
       <Filter>Driver Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStartDriver.cpp">
+      <Filter>Driver Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStart.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

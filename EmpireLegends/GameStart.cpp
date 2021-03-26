@@ -1,17 +1,33 @@
-#include <iostream>
-#include <sstream>
-
+#include "GameStart.h"
 #include "MapLoader.h"
 #include "Player.h"
 #include "BiddingFacility.h"
+#include <iostream>
 
-using namespace std;
+GameStart::GameStart() {
+	mapType = 0;
+	numOfPlayers = 0;
+	p1 = nullptr;
+	p2 = nullptr;
+	p3 = nullptr;
+	p4 = nullptr;
+	biddingFacility = new BiddingFacility();
+}
 
-int main() {
+GameStart::~GameStart() {
+	mapType = 0;
+	numOfPlayers = 0;
+	playerName1 = "";
+	playerName2 = "";
+	playerName3 = "";
+	playerName4 = "";
+	delete p1, p2, p3, p4;
+	biddingFacility = nullptr;
+}
 
-	// MAP VARIABLES
-	int mapType;
-	auto* mapLoader = new MapLoader();
+void GameStart::loadMap() {
+
+	MapLoader* mapLoader = new MapLoader();
 
 	std::cout << "------------------------------" << std::endl;
 	std::cout << "Eight-Minute-Empire: Legends" << std::endl;
@@ -44,17 +60,17 @@ int main() {
 			std::cin >> mapType;
 		}
 	}
+}
 
-	// PLAYER VARIABLES
-	Player* p1, * p2, * p3, * p4;
-	string playerName1, playerName2, playerName3, playerName4;
-	int numofPlayers = 0, playerCoins = 0;
+void GameStart::detPlayerCount() {
+
+	int playerCoins = 0;
 
 	std::cout << "How many players will be playing? Please select a number between 2 and 4: ";
-	std::cin >> numofPlayers;
+	std::cin >> numOfPlayers;
 
 	// Assign coins according to numofPlayers
-	switch (numofPlayers) {
+	switch (numOfPlayers) {
 	case 2:
 
 		playerCoins = 14;
@@ -80,17 +96,17 @@ int main() {
 
 		std::cout << "Enter player name 1: ";
 		std::cin.ignore();
-		getline(cin, playerName1);
+		getline(std::cin, playerName1);
 		p1 = new Player(playerName1, playerCoins);
 		std::cout << "Welcome " << playerName1 << " !" << std::endl;
 
 		std::cout << "\nEnter player name 2: ";
-		getline(cin, playerName2);
+		getline(std::cin, playerName2);
 		p2 = new Player(playerName2, playerCoins);
 		std::cout << "Welcome " << playerName2 << " !" << std::endl;
 
 		std::cout << "\nEnter player name 3: ";
-		getline(cin, playerName3);
+		getline(std::cin, playerName3);
 		p3 = new Player(playerName3, playerCoins);
 		std::cout << "Welcome " << playerName3 << " !" << std::endl;
 
@@ -104,22 +120,22 @@ int main() {
 
 		std::cout << "Enter player name 1: ";
 		std::cin.ignore();
-		getline(cin, playerName1);
+		getline(std::cin, playerName1);
 		p1 = new Player(playerName1, playerCoins);
 		std::cout << "Welcome " << playerName1 << " !" << std::endl;
 
 		std::cout << "\nEnter player name 2: ";
-		getline(cin, playerName2);
+		getline(std::cin, playerName2);
 		p2 = new Player(playerName2, playerCoins);
 		std::cout << "Welcome " << playerName2 << " !" << std::endl;
 
 		std::cout << "\nEnter player name 3: ";
-		getline(cin, playerName3);
+		getline(std::cin, playerName3);
 		p3 = new Player(playerName3, playerCoins);
 		std::cout << "Welcome " << playerName3 << " !" << std::endl;
 
 		std::cout << "\nEnter player name 4: ";
-		getline(cin, playerName4);
+		getline(std::cin, playerName4);
 		p4 = new Player(playerName4, playerCoins);
 		std::cout << "Welcome " << playerName4 << " !" << std::endl;
 
@@ -128,21 +144,21 @@ int main() {
 		break;
 
 	default:
-		while (numofPlayers > 4 || numofPlayers < 2) {
+		while (numOfPlayers > 4 || numOfPlayers < 2) {
 			std::cout << "INVALID number of players." << std::endl;
 			std::cout << "Please select a number between 2 and 4: ";
-			std::cin >> numofPlayers;
+			std::cin >> numOfPlayers;
 		}
 	}
+}
 
-	// BIDING FACILITY VARIABLES
-	BiddingFacility* biddingFacility = new BiddingFacility();
-	vector <Player*> biddingPlayers;
+void GameStart::playerBidding() {
+	biddingFacility = new BiddingFacility();
 
-	std::cout << "Entering the bidding phase with " << numofPlayers << " players..." << std::endl;
+	std::cout << "Entering the bidding phase with " << numOfPlayers << " players..." << std::endl;
 
 	// Allow players to place their bids
-	switch (numofPlayers) {
+	switch (numOfPlayers) {
 	case 2:
 
 		biddingPlayers.clear();
@@ -179,39 +195,4 @@ int main() {
 	default:
 		biddingPlayers.clear();
 	}
-
-	// CARD VARIABLES
-	Card* card1 = new Card("Dire dragon", "Flying", "Place 3 armies and destroy one army");
-	Card* card2 = new Card("Dire giant", "Immune to attack", "Place 3 armies and destroy army");
-	Card* card3 = new Card("Dire eye", "Flying", "Place 4 armies");
-	Card* card4 = new Card("Dire Goblin", " +1 elixer", "Move 5 armies");
-	Card* card5 = new Card("Dire Ogre", " +1 VP per 3 coins", "Move 2 armies");
-	Card* card6 = new Card("Lake", " +1 VP per Forest card", "Place 2 armies and move 3 armies");
-	Card* card7 = new Card("Forest Elf", " +1 army", "Place 3 armies or movie 2 armies");
-	Card* card8 = new Card("Forest Gnome", " +3 elixer", "Move 2 armies");
-	Card* card9 = new Card("Forest Tree Town", "Move 1 army", "Place a city");
-	Card* card10 = new Card("Graveyard", " +1VP per Cursed card", "Place 2 armies");
-	Card* card11 = new Card("Noble Hills", " Three noble cards = 4 VP", "Place 3 armies");
-	Card* card12 = new Card("Mountain Treasury", " +1 elixer and +2 coins", "Move 3 armies");
-	Card* card13 = new Card("Castle", " +1 elixer", "Place 3 armies or build a city");
-
-	// Add Cards to Deck
-	vector<Card*> cardVector;
-	cardVector.push_back(card1);
-	cardVector.push_back(card2);
-	cardVector.push_back(card3);
-	cardVector.push_back(card4);
-	cardVector.push_back(card5);
-	cardVector.push_back(card6);
-	cardVector.push_back(card7);
-	cardVector.push_back(card8);
-	cardVector.push_back(card9);
-	cardVector.push_back(card10);
-	cardVector.push_back(card11);
-	cardVector.push_back(card12);
-	cardVector.push_back(card13);
-
-	std::cout << "Printing deck:" << std::endl;
-	Deck* deck = new Deck(cardVector);
-	std::cout << *deck;
 }
