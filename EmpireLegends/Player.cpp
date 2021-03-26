@@ -8,17 +8,15 @@ using namespace std;
 //default constructor 
 Player::Player() {
 	playerName = "";
-	pResources.totalCoins = 0;
+	pResources = new Resources;
+	pResources->totalCoins = 0;
 }
 
 // parametrized constructor
 Player::Player(string name, int coins) {
 	playerName = name;
-	pResources.totalCoins = coins;
-
-	// set other player resources to default values
-	pResources.unplacedCities = TOTAL_NUM_CITIES;
-	pResources.unplacedArmies = TOTAL_NUM_ARMIES;
+	pResources = new Resources;
+	pResources->totalCoins = coins;
 }
 
 string Player::getName() const{
@@ -30,35 +28,82 @@ void Player::setName(string Name) {
 }
 
 int Player::getCoins() const{
-	return pResources.totalCoins;
+	return pResources->totalCoins;
 }
 void Player::setCoins(int coins) {
-	pResources.totalCoins = coins;
+	pResources->totalCoins = coins;
 }
 
 Player::Player(const string username)
 {
 	// verify that this is not a duplicate username for the current players in game
 	setName(username);
-
+	pResources = new Resources;
 	// set player resources to default values
-	pResources.totalCoins = TOTAL_NUM_COINS;
-	pResources.unplacedCities = TOTAL_NUM_CITIES;
-	pResources.unplacedArmies = TOTAL_NUM_ARMIES;
+	pResources->totalCoins = TOTAL_NUM_COINS;
+	pResources->unplacedCities = TOTAL_NUM_CITIES;
+	pResources->unplacedArmies = TOTAL_NUM_ARMIES;
 	
 	// define a bidingFacility
 	std::cout << "Created new player: " << getName() << std::endl;
 }
 
+Player::~Player()
+{
+	delete pResources;
+	delete playerHand;
+	pResources = nullptr;
+	playerHand = nullptr;
+}
+
+Resources::Resources(const Resources& otherResources)
+{
+	this->totalCoins = otherResources.totalCoins;
+	this->unplacedCities = otherResources.unplacedCities;
+	this->unplacedArmies = otherResources.unplacedArmies;
+	this->extraMoves = otherResources.extraMoves;
+	this->extraArmies = otherResources.extraArmies;
+	this->flying = otherResources.flying;
+	this->elixir = otherResources.elixir;
+	this->coinVPs = otherResources.coinVPs;
+	this->setNameVPs = otherResources.setNameVPs;
+	this->completeSetVPs = otherResources.completeSetVPs;
+	this->immune = otherResources.immune;
+}
+
+Resources& Resources::operator=(const Resources& resources)
+{
+	this->totalCoins = resources.totalCoins;
+	this->unplacedCities = resources.unplacedCities;
+	this->unplacedArmies = resources.unplacedArmies;
+	this->extraMoves = resources.extraMoves;
+	this->extraArmies = resources.extraArmies;
+	this->flying = resources.flying;
+	this->elixir = resources.elixir;
+	this->coinVPs = resources.coinVPs;
+	this->setNameVPs = resources.setNameVPs;
+	this->completeSetVPs = resources.completeSetVPs;
+	this->immune = resources.immune;
+
+	return *this;
+}
+
 // Copy constructor
 Player::Player(const Player& otherPlayer)
 {
-	const Resources playerResources = otherPlayer.getResources();
-	
 	this->playerName = otherPlayer.playerName;
-	this->pResources.totalCoins = playerResources.totalCoins;
-	this->pResources.unplacedCities = playerResources.unplacedCities;
-	this->pResources.unplacedArmies = playerResources.unplacedArmies;
+	this->pResources = new Resources;
+	*this->pResources = *otherPlayer.getResources();
+}
+
+// Assignment operator
+Player& Player::operator=(const Player& player)
+{
+	this->setName(player.getName());
+	this->pResources = new Resources;
+	*this->pResources = *player.getResources();
+
+	return *this;
 }
 
 // Stream insertion operator overload
@@ -82,28 +127,14 @@ ostream& operator>>(ostream& os, const Player& player)
 	return os;
 }
 
-// Assignment operator
-Player& Player::operator=(const Player& player)
-{
-	const Resources playerResources = player.getResources();
-	
-	setName(player.playerName);
-	
-	this->pResources.totalCoins = playerResources.totalCoins;
-	this->pResources.unplacedCities = playerResources.unplacedCities;
-	this->pResources.unplacedArmies = playerResources.unplacedArmies;
-
-	return *this;
-}
-
 // Player pays coins (to buy card)
 void Player::PayCoin(const int price)
 {
-	if (price > 0 && (pResources.totalCoins - price) >= 0)
+	if (price > 0 && (pResources->totalCoins - price) >= 0)
 	{
-		setBalance(pResources.totalCoins - price);
+		setBalance(pResources->totalCoins - price);
 		std::cout << "Removed " << price << " coins from player total." << std::endl;
-		std::cout << "New total: " << pResources.totalCoins << " coins" << std::endl;
+		std::cout << "New total: " << pResources->totalCoins << " coins" << std::endl;
 	} else
 	{
 		std::cout << "Cannot perform this action (PayCoin)." << std::endl;
@@ -113,13 +144,13 @@ void Player::PayCoin(const int price)
 // Get player balance
 int Player::getBalance() const
 {
-	return pResources.totalCoins;
+	return pResources->totalCoins;
 }
 
 // Set player balance
 void Player::setBalance(int newBalance)
 {
-	pResources.totalCoins = newBalance;
+	pResources->totalCoins = newBalance;
 }
 
 // Player moves from one territory to another
@@ -137,7 +168,7 @@ int Player::MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap
 void Player::MoveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map)
 {
 	// check that you can call MoveOverLand with the given territories
-	if (number > 0 && number < pResources.unplacedArmies && MoveOverLand(from, to, map) > 0)
+	if (number > 0 && number < pResources->unplacedArmies && MoveOverLand(from, to, map) > 0)
 	{
 		from->removeArmies(number);
 		to->addArmies(number);
@@ -151,11 +182,11 @@ void Player::MoveArmies(int number, Territory<Region>* from, Territory<Region>* 
 // Place armies at the specified location
 void Player::PlaceNewArmies(int number, Territory<Region>* location)
 {
-	const int unplacedArmies = pResources.unplacedArmies;
+	const int unplacedArmies = pResources->unplacedArmies;
 	// check ownership of territory (can place ONLY if your own)
 	if (number > 0 && unplacedArmies - number >= 0 && (TOTAL_NUM_ARMIES - unplacedArmies + number) <= TOTAL_NUM_ARMIES)
 	{
-		pResources.unplacedArmies -= number;
+		pResources->unplacedArmies -= number;
 		location->addArmies(number);
 		std::cout << "Added " << number << " armies at " << location->getName() << std::endl;
 	} else
@@ -173,7 +204,7 @@ void Player::DestroyArmy(int number, Territory<Region>* location)
 	if (number > 0 && location->getArmyCount() - number > 0)
 	{
 		location->removeArmies(number);
-		pResources.unplacedArmies += number;
+		pResources->unplacedArmies += number;
 		
 		std::cout << "Successfully destroyed " << number << " armies at " << location->getName() << " ." << std::endl;
 	} else
@@ -186,19 +217,19 @@ void Player::DestroyArmy(int number, Territory<Region>* location)
 void Player::BuildCity(Territory<Region>* location)
 {
 	// check ownership of region (MUST HAVE AT LEAST ONE ARMY THERE)
-	const int unplacedCities = pResources.unplacedCities;
+	const int unplacedCities = pResources->unplacedCities;
 	if (unplacedCities - 1 >= 0 && (TOTAL_NUM_CITIES - unplacedCities + 1) <= TOTAL_NUM_CITIES && location->getArmyCount() > 0)
 	{
-		pResources.unplacedCities -= 1;
+		pResources->unplacedCities -= 1;
 		// add city at specified location
 		std::cout << "Built a city at " << location->getName() << std::endl;
-	} else if (pResources.unplacedCities - 1 < 0 || (TOTAL_NUM_CITIES - unplacedCities + 1) > TOTAL_NUM_CITIES)
+	} else if (pResources->unplacedCities - 1 < 0 || (TOTAL_NUM_CITIES - unplacedCities + 1) > TOTAL_NUM_CITIES)
 	{
 		std::cout << "This action is not permissible (BuildCity)." << std::endl;
 	}
 }
 
-const Resources Player::getResources() const
+Resources* Player::getResources() const
 {
 	return pResources;
 }
