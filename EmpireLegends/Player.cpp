@@ -109,15 +109,6 @@ Player& Player::operator=(const Player& player)
 	return *this;
 }
 
-// Assignment operator
-Player& Player::operator=(const Player& player)
-{
-	this->setName(player.getName());
-	this->pResources = new Resources;
-	*this->pResources = *player.getResources();
-
-	return *this;
-}
 
 // Stream insertion operator overload
 ostream& operator<<(ostream& os, const Player& player)
@@ -180,48 +171,63 @@ int Player::MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap
 // Move specified number of armies from one territory to another
 void Player::MoveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map)
 {
-	// check that you can call MoveOverLand with the given territories
-	int cost = MoveOverLand(from, to, map);
-	int numOfArmy = 0;
-	for (auto it : playerArmies) {
-		if (it->getName()==from->getName())
-		{
-			numOfArmy++;
-		}
-	}
+	// //check that you can call MoveOverLand with the given territories
+	//bool checkFrom = false;
+	//bool checkTo = false;
 
-	if (number > 0 && number <= pResources->unplacedArmies && cost > 0)
-	{		
-		if (cost <= getCoins() && numOfArmy > 0)
-		{
-			from->removeArmies(number);
-			to->addArmies(number);
-			int count = 0;
-			for (int it = 0; it< playerArmies.size(); ++it) {
-				if (count == number)
-				{
-					break;
-				}
-				if (playerArmies[it]->getName() == from->getName())
-				{
-					playerArmies[it] = to;
-					count++;
-				}
+	//if ()
+	//{
+
+	//}
+
+	//if (checkFrom == false || checkTo == false)
+	//{
+	//		std::cout << "One of the regions given doesn't exist within the map. The action cannot done. (MoveArmies) " << std::endl;
+	//}
+
+	//else {
+		int cost = MoveOverLand(from, to, map);
+		int numOfArmy = 0;
+		for (auto it : playerArmies) {
+			if (it->getName() == from->getName())
+			{
+				numOfArmy++;
 			}
-			std::cout << "This action will cost " << cost << " travel points" << std::endl;
-			PayCoin(cost);
-			std::cout << getName() + " moved " << number << " armies." << std::endl;
+		}
+
+		if (number > 0 && number <= pResources->unplacedArmies && cost > 0)
+		{
+			if (cost <= getCoins() && numOfArmy > 0)
+			{
+				from->removeArmies(number);
+				to->addArmies(number);
+				int count = 0;
+				for (int it = 0; it < playerArmies.size(); ++it) {
+					if (count == number)
+					{
+						break;
+					}
+					if (playerArmies[it]->getName() == from->getName())
+					{
+						playerArmies[it] = to;
+						count++;
+					}
+				}
+				std::cout << "This action will cost " << cost << " travel points" << std::endl;
+				PayCoin(cost);
+				std::cout << getName() + " moved " << number << " armies." << std::endl;
+			}
+			else
+			{
+				std::cout << getName() + " couldn't move any armies due to a lack of coins or of armies" << std::endl;
+			}
+
 		}
 		else
 		{
-			std::cout << getName() + " couldn't move any armies due to a lack of coins or of armies" << std::endl;
+			std::cout << "An error made it impossible to perform this action. (MoveArmies)" << std::endl;
 		}
-
-	}
-	else
-	{
-		std::cout << "An error made it impossible to perform this action. (MoveArmies)" << std::endl;
-	}
+	//}
 }
 
 // Place armies at the specified location
@@ -315,7 +321,12 @@ void Player::DestroyArmy(int number, Territory<Region>* location, vector<Player*
 					number -=1;
 					armyLost +=1;
 					ennemi->playerArmies.erase(ennemi->playerArmies.begin() + i);
-					i -= 1;
+					
+					if (i > 0) 
+					{
+						i -= 1;
+					}
+					
 				}
 				if (number == 0)
 				{
@@ -403,58 +414,58 @@ void Player::addGoods(Good* addedGood)
 }
 
 //Give player the possible actions within their turn if they have an "And/Or" card
-string Player::AndOrAction(Card* cardTwoAction) {
-
-	string action1 = cardTwoAction->getAction();
-	string action2 = cardTwoAction->getSecondAction();
-	int option = 0;
-	string chosenAction = "";
-
-	if (action2 == "")
-	{
-		std::cout << "Error: The card entered isn't a card with two actions." << std::endl;
-		return  chosenAction;
-	}
-
-	std::cout << "This card has two actions, " + action1 + " and " + action2 << std::endl;
-
-	do
-	{
-		std::cout << "Please enter the number next to the action you would like to do :" << std::endl;
-		std::cout << "1 : " + action1 << std::endl;
-		std::cout << "2 : " + action2 << std::endl;
-		std::cin >> option;
-
-		switch (option) {
-		case 1:
-			chosenAction = action1;
-			break;
-		case 2:
-			chosenAction = action2;
-			break;
-		default:
-			std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
-		}
-
-	} while (chosenAction == "");
-
-
-	if (chosenAction == "Build City")
-	{
-		std::cout << getName() + " have chosen to build a city." << std::endl;
-	}
-	else if (chosenAction == "Move Armies")
-	{
-		std::cout << getName() + " have chosen to move your armies." << std::endl;
-	}
-	else if (chosenAction == "Destroy Army")
-	{
-		std::cout << getName() + " have chosen to destroy an army" << std::endl;
-	}
-	else if (chosenAction == "Place New Armies")
-	{
-		std::cout << getName() + " have chosen to place new armies" << std::endl;
-	}
-
-	return chosenAction;
-}
+//string Player::AndOrAction(Card* cardTwoAction) {
+//
+//	string action1 = cardTwoAction->getAction();
+//	string action2 = cardTwoAction->getSecondAction();
+//	int option = 0;
+//	string chosenAction = "";
+//
+//	if (action2 == "")
+//	{
+//		std::cout << "Error: The card entered isn't a card with two actions." << std::endl;
+//		return  chosenAction;
+//	}
+//
+//	std::cout << "This card has two actions, " + action1 + " and " + action2 << std::endl;
+//
+//	do
+//	{
+//		std::cout << "Please enter the number next to the action you would like to do :" << std::endl;
+//		std::cout << "1 : " + action1 << std::endl;
+//		std::cout << "2 : " + action2 << std::endl;
+//		std::cin >> option;
+//
+//		switch (option) {
+//		case 1:
+//			chosenAction = action1;
+//			break;
+//		case 2:
+//			chosenAction = action2;
+//			break;
+//		default:
+//			std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
+//		}
+//
+//	} while (chosenAction == "");
+//
+//
+//	if (chosenAction == "Build City")
+//	{
+//		std::cout << getName() + " have chosen to build a city." << std::endl;
+//	}
+//	else if (chosenAction == "Move Armies")
+//	{
+//		std::cout << getName() + " have chosen to move your armies." << std::endl;
+//	}
+//	else if (chosenAction == "Destroy Army")
+//	{
+//		std::cout << getName() + " have chosen to destroy an army" << std::endl;
+//	}
+//	else if (chosenAction == "Place New Armies")
+//	{
+//		std::cout << getName() + " have chosen to place new armies" << std::endl;
+//	}
+//
+//	return chosenAction;
+//}

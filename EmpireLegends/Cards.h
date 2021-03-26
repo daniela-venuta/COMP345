@@ -44,7 +44,7 @@ public:
 	// Pure virtual method to apply good
 	virtual void applyGood(Resources* resources) = 0;
 	virtual ~Good() = default;
-	
+
 	friend ostream& operator<<(ostream& os, const Good& good) { return os << good.toString(); }
 
 protected:
@@ -138,44 +138,6 @@ public:
 	CoinVPs& operator=(const CoinVPs& good);
 };
 
-class GainCoins : public Good
-{
-public:
-
-	explicit GainCoins(int nbCoins);
-
-	void applyGood(Resources* resources) override;
-
-	string toString() const override;
-
-	GainCoins& operator=(const GainCoins& good);
-
-private:
-	int coins;
-};
-
-class Immune : public Good
-{
-public:
-
-	explicit Immune() : Good("Immune to Attack") {}
-
-	void applyGood(Resources* resources) override;
-
-	Immune& operator=(const Immune& good);
-};
-
-class CoinVPs : public Good
-{
-public:
-
-	explicit CoinVPs() : Good("+1 VP per 3 coins") {}
-
-	void applyGood(Resources* resources) override;
-
-	CoinVPs& operator=(const CoinVPs& good);
-};
-
 class SetNameVPs : public Good
 {
 public:
@@ -191,21 +153,6 @@ private:
 };
 
 class CompleteSetVPs : public Good
-{
-public:
-
-	explicit CompleteSetVPs(int setSize, CardSet set);
-
-	void applyGood(Resources* resources) override;
-
-	CompleteSetVPs& operator=(const CompleteSetVPs& good);
-
-private:
-	CardSet set;
-	string setSize;
-};
-
-class Card
 {
 public:
 
@@ -255,11 +202,6 @@ class Action
 
 };
 
-class Action
-{
-
-};
-
 class Hand
 {
 public:
@@ -281,6 +223,7 @@ public:
 	static int getCardCost(int position);
 
 private:
+
 	vector<Card*> handCards;
 };
 
@@ -303,7 +246,7 @@ public:
 
 	void draw(const int count);
 	void shuffle();
-	
+
 	Hand* getHand() const;
 private:
 	vector<Card*> cardDeck;

@@ -21,7 +21,7 @@ Deck::~Deck()
 		delete card;
 		card = nullptr;;
 	}
-	
+
 	cardDeck.clear();
 }
 
@@ -65,7 +65,7 @@ ostream& operator<<(ostream& os, const Deck& deck)
 	}
 
 	s += "| ";
-	
+
 	os << s << std::endl;
 
 	return os;
@@ -139,13 +139,13 @@ int Hand::getCardCost(int position)
 	int cardCost;
 	switch (position)
 	{
-	case 1: cardCost = 0; break;
-	case 2: cardCost = 1; break;
-	case 3: cardCost = 1; break;
-	case 4: cardCost = 2; break;
-	case 5: cardCost = 2; break;
-	case 6: cardCost = 3; break;
-	default: cardCost = -1;
+	case 1:cardCost = 0; break;
+	case 2:
+	case 3:cardCost = 1; break;
+	case 4:
+	case 5:cardCost = 2; break;
+	case 6:cardCost = 3; break;
+	default: cardCost = 0;
 	}
 
 	return cardCost;
@@ -172,17 +172,17 @@ ostream& operator<<(ostream& os, const Hand& hand)
 #pragma region Card
 //======= CARD METHODS =======//
 
-Card::Card(string nameStr, Good* good,  string actionDesc)
+Card::Card(string nameStr, Good* good, string actionDesc)
 {
 	// initialize card
 	this->name = std::move(nameStr);
 	this->good = good;
 	this->action = std::move(actionDesc);
+	this->secondAction = "";
 }
 
-Card::Card(string nameStr, Good* good, string firstActionDesc, string secondActionDesc)
+Card::Card(string nameStr, Good* good, string firstActionDesc, string secondActionDesc) 
 {
-	// initialize card w/ 2 actions
 	this->name = std::move(nameStr);
 	this->good = good;
 	this->action = std::move(firstActionDesc);
@@ -200,6 +200,7 @@ Card::Card(const Card& otherCard)
 	this->name = otherCard.name;
 	this->good = otherCard.good;
 	this->action = otherCard.action;
+	this->secondAction = otherCard.secondAction;
 }
 
 ostream& operator<<(ostream& os, const Card& card)
@@ -213,6 +214,7 @@ Card& Card::operator=(const Card& card)
 	this->name = card.name;
 	this->good = card.good;
 	this->action = card.action;
+	this->secondAction = card.secondAction;
 
 	return *this;
 }
