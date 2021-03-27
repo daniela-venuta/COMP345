@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "Map.h"
-#include "MapUtility.h"
+#include "Cards.h"
 #include <algorithm>
 #include <vector>
 #include <iostream>
@@ -135,14 +135,14 @@ ostream& operator>>(ostream& os, const Player& player)
 // Player pays coins (to buy card)
 void Player::PayCoin(const int price)
 {
-	if (price > 0 && (pResources->totalCoins - price) >= 0)
+	if (price > -1 && (pResources->totalCoins - price) >= 0)
 	{
 		setBalance(pResources->totalCoins - price);
-		std::cout << "Removed " << price << " coins from "+ getName() + "'s total." << std::endl;
-		std::cout << "New total of coins of " + getName() + ": " << pResources->totalCoins << " coins" << std::endl;
+		std::cout << "Removed " << price << " coins from player total." << std::endl;
+		std::cout << "New total: " << pResources->totalCoins << " coins" << std::endl;
 	} else
 	{
-		std::cout << getName() + " cannot perform this action (PayCoin)." << std::endl;
+		std::cout << "Cannot perform this action (PayCoin)." << std::endl;
 	}
 
 }
@@ -336,7 +336,7 @@ void Player::DestroyArmy(int number, Territory<Region>* location, vector<Player*
 		
 	else 
 	{
-		std::cout << getName() + " couldn't perform this action. (Destroy City)" << std::endl;
+		std::cout << "Action not permissible (DestroyArmies at " << location->getName() << ")" << std::endl;
 	}
 
 }

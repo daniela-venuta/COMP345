@@ -85,10 +85,7 @@ public:
 	bool DestroyArmy();
 	bool BuildCity();
 
-	int getNumofcards();
-	void setNumofcards();
-	vector<Good*> getListGoods();
-	void addGoods(Good* addedGood);
+	void applyGood(Good* addedGood);
 	Resources* getResources() const;
 	void andOrAction(Card* cardTwoAction, GameMap* gm);
 	int MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap* map);
@@ -97,8 +94,6 @@ private:
 	string playerName;
 	vector<Territory<Region>*> playerTerritories;
 	Hand* playerHand;
-	int NumCards;
-	vector<Good*> playerGoods;
 	vector<Territory<Region>*> playerArmies;
 	Resources* pResources;
 

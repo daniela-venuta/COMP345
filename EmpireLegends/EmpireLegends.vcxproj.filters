@@ -68,7 +68,7 @@
     <ClCompile Include="AfterActionDriver.cpp">
       <Filter>Driver Files</Filter>
     </ClCompile>
-    <ClCompile Include="MainGameLoopDriver.cpp">
+    <ClCompile Include="MainLoopDriver.cpp">
       <Filter>Driver Files</Filter>
     </ClCompile>
     <ClCompile Include="CardActionDriver.cpp">

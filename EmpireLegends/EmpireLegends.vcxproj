@@ -147,7 +147,7 @@
     <ClCompile Include="MainDriver.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="AfterActionDriver.cpp" />
-    <ClCompile Include="MainGameLoopDriver.cpp" />
+    <ClCompile Include="MainLoopDriver.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapDriver.cpp" />
     <ClCompile Include="CardActionDriver.cpp" />
