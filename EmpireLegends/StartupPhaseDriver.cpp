@@ -30,7 +30,7 @@ int main()
 
 	
 	StartingPhase* startingPhase = new StartingPhase();
-	startingPhase->startGame(players, cardDeck);
+	startingPhase->startGame(players, cardDeck, 2);
 
 	delete startingPhase;
 	startingPhase = nullptr;

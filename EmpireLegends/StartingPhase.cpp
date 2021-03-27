@@ -126,10 +126,11 @@ StartingPhase::~StartingPhase()
 	delete map;
 }
 
-void StartingPhase::startGame(const vector<Player*> playerVector, Deck* deck)
+void StartingPhase::startGame(const vector<Player*> playerVector, Deck* deck, int numPlayers)
 {
 	this->players = playerVector;
 	this->cardDeck = deck;
+	this->numOfPlayers = numPlayers;
 	
 	shuffleCardDeck();
 	assignPlayerCoins();
@@ -199,7 +200,7 @@ string StartingPhase::getRandomTerritory()
 	return territory;
 }
 
-void StartingPhase::shuffleCardDeck()
+void StartingPhase::shuffleCardDeck() const
 {
 	std::cout << *cardDeck;
 
@@ -213,23 +214,13 @@ void StartingPhase::shuffleCardDeck()
 
 void StartingPhase::assignPlayerCoins()
 {
-	string username;
 	string color;
-	
-	// determines how many coins per player
-	std::cout << "\nNumber of players in the game (2-4): ";
-	std::cin >> numOfPlayers;
 
 	// Assign number of coins based on players
 	int playerCoins = setNumberOfCoins(numOfPlayers);
 
 	// Get players
 	for (int i = 0; i < numOfPlayers; i++) {
-		std::cout << "Type player name: ";
-		std::cin >> username;
-
-		// creates a new pointer for each player object and adds it to the player vector
-		players.push_back(new Player(username, 0));
 		players[i]->getResources()->totalCoins = playerCoins;
 	}
 
