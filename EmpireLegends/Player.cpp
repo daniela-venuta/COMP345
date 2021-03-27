@@ -237,7 +237,7 @@ Resources* Player::getResources() const
 
 void Player::addGoods(Good* addedGood)
 {
-	addedGood.applyGood(pResources);
+	addedGood->applyGood(pResources);
 	
 	//Just replace this line with a call to the applyGood method with the Resources instance	
 	//pResources->applyGood(addedGood);

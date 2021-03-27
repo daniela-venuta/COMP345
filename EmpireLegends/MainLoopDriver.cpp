@@ -77,8 +77,6 @@ int main()
 
 	Deck* deck = new Deck(cardVector);
 
-	//deck->draw(6);
-
 	std::cout << "Face up cards: \n";
 	std::cout << "1- " << *card6;
 	std::cout << "2- " << *card5;
@@ -119,7 +117,7 @@ int main()
 	
 	
 	MainGame* mainGame = new MainGame(nullptr, nullptr, deck, myPlayers);
-	//Hand* deckHand = deck->getHand();
+	
 	mainGame->maingameloop(cardVector , numOfTurns, myPlayers);
 
 

@@ -101,7 +101,3 @@ int MainGame::PickACard() {
 
     return cardposition;
 }
-
-
-
-
