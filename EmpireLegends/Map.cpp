@@ -438,6 +438,11 @@ int GameMap::getTravelCost(Territory<Region>* from, Territory<Region>* to)
         }
 	}
 
+    if (continentFrom == nullptr || continentTo == nullptr)
+    {
+        return 0;
+    }
+
     cost += continentFrom->value->getBestCost(from);
     cost += continentFrom->getTravelCost(continentTo);
     cost += continentTo->value->getBestCost(to);
