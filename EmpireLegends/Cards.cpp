@@ -117,7 +117,7 @@ Card* Hand::exchange(int rowPosition, Player* player)
 
 		if (cardCost > 0)
 		{
-			player->PayCoin(cardCost);
+			player->payCoin(cardCost);
 		}
 	}
 	else

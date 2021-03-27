@@ -44,53 +44,48 @@ void MainGame::afterAction()
 }
 
 
-void MainGame::maingameloop(vector<Card*> cardVector, int numOfTurns , vector<Player*> myPlayers) {
-       
+void MainGame::mainGameloop(vector<Card*> cardVector, int numOfTurns, vector<Player*> players) {
+
     int cardposition = 0;
-    std::cout << myPlayers[0]->getBalance(); 
-    std::cout << myPlayers[1]->getBalance();
-        
+
     while (numOfTurns > 0) {
-            
-        std::cout <<"The number od turns player: "<< numOfTurns << std::endl; 
-        for (int i = 0; i < myPlayers.size(); i++) {
-         
-            std::cout << "\n\nPlayer " << myPlayers[i]->getName() << std::endl;
-             
-            cardposition = PickACard();
-                                      
+
+        for (int i = 0; i < players.size(); i++) {
+
+            std::cout << "\n\nPlayer " << players[i]->getName() << std::endl;
+
+            cardposition = pickACard();
+
             std::cout << "\n";
-               
+
             Hand* deckHand = deck->getHand();
-                
-            int cardcost = deckHand->getCardCost(cardposition);              
+
+            int cardcost = deckHand->getCardCost(cardposition);
             int cardDeckPos = (cardposition - 1);
-                
+
             Card* facecard = cardVector[cardDeckPos];
-               
-            if (myPlayers[i]->getBalance() >= cardcost) {
-                                 
-                myPlayers[i]->PayCoin(cardcost);
-                   
-                myPlayers[i]->addGoods(facecard->getGood());
-                  
+
+            if (players[i]->getBalance() >= cardcost) {
+
+                players[i]->payCoin(cardcost);
+
+                players[i]->applyGood(facecard->getGood());
+
                 std::cout << "Players card good : " << *facecard->getGood() << std::endl;
-                    
-                std::cout << "Players card action : " << facecard->getAction() << std::endl;                                  
-            }            
+
+                std::cout << "Players card action : " << facecard->getAction() << std::endl;
+            }
             else {
-                
-                std::cout << "Card not added to player" << std::endl;               
-            }                        
-        } 
+
+                std::cout << "Card not added to player" << std::endl;
+            }
+        }
         numOfTurns--;
-    } 
-    std::cout << "The Game is Over!!" << std::endl; 
+    }
+    std::cout << "The Game is Over!!" << std::endl;
 }
 
-
-
-int MainGame::PickACard() {
+int MainGame::pickACard() {
 
     int cardposition;
 

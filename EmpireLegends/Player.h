@@ -1,5 +1,4 @@
 #pragma once
-
 #include <string>
 #include <vector>
 #include "Map.h"
@@ -69,7 +68,7 @@ public:
 	int getCoins() const;
 	void setCoins(int coins);
 
-	void PayCoin(int price);
+	void payCoin(int price);
 	int getBalance() const;
 	void setBalance(int newBalance);
 

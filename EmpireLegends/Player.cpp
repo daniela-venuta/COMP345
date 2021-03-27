@@ -133,7 +133,7 @@ ostream& operator>>(ostream& os, const Player& player)
 }
 
 // Player pays coins (to buy card)
-void Player::PayCoin(const int price)
+void Player::payCoin(const int price)
 {
 	if (price > -1 && (pResources->totalCoins - price) >= 0)
 	{
@@ -201,7 +201,7 @@ void Player::MoveArmies(int number, Territory<Region>* from, Territory<Region>* 
 					}
 				}
 				std::cout << "This action will cost " << cost << " travel points" << std::endl;
-				PayCoin(cost);
+				payCoin(cost);
 				std::cout << getName() + " moved " << number << " armies." << std::endl;
 			}
 			else
@@ -378,22 +378,10 @@ Resources* Player::getResources() const
 	return pResources;
 }
 
-int Player::getNumofcards() {
-	return NumCards;
-}
 
-void Player::setNumofcards() {
-	NumCards++;
-}
-
-vector<Good*> Player::getListGoods()
+void Player::applyGood(Good* addedGood)
 {
-	return playerGoods;
-}
-
-void Player::addGoods(Good* addedGood)
-{
-	playerGoods.push_back(addedGood);
+	addedGood->applyGood(pResources);
 }
 
 //Give player the possible actions within their turn if they have an "And/Or" card
@@ -675,5 +663,3 @@ bool Player::BuildCity()
 	return true;
 }
 	
-
-
