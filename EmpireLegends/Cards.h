@@ -44,7 +44,7 @@ public:
 	// Pure virtual method to apply good
 	virtual void applyGood(Resources* resources) = 0;
 	virtual ~Good() = default;
-	
+
 	friend ostream& operator<<(ostream& os, const Good& good) { return os << good.toString(); }
 
 protected:
@@ -93,11 +93,13 @@ class Elixir : public Good
 {
 public:
 
-	explicit Elixir() : Good("Elixir") {}
+	explicit Elixir(int num);
 
 	void applyGood(Resources* resources) override;
 
 	Elixir& operator=(const Elixir& good);
+private:
+	int elixirs;
 };
 
 class GainCoins : public Good
@@ -216,10 +218,9 @@ public:
 
 	Card* exchange(int rowPosition, Player* player);
 	void addCard(Card* card);
-
-private:
 	static int getCardCost(int position);
 
+private:
 	vector<Card*> handCards;
 };
 
@@ -242,7 +243,7 @@ public:
 
 	void draw(const int count);
 	void shuffle();
-	
+
 	Hand* getHand() const;
 private:
 	vector<Card*> cardDeck;

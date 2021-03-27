@@ -140,12 +140,12 @@ int Hand::getCardCost(int position)
 	switch (position)
 	{
 	case 1:cardCost = 0; break;
-	case 2:
+	case 2:cardCost = 1; break;
 	case 3:cardCost = 1; break;
-	case 4:
+	case 4:cardCost = 2; break;
 	case 5:cardCost = 2; break;
 	case 6:cardCost = 3; break;
-	default: cardCost = 0;
+	default: cardCost = -1;
 	}
 
 	return cardCost;
@@ -270,9 +270,14 @@ Flying& Flying::operator=(const Flying& good)
 	return *this;
 }
 
+Elixir::Elixir(int numElixirs) : Good("Elixir")
+{
+	elixirs = numElixirs;
+}
+
 void Elixir::applyGood(Resources* resources)
 {
-	resources->elixir++;
+	resources->elixir += elixirs;
 }
 
 Elixir& Elixir::operator=(const Elixir& good)

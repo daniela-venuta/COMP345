@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Map.h"
+#include "Cards.h"
 
 #include <iostream>
 
@@ -130,7 +131,7 @@ ostream& operator>>(ostream& os, const Player& player)
 // Player pays coins (to buy card)
 void Player::PayCoin(const int price)
 {
-	if (price > 0 && (pResources->totalCoins - price) >= 0)
+	if (price > -1 && (pResources->totalCoins - price) >= 0)
 	{
 		setBalance(pResources->totalCoins - price);
 		std::cout << "Removed " << price << " coins from player total." << std::endl;
@@ -234,3 +235,11 @@ Resources* Player::getResources() const
 	return pResources;
 }
 
+void Player::addGoods(Good* addedGood)
+{
+	addedGood.applyGood(pResources);
+	
+	//Just replace this line with a call to the applyGood method with the Resources instance	
+	//pResources->applyGood(addedGood);
+
+}

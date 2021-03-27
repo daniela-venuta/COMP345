@@ -77,6 +77,7 @@ public:
 	void BuildCity(Territory<Region>*territory);
 
 	Resources* getResources() const;
+	void addGoods(Good* addedGood);
 
 private:
 	string playerName;
