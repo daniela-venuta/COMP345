@@ -26,11 +26,11 @@ public:
 	StartingPhase();
 	~StartingPhase();
 
-	void startGame();
+	void startGame(const vector<Player*> playerVector, Deck* deck);
 
 private:
-	void setupCardDeck();
-	void populatePlayers();
+	void shuffleCardDeck();
+	void assignPlayerCoins();
 	void setupStartingTerritories();
 	void placeArmiesOnMap();
 	void setupNonPlayer();

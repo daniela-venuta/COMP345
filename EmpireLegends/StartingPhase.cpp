@@ -126,10 +126,13 @@ StartingPhase::~StartingPhase()
 	delete map;
 }
 
-void StartingPhase::startGame()
+void StartingPhase::startGame(const vector<Player*> playerVector, Deck* deck)
 {
-	setupCardDeck();
-	populatePlayers();
+	this->players = playerVector;
+	this->cardDeck = deck;
+	
+	shuffleCardDeck();
+	assignPlayerCoins();
 	setupStartingTerritories();
 	placeArmiesOnMap();
 	setupNonPlayer();
@@ -196,28 +199,8 @@ string StartingPhase::getRandomTerritory()
 	return territory;
 }
 
-void StartingPhase::setupCardDeck()
+void StartingPhase::shuffleCardDeck()
 {
-	// set up cards
-	Card* cardOne = new Card("Dire dragon", new Flying, "Place 3 armies and destroy one army");
-	Card* cardTwo = new Card("Dire giant", new Immune, "Place 3 armies and destroy army");
-	Card* cardThree = new Card("Dire eye", new Flying, "Place 4 armies");
-	Card* cardFour = new Card("Dire Ogre", new CoinVPs, "Move 2 armies");
-	Card* cardFive = new Card("Lake", new SetNameVPs(CardSet::forest), "Place 2 armies and move 3 armies");
-	Card* cardSix = new Card("Noble Hills", new CompleteSetVPs(3, CardSet::noble), "Place 3 armies");
-
-	// add Cards to a vector
-	vector<Card*> cardVector;
-	cardVector.push_back(cardOne);
-	cardVector.push_back(cardTwo);
-	cardVector.push_back(cardThree);
-	cardVector.push_back(cardFour);
-	cardVector.push_back(cardFive);
-	cardVector.push_back(cardSix);
-
-	// Create deck and add cards (this creates a card hand as well)
-	cardDeck = new Deck(cardVector);
-
 	std::cout << *cardDeck;
 
 	cardDeck->shuffle();
@@ -228,7 +211,7 @@ void StartingPhase::setupCardDeck()
 	std::cout << *cardDeck;
 }
 
-void StartingPhase::populatePlayers()
+void StartingPhase::assignPlayerCoins()
 {
 	string username;
 	string color;
@@ -241,12 +224,13 @@ void StartingPhase::populatePlayers()
 	int playerCoins = setNumberOfCoins(numOfPlayers);
 
 	// Get players
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < numOfPlayers; i++) {
 		std::cout << "Type player name: ";
 		std::cin >> username;
 
 		// creates a new pointer for each player object and adds it to the player vector
-		players.push_back(new Player(username, playerCoins));
+		players.push_back(new Player(username, 0));
+		players[i]->getResources()->totalCoins = playerCoins;
 	}
 
 	// select colors
