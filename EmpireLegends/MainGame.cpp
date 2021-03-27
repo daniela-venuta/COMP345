@@ -43,21 +43,17 @@ void MainGame::afterAction()
 	std::cout << getCurrentPlayer()->getName() << " plays next." << std::endl;
 }
 
-
-void MainGame::maingameloop(vector<Card*> cardVector, int numOfTurns , vector<Player*> myPlayers) {
+void MainGame::mainGameloop(vector<Card*> cardVector, int numOfTurns , vector<Player*> players) {
        
     int cardposition = 0;
-    std::cout << myPlayers[0]->getBalance(); 
-    std::cout << myPlayers[1]->getBalance();
-        
+          
     while (numOfTurns > 0) {
-            
-        std::cout <<"The number od turns player: "<< numOfTurns << std::endl; 
-        for (int i = 0; i < myPlayers.size(); i++) {
+                  
+        for (int i = 0; i < players.size(); i++) {
          
-            std::cout << "\n\nPlayer " << myPlayers[i]->getName() << std::endl;
+            std::cout << "\n\nPlayer " << players[i]->getName() << std::endl;
              
-            cardposition = PickACard();
+            cardposition = pickACard();
                                       
             std::cout << "\n";
                
@@ -68,11 +64,11 @@ void MainGame::maingameloop(vector<Card*> cardVector, int numOfTurns , vector<Pl
                 
             Card* facecard = cardVector[cardDeckPos];
                
-            if (myPlayers[i]->getBalance() >= cardcost) {
+            if (players[i]->getBalance() >= cardcost) {
                                  
-                myPlayers[i]->PayCoin(cardcost);
+                players[i]->payCoin(cardcost);
                    
-                myPlayers[i]->addGoods(facecard->getGood());
+                players[i]->applyGood(facecard->getGood());
                   
                 std::cout << "Players card good : " << *facecard->getGood() << std::endl;
                     
@@ -88,9 +84,7 @@ void MainGame::maingameloop(vector<Card*> cardVector, int numOfTurns , vector<Pl
     std::cout << "The Game is Over!!" << std::endl; 
 }
 
-
-
-int MainGame::PickACard() {
+int MainGame::pickACard() {
 
     int cardposition;
 

@@ -129,7 +129,7 @@ ostream& operator>>(ostream& os, const Player& player)
 }
 
 // Player pays coins (to buy card)
-void Player::PayCoin(const int price)
+void Player::payCoin(const int price)
 {
 	if (price > -1 && (pResources->totalCoins - price) >= 0)
 	{
@@ -235,11 +235,7 @@ Resources* Player::getResources() const
 	return pResources;
 }
 
-void Player::addGoods(Good* addedGood)
+void Player::applyGood(Good* addedGood)
 {
-	addedGood->applyGood(pResources);
-	
-	//Just replace this line with a call to the applyGood method with the Resources instance	
-	//pResources->applyGood(addedGood);
-
+	addedGood->applyGood(pResources);	
 }

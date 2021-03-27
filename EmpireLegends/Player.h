@@ -66,7 +66,7 @@ public:
 
 	void setCoins(int coins);
 
-	void PayCoin(int price);
+	void payCoin(int price);
 	int getBalance() const;
 	void setBalance(int newBalance);
 
@@ -77,7 +77,7 @@ public:
 	void BuildCity(Territory<Region>*territory);
 
 	Resources* getResources() const;
-	void addGoods(Good* addedGood);
+	void applyGood(Good* addedGood);
 
 private:
 	string playerName;

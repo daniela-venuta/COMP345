@@ -9,14 +9,9 @@ int main()
 {
 	vector<Card*> cardVector;
 	cardVector.reserve(20);
-	vector<Player*> myPlayers;
-	int numOfPlayers;
-	int FinalnumOfCards;
+	vector<Player*> players;
 	int numOfTurns = 0;
 	int PlayerCount =0;
-
-	//myPlayers.push_back(new Player("John", 11));
-	//myPlayers.push_back(new Player("Bob", 11));
 
 	Card* card1 = new Card("Dire Dragon", new Flying, "Place 3 armies and destroy one army");
 	Card* card2 = new Card("Dire Giant", new Immune, "Place 3 armies and destroy army");
@@ -94,31 +89,31 @@ int main()
 	switch (PlayerCount) {
 
 	case 2:
-		myPlayers.push_back(new Player("John", 14));
-		myPlayers.push_back(new Player("Bob", 14));
+		players.push_back(new Player("John", 14));
+		players.push_back(new Player("Bob", 14));
 		numOfTurns = 13;
 		break;
 
 	case 3:
-		myPlayers.push_back(new Player("John", 11));
-		myPlayers.push_back(new Player("Bob", 11));
-		myPlayers.push_back(new Player("Anna", 11));
+		players.push_back(new Player("John", 11));
+		players.push_back(new Player("Bob", 11));
+		players.push_back(new Player("Anna", 11));
 		numOfTurns = 10;
 		break;
 
 	case 4:
-		myPlayers.push_back(new Player("John", 9));
-		myPlayers.push_back(new Player("Bob", 9));
-		myPlayers.push_back(new Player("Jack", 9));
-		myPlayers.push_back(new Player("Anna", 9));
+		players.push_back(new Player("John", 9));
+		players.push_back(new Player("Bob", 9));
+		players.push_back(new Player("Jack", 9));
+		players.push_back(new Player("Anna", 9));
 		numOfTurns = 8;
 		break;
 	}
 	
 	
-	MainGame* mainGame = new MainGame(nullptr, nullptr, deck, myPlayers);
+	MainGame* mainGame = new MainGame(nullptr, nullptr, deck, players);
 	
-	mainGame->maingameloop(cardVector , numOfTurns, myPlayers);
+	mainGame->mainGameloop(cardVector , numOfTurns, players);
 
 
 	for (Card* card : cardVector)
@@ -127,7 +122,7 @@ int main()
 		card = nullptr;
 	}
 
-	for (Player* player : myPlayers)
+	for (Player* player : players)
 	{
 		delete player;
 	}
