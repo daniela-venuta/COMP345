@@ -1,7 +1,8 @@
 #include "Player.h"
 #include "Map.h"
+#include "MapUtility.h"
 #include <algorithm>
-
+#include <vector>
 #include <iostream>
 
 using namespace std; 
@@ -235,7 +236,7 @@ void Player::PlaceNewArmies(int number, Territory<Region>* location)
 	if (number > 0 && (unplacedArmies - number) >= 0)
 	{
 
-		if (ownsCity == true || location->getName() == originRegion)
+		if (ownsCity == true || location->getName() == initialRegion)
 		{
 		    pResources->unplacedArmies -= number;
 			location->addArmies(number);
@@ -355,7 +356,6 @@ void Player::BuildCity(Territory<Region>* location)
 			break;
 		}
 	}
-	
 
 	if (haveOwnArmy && unplacedCities - 1 >= 0 && (TOTAL_NUM_CITIES - unplacedCities + 1) <= TOTAL_NUM_CITIES && location->getArmyCount() > 0)
 	{
@@ -366,14 +366,11 @@ void Player::BuildCity(Territory<Region>* location)
 
 		std::cout << getName() + " built a city at " + location->getName() << std::endl;
 	}
-	else if (pResources->unplacedCities - 1 < 0 || (TOTAL_NUM_CITIES - unplacedCities + 1) > TOTAL_NUM_CITIES)
+	else  
 	{
-		std::cout << "This action is not permissible due to errors (BuildCity)." << std::endl;
+		std::cout << getName() +  " cannot built a city at " + location->getName() + " due to not having an army in this region \nor not having any funds to built a new city." << std::endl;
 	}
-	else
-	{
-		std::cout << getName() + " cannot built a city at " + location->getName() + " due to not having an army in this region." << std::endl;
-	}
+
 }
 
 Resources* Player::getResources() const
@@ -400,7 +397,7 @@ void Player::addGoods(Good* addedGood)
 }
 
 //Give player the possible actions within their turn if they have an "And/Or" card
-string Player::AndOrAction(Card* cardTwoAction) {
+void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 
 	string action1 = cardTwoAction->getAction();
 	string action2 = cardTwoAction->getSecondAction();
@@ -410,10 +407,12 @@ string Player::AndOrAction(Card* cardTwoAction) {
 	if (action2 == "")
 	{
 		std::cout << "Error: The card entered isn't a card with two actions." << std::endl;
-		return  chosenAction;
+		return;
 	}
 
 	std::cout << "This card has two actions, " + action1 + " and " + action2 << std::endl;
+
+	
 
 	do
 	{
@@ -424,10 +423,12 @@ string Player::AndOrAction(Card* cardTwoAction) {
 
 		switch (option) {
 		case 1:
-			chosenAction = action1;
+			chosenAction = action1; 
+			std::cout << getName() + " have chosen " + action1 +"." << std::endl;
 			break;
 		case 2:
 			chosenAction = action2;
+			std::cout << getName() + " have chosen " + action2 + "." << std::endl;
 			break;
 		default:
 			std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
@@ -435,23 +436,244 @@ string Player::AndOrAction(Card* cardTwoAction) {
 
 	} while (chosenAction == "");
 
+	bool check = false;
+	int notpossible = 0;
+	bool canBuild, canMove, canDestroy, canPlace;
+	canBuild = canMove = canDestroy = canPlace = true;
 
-	if (chosenAction == "Build City")
+	do 
 	{
-		std::cout << getName() + " have chosen to build a city." << std::endl;
-	}
-	else if (chosenAction == "Move Armies")
-	{
-		std::cout << getName() + " have chosen to move your armies." << std::endl;
-	}
-	else if (chosenAction == "Destroy Army")
-	{
-		std::cout << getName() + " have chosen to destroy an army" << std::endl;
-	}
-	else if (chosenAction == "Place New Armies")
-	{
-		std::cout << getName() + " have chosen to place new armies" << std::endl;
-	}
+		if (chosenAction == "Build City")
+		{
+			if (canBuild == true) 
+			{
+				std::cout << "You have chosen to build a city." << std::endl;
 
-	return chosenAction;
+				if (BuildCity() == true)
+				{
+					check = true;
+				}
+				else
+				{
+					canBuild = false;
+					notpossible += 1;
+				}
+			}
+			else 
+			{
+				std::cout <<"You have already tried to build a city, but something made it impossible to be done. Please choose another option"<< std::endl;
+			}
+			
+		}
+
+		else if (chosenAction == "Move Armies")
+		{
+			if (canMove == true)
+			{
+				std::cout << "You have chosen to move some armies." << std::endl;
+
+				if (MoveArmies() == true)
+				{
+					check = true;
+				}
+				else
+				{
+					canMove = false;
+					notpossible += 1;
+				}
+			}
+			else
+			{
+				std::cout << "You have already tried to move some armies, but something made it impossible to be done. Please choose another option." << std::endl;
+			}
+
+
+		}
+
+		else if (chosenAction == "Destroy Army" )
+		{
+			if (canDestroy == true)
+			{
+				std::cout << "You have chosen to destroy some armies." << std::endl;
+
+				if (DestroyArmy() == true)
+				{
+					check = true;
+				}
+				else
+				{
+					canDestroy = false;
+					notpossible += 1;
+				}
+			}
+			else
+			{
+				std::cout << "You have already tried to move some armies, but something made it impossible to be done. Please choose another option." << std::endl;
+			}
+		}
+
+		else if (chosenAction == "Place New Armies")
+		{
+			std::cout << "You have chosen to place new armies." << std::endl;
+			check = PlaceNewArmies(gm);
+		}
+
+	} while (check != true);
+	
 }
+
+bool Player::PlaceNewArmies(GameMap* gm)
+{
+	std::cout << getName() + ": You try to PLACE NEW ARMIES." << std::endl;
+	if (pResources->unplacedArmies == 0)
+	{
+		std::cout << "Unfortunataly, you cannot build a city due to having no armies on the map \n or you don't have enough material left to build a city." << std::endl;
+		return false;
+	}
+
+	vector<Territory<Region>*> possibleRegions;
+	Territory<Region>* originPoint = gm->findTerritory("Continent 1")->value->findTerritory("Region 1");
+	possibleRegions.push_back(originPoint);
+	int options = 0;
+	for (auto reg : playerArmies)
+	{
+		auto it = find(possibleRegions.begin(), possibleRegions.end(), reg);
+		if (it == possibleRegions.end())
+		{
+			options += 1;
+			possibleRegions.push_back(reg);
+		}
+	}
+
+	int numOfArmies = 0;
+	Territory<Region>* armyReg = nullptr;
+	if (options == 1)
+	{
+		armyReg = possibleRegions.at(0);
+		std::cout << "As there is only one option, the city must be built in " + armyReg->getName() + "." << std::endl;
+	}
+	else 
+	{
+		do
+		{
+			int optionChosen;
+			std::cout << "Here are the possible regions where you could add armies:" << std::endl;
+			for (int i = 0; i < possibleRegions.size(); i++)
+			{
+				string optNum = to_string(i + 1);
+				std::cout << optNum + ": " + possibleRegions.at(i)->getName() + ";" << std::endl;
+			}
+			std::cout << "Please enter the number next to the region you wish to add armies to: " << std::endl;
+
+			std::cin >> optionChosen;
+			if (optionChosen > 0 && optionChosen <= options)
+			{
+				int index = optionChosen - 1;
+				armyReg = possibleRegions.at(index);
+			}
+			else
+			{
+				std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
+			}
+
+		} while (armyReg == nullptr);
+
+	}
+
+	do 
+	{
+		std::cout << "Please enter the number of armies you wish to put within : (You have a maximum of " << pResources->unplacedArmies + ")." << std::endl;
+
+		std::cin >> numOfArmies;
+		if (numOfArmies <= 0 || numOfArmies > pResources->unplacedArmies)
+		{
+			std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
+		}
+
+	} while (numOfArmies <= 0 || numOfArmies > pResources->unplacedArmies);
+
+
+	std::cout << getName() + " added " << numOfArmies << " armies at " << armyReg->getName() << std::endl;
+
+	return true;
+}
+
+bool Player::MoveArmies()
+{
+	return true;
+}
+
+bool Player::DestroyArmy()
+{
+	return true;
+}
+
+bool Player::BuildCity()
+{
+	std::cout << getName() + ": You try to BUILD A CITY." << std::endl;
+	if (playerArmies.empty()||pResources->unplacedCities == 0)
+	{
+		std::cout << "Unfortunataly, you cannot build a city due to having no armies on the map \n or you don't have enough material left to build a city." << std::endl;
+		return false;
+	}
+
+	vector<Territory<Region>*> possibleRegions;
+	int options = 0;
+	for (auto reg : playerArmies)
+	{
+		auto it = find(possibleRegions.begin(), possibleRegions.end(), reg);
+		if (it == possibleRegions.end())
+		{
+			options += 1;
+			possibleRegions.push_back(reg);
+		}
+	}
+
+	Territory<Region>* cityReg = NULL;
+	if (options == 1)
+	{
+		cityReg = possibleRegions.at(0);
+		std::cout << "As there is only one option, the city must be built in " + cityReg->getName() + "." << std::endl;
+	}
+	else 
+	{
+		do
+		{
+			int optionChosen;
+			std::cout << "Here are the possible regions where you could build a city:" << std::endl;
+			for (int i = 0; i < possibleRegions.size(); i++)
+			{
+				string optNum = to_string(i + 1);
+				std::cout << optNum + ": " + possibleRegions.at(i)->getName() + ";" << std::endl;
+			}
+			std::cout << "Please enter the number next to the region you wish to build a city in: " << std::endl;
+
+			std::cin >> optionChosen;
+			if (optionChosen > 0 && optionChosen <= options)
+			{
+				int index = optionChosen - 1;
+				cityReg = possibleRegions.at(index);
+			}
+			else
+			{
+				std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
+			}
+
+		} while (cityReg == nullptr);
+
+		std::cout << "You have chosen to built the city in " + cityReg->getName() + "." << std::endl;
+	
+	}
+
+	pResources->unplacedCities -= 1;
+	// add city at specified location
+
+	playerTerritories.push_back(cityReg);
+
+	std::cout << getName() + " built a city at " + cityReg->getName() << std::endl;
+
+	return true;
+}
+	
+
+

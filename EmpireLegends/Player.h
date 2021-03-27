@@ -11,7 +11,9 @@ using std::map;
 using std::ostream;
 
 enum Color { none, red, green, blue, yellow };
-static string originRegion = "Region 1";
+static vector<Player*> currentPlayers;
+static string initialContinent= "Continent 1";
+static string initialRegion = "Region 1";
 
 struct Resources
 {
@@ -71,17 +73,25 @@ public:
 	int getBalance() const;
 	void setBalance(int newBalance);
 
-	int MoveOverLand(Territory<Region>*from, Territory<Region>*to, GameMap * map);
+	//Original Version of Player Actions
 	void PlaceNewArmies(int number, Territory<Region>*destination);
 	void MoveArmies(int number, Territory<Region>*from, Territory<Region>*to, GameMap * map);
 	void DestroyArmy(int number, Territory<Region>*location, vector<Player*> currentPlayers);
 	void BuildCity(Territory<Region>*territory);
+
+	//"Ask Prompt to Player" of Player Actions
+	bool PlaceNewArmies(GameMap* gm);
+	bool MoveArmies();
+	bool DestroyArmy();
+	bool BuildCity();
+
 	int getNumofcards();
 	void setNumofcards();
 	vector<Good*> getListGoods();
 	void addGoods(Good* addedGood);
 	Resources* getResources() const;
-	string AndOrAction(Card* cardTwoAction);
+	void andOrAction(Card* cardTwoAction, GameMap* gm);
+	int MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap* map);
 
 private:
 	string playerName;
@@ -90,11 +100,11 @@ private:
 	int NumCards;
 	vector<Good*> playerGoods;
 	vector<Territory<Region>*> playerArmies;
-
 	Resources* pResources;
 
 	static const int TOTAL_NUM_ARMIES = 18;
 	static const int TOTAL_NUM_CITIES = 3;
 	static const int TOTAL_NUM_COINS = 9;
+	
 };
 	
