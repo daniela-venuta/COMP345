@@ -13,6 +13,7 @@ int main()
 	int numOfTurns = 0;
 	int PlayerCount = 0;
 
+
 	Card* card1 = new Card("Dire Dragon", new Flying, "Place 3 armies and destroy one army");
 	Card* card2 = new Card("Dire Giant", new Immune, "Place 3 armies and destroy army");
 	Card* card3 = new Card("Dire Eye", new Flying, "Place 4 armies");
