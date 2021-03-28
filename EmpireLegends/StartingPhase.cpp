@@ -29,28 +29,6 @@ bool ColorUtilities::getColorAvailability(Color color)
 	return isAvailable;
 }
 
-void ColorUtilities::setColorAvailability(string color, bool isAvailable)
-{
-	Color col = parseColor(color);
-
-	if (col == Color::blue)
-	{
-		blue = isAvailable;
-	}
-	else if (col == Color::yellow)
-	{
-		yellow = isAvailable;
-	}
-	else if (col == Color::red)
-	{
-		red = isAvailable;
-	}
-	else
-	{
-		green = isAvailable;
-	}
-}
-
 void ColorUtilities::setColorAvailability(Color color, bool isAvailable)
 {
 	if (color == Color::blue)
@@ -94,35 +72,7 @@ Color ColorUtilities::getNewColor()
 	return freeColor;
 }
 
-Color ColorUtilities::parseColor(string color)
-{
-	// set string to lower case
-	std::transform(color.begin(), color.end(), color.begin(),
-		[](unsigned char c) { return std::tolower(c); });
-
-	Color col = Color::none;
-
-	if (color.compare("blue") == 0)
-	{
-		col = Color::blue;
-	}
-	else if (color.compare("red") == 0)
-	{
-		col = Color::red;
-	}
-	else if (color.compare("green") == 0)
-	{
-		col = Color::green;
-	}
-	else if (color.compare("yellow") == 0)
-	{
-		col = Color::yellow;
-	}
-
-	return col;
-}
-
-Color ColorUtilities::parseColor(int index)
+Color ColorUtilities::getColor(int index)
 {
 	Color col = Color::none;
 
@@ -252,7 +202,7 @@ void StartingPhase::assignPlayerResources()
 		{
 			std::cout << player->getName() << ", choose your color: ";
 			std::cin >> colorNum;
-			col = colorUtilities->parseColor(colorNum);
+			col = colorUtilities->getColor(colorNum);
 			isAvailable = !colorUtilities->getColorAvailability(col);
 
 			if(isAvailable)
