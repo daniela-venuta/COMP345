@@ -68,17 +68,15 @@ void MainGame::mainGameloop(int numOfTurns, vector<Player*> players) {
             int cardcost = deckHand->getCardCost(cardposition);
             int cardDeckPos = (cardposition - 1);
           
-            /* auto* Hand = getHandCards();
+            vector<Card*> Hand = deckHand->getHandCards();
            
-            auto iter = find(handCards.begin(), handCards.end(), cardWanted)
+            Card* facecard =  Hand.at(cardDeckPos);
            
-                Card* facecard = ;*/
-
             std::cout << "Card exchanged: " << *deck->getHand()->exchange(cardDeckPos, players[i]) << std::endl;
             
             //deck->getCardDeck();
             
-            Card* facecard = deckHand->getHandCards()[cardDeckPos];
+            //Card* facecard = deckHand->getHandCards()[cardDeckPos];
                       
             if (players[i]->getBalance() >= cardcost) {
 

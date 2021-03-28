@@ -72,17 +72,11 @@ public:
 	int getBalance() const;
 	void setBalance(int newBalance);
 
-	//Original Version of Player Actions
+
 	void PlaceNewArmies(int number, Territory<Region>*destination);
 	void MoveArmies(int number, Territory<Region>*from, Territory<Region>*to, GameMap * map);
 	void DestroyArmy(int number, Territory<Region>*location, vector<Player*> currentPlayers);
 	void BuildCity(Territory<Region>*territory);
-
-	//"Ask Prompt to Player" of Player Actions
-	bool PlaceNewArmies(GameMap* gm);
-	bool MoveArmies(GameMap* gm);
-	bool DestroyArmy();
-	bool BuildCity();
 
 	void applyGood(Good* addedGood);
 	Resources* getResources() const;
@@ -100,5 +94,6 @@ private:
 	static const int TOTAL_NUM_CITIES = 3;
 	static const int TOTAL_NUM_COINS = 9;
 	
+	Territory<Region>* chosenTerritory(vector<Territory<Region>*> regions);
 };
 	

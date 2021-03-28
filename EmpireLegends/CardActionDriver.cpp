@@ -77,7 +77,7 @@ int main() {
 
 	//AndOrAction()
 	std::cout << "-- AndOrAction Tests --" << std::endl;
-	Card* c1 = new Card("Dire Dragon", new Flying, "Build City", "Place New Armies");
+	Card* c1 = new Card("Dire Dragon", new Flying, "Move 3 Armies", "Destroy 1 Armies");
 	Card* c2 = new Card("Dire Ogre", new CoinVPs, "Move 2 armies");
 
 	std::cout << p1->getName() + "'s turn: " << std::endl;
