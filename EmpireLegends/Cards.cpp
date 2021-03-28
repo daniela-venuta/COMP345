@@ -114,6 +114,26 @@ bool Deck::isEmpty() const
 #pragma endregion Deck
 
 #pragma region Hand
+Action::Action(string name, int multiplier)
+{
+	this->name = name;
+	this->multiplier = multiplier;
+}
+
+Action::Action(const Action& action)
+{
+	this->name = action.getName();
+	this->multiplier = action.getMultiplier();
+}
+
+Action& Action::operator=(const Action& action)
+{
+	this->name = action.getName();
+	this->multiplier = action.getMultiplier();
+
+	return *this;
+}
+
 //======= HAND METHODS =======//
 Hand::~Hand()
 {
@@ -190,6 +210,18 @@ int Hand::getCardCost(int position)
 	return cardCost;
 }
 
+ostream& operator<<(ostream& os, const Action& action)
+{
+	string s;
+	s += "Action: " + action.name;
+
+	if (action.multiplier > 0)
+	{
+		s += " (" + std::to_string(action.multiplier) + ")";
+	}
+	return os << s;
+}
+
 ostream& operator<<(ostream& os, const Hand& hand)
 {
 	string s = "The following cards remain in the hand: ";
@@ -210,22 +242,22 @@ ostream& operator<<(ostream& os, const Hand& hand)
 #pragma region Card
 //======= CARD METHODS =======//
 
-Card::Card(string nameStr, Good* good, string actionDesc)
+Card::Card(string name, Good* good, Action* action)
 {
 	// initialize card
-	this->name = std::move(nameStr);
+	this->name = std::move(name);
 	this->good = good;
-	this->action = std::move(actionDesc);
-	this->secondAction = "";
+	this->action = action;
+	this->secondAction = nullptr;
 	this->andOr = AndOr::SINGLE;
 }
 
-Card::Card(string nameStr, Good* good, string firstActionDesc, string secondActionDesc, AndOr andOr)
+Card::Card(string name, Good* good, Action* firstAction, Action* secondAction, AndOr andOr)
 {
-	this->name = std::move(nameStr);
+	this->name = std::move(name);
 	this->good = good;
-	this->action = std::move(firstActionDesc);
-	this->secondAction = std::move(secondActionDesc);
+	this->action = firstAction;
+	this->secondAction = secondAction;
 	this->andOr = andOr;
 }
 
@@ -245,7 +277,18 @@ Card::Card(const Card& otherCard)
 
 ostream& operator<<(ostream& os, const Card& card)
 {
-	os << "Card name: " << card.getName() << std::endl << *card.getGood() << std::endl;
+	os << "Card name: " << card.getName() << std::endl << *card.getGood() << std::endl << *card.getAction() << std::endl;
+	if (card.getSecondAction() != nullptr)
+	{
+		if (card.getAndOr() == AndOr::OR)
+		{
+			os << "or" << std::endl;
+		} else if (card.getAndOr() == AndOr::AND)
+		{
+			os << "and" << std::endl;
+		}
+		os << *card.getSecondAction() << std::endl;
+	}
 	return os;
 }
 
@@ -264,12 +307,12 @@ string Card::getName() const
 	return name;
 }
 
-string Card::getAction() const
+Action* Card::getAction() const
 {
 	return action;
 }
 
-string Card::getSecondAction() const
+Action* Card::getSecondAction() const
 {
 	return secondAction;
 }

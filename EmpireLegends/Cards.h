@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 
+class Action;
 using std::string;
 using std::vector;
 using std::map;
@@ -180,8 +181,8 @@ class Card
 {
 public:
 	Card() = default;
-	Card(string nameStr, Good* good, string actionDesc);
-	Card(string nameStr, Good* good, string firstActionDesc, string secondActionDesc, AndOr andOr);
+	Card(string name, Good* good, Action* actionDesc);
+	Card(string name, Good* good, Action* firstAction, Action* secondAction, AndOr andOr);
 	~Card();
 
 	// copy constructor
@@ -191,26 +192,41 @@ public:
 	friend ostream& operator<<(ostream& os, const Card& card);
 
 	// assignment operator
-	Card& operator = (const Card& card);
+	Card& operator=(const Card& card);
 
 	// getters and setters
 	string getName() const;
 	Good* getGood() const;
-	string getAction() const;
-	string getSecondAction() const;
+	Action* getAction() const;
+	Action* getSecondAction() const;
 	AndOr getAndOr() const;
 
 private:
 	string name;
 	Good* good;
-	string action;
-	string secondAction;
+	Action* action;
+	Action* secondAction;
 	AndOr andOr;
 };
 
 class Action
 {
+	string name;
+	int multiplier;
 
+public:
+
+	explicit Action(string name, int multiplier = 0);
+	// copy constructor
+	Action(const Action& action);
+	
+	// stream insertion operator overload
+	friend ostream& operator<<(ostream& os, const Action& action);
+	// assignment operator
+	Action& operator=(const Action& action);
+	
+	string getName() const { return name; }
+	int getMultiplier() const { return multiplier; }
 };
 
 class Hand

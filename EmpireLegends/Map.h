@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 
+class Player;
+
 // *** The graph structure used is inspired by the vector-based graph example shown in the Graphs DS zip found on the course's Moodle ***
 
 /// <summary>
@@ -57,7 +59,8 @@ struct Region : Location
 template <class T>
 class Territory
 {
-    int armyCount;
+	std::map<Player*, int> armies;
+	std::map<Player*, int> cities;
 
 	// Calculating the travel cost recursively
     int getTravelCostWithVisits(Territory<T>* destination, std::vector<Territory<T>*>& visited);
@@ -70,7 +73,7 @@ public:
     /// 1-parameter constructor
     /// </summary>
     /// <param name="value">territory's value</param>
-    explicit Territory(T* value) : armyCount(0), value(value) {}
+    explicit Territory(T* value) : value(value) {}
     /// <summary>
     /// Copy constructor. Does not copy the adjacency vector, since it's the graph's responsibility
     /// </summary>
@@ -118,14 +121,37 @@ public:
     /// Adding armies to the territory
     /// </summary>
     /// <param name="number">number of armies to add</param>
-    void addArmies(int number);
+    /// <param name="player">armies owner</param>
+    void addArmies(int number, Player* player);
     /// <summary>
     /// Removing armies from the territory
     /// </summary>
     /// <param name="number">number of armies to remove</param>
-    void removeArmies(int number);
-	
-    int getArmyCount() const;
+    /// <param name="player">armies owner</param>
+    void removeArmies(int number, Player* player);
+    /// <summary>
+    /// Adding a city to the territory
+    /// </summary>
+    /// <param name="number">number of armies to add</param>
+    /// <param name="player">armies owner</param>
+    void addCity(Player* player);
+    /// <summary>
+    /// Retrieves the total number of armies in this territory
+    /// </summary>
+    /// <returns></returns>
+    int getTotalArmyCount() const;
+    /// <summary>
+    /// Retrieves the number of armies in this territory owned by a player
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    int getPlacedArmies(Player* player) const;
+    /// <summary>
+    /// Retrieves the number of armies in this territory owned by a player
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    int getPlacedCities(Player* player) const;
 };
 
 /// <summary>

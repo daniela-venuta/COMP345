@@ -1,3 +1,4 @@
+//
 //// Tommy Andrews 40094870
 //// Émilie Martin 40095423
 //// Amélie Singoye 40094316
@@ -20,13 +21,6 @@
 //	auto* p2 = new Player("player2");
 //	auto* p3 = new Player("player3");
 //	auto* p4 = new Player("player4");
-//
-//	// Create list player pointers - Changes due to modification of Destroy Armies 
-//	vector<Player*> allPlayers;
-//	allPlayers.push_back(p1);
-//	allPlayers.push_back(p2);
-//	allPlayers.push_back(p3);
-//	allPlayers.push_back(p4);
 //
 //	std::cout << std::endl;
 //	std::cout << "P1 balance: " << p1->getBalance() << " coins." << std::endl;
@@ -57,70 +51,69 @@
 //
 //		std::cout << std::endl;
 //		std::cout << "preliminary placement of armies...." << std::endl;
-//		p1->PlaceNewArmies(3, t1);
-//		p2->PlaceNewArmies(2, t1);
-//		p3->PlaceNewArmies(15, t4);
-//		p4->PlaceNewArmies(17, t4);
+//		p1->placeNewArmies(3, t1);
+//		p2->placeNewArmies(2, t1);
+//		p3->placeNewArmies(15, t4);
+//		p4->placeNewArmies(17, t4);
 //
 //		std::cout << std::endl;
 //		std::cout << "============ MOVING ARMIES ============" << std::endl;
 //
-//		p1->MoveArmies(3, t1, t4, gameMap);
-//		p2->MoveArmies(-5, t3, t8, gameMap); // should output error message (invalid number of armies; negative number)
-//		p2->MoveArmies(2, t1, t4, gameMap);
-//		p3->MoveArmies(20, t4, t8, gameMap); // should output error message (invalid number of armies; insufficient armies)
-//		p3->MoveArmies(15, t4, t8, gameMap);
-//		p4->MoveArmies(10, t1, t1, gameMap); // should output error message (invalid destination region)
-//		p4->MoveArmies(17, t4, t8, gameMap);
+//		p1->moveArmies(3, t1, t4, gameMap);
+//		p2->moveArmies(-5, t3, t8, gameMap); // should output error message (invalid number of armies; negative number)
+//		p2->moveArmies(2, t1, t4, gameMap);
+//		p3->moveArmies(20, t4, t8, gameMap); // should output error message (invalid number of armies; insufficient armies)
+//		p3->moveArmies(15, t4, t8, gameMap);
+//		p4->moveArmies(10, t1, t1, gameMap); // should output error message (invalid destination region)
+//		p4->moveArmies(17, t4, t8, gameMap);
 //
 //		std::cout << std::endl;
-//		std::cout << "T1 army count: " << t1->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T3 army count: " << t3->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T4 army count: " << t4->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T8 army count: " << t8->getArmyCount() << " armies." << std::endl;
+//		std::cout << "T1 army count: " << t1->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T3 army count: " << t3->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T4 army count: " << t4->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T8 army count: " << t8->getTotalArmyCount() << " armies." << std::endl;
 //
 //		std::cout << std::endl;
 //		std::cout << "============ PLACING NEW ARMIES ============" << std::endl;
 //
-//		p1->PlaceNewArmies(20, t4); // should output error message (invalid number of armies; insufficient armies)
-//		p1->PlaceNewArmies(4, t4);
-//		p2->PlaceNewArmies(-5, t4); // should output error message (invalid number of armies; negative number)
-//		p2->PlaceNewArmies(1, t4);
-//		p3->PlaceNewArmies(0, t8); // should output error message (invalid number of armies; can't add zero)
-//		p3->PlaceNewArmies(3, t8);
-//		p4->PlaceNewArmies(5, t8); // should output error message (invalid number of armies; insufficient armies)
-//		p4->PlaceNewArmies(1, t8);
+//		p1->placeNewArmies(20, t4); // should output error message (invalid number of armies; insufficient armies)
+//		p1->placeNewArmies(4, t4);
+//		p2->placeNewArmies(-5, t4); // should output error message (invalid number of armies; negative number)
+//		p2->placeNewArmies(1, t4);
+//		p3->placeNewArmies(0, t8); // should output error message (invalid number of armies; can't add zero)
+//		p3->placeNewArmies(3, t8);
+//		p4->placeNewArmies(5, t8); // should output error message (invalid number of armies; insufficient armies)
+//		p4->placeNewArmies(1, t8);
 //
 //		std::cout << std::endl;
-//		std::cout << "T1 army count: " << t1->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T3 army count: " << t3->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T4 army count: " << t4->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T8 army count: " << t8->getArmyCount() << " armies." << std::endl;
+//		std::cout << "T1 army count: " << t1->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T3 army count: " << t3->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T4 army count: " << t4->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T8 army count: " << t8->getTotalArmyCount() << " armies." << std::endl;
 //
 //		std::cout << std::endl;
 //		std::cout << "============ DESTROYING ARMIES ============" << std::endl;
 //
-//		p1->DestroyArmy(3, t4, allPlayers);
-//		p2->DestroyArmy(8, t4, allPlayers); //should output error message (invalid number of armies; not enough armies to destroy)
-//		p2->DestroyArmy(2, t4, allPlayers);
-//		p3->DestroyArmy(-9, t8, allPlayers); // should output error message (invalid number of armies; negative)
-//		p3->DestroyArmy(15, t8, allPlayers);
-//		p4->DestroyArmy(7, t8, allPlayers); //should output error message (invalid number of armies; not enough armies to destroy)
+//		p1->destroyArmy(1, t4, p2);
+//		p1->destroyArmy(8, t4, p2); //should output error message (invalid number of armies; not enough armies to destroy)
+//		p2->destroyArmy(2, t4, p1);
+//		p3->destroyArmy(-9, t8, p4); // should output error message (invalid number of armies; negative)
+//		p3->destroyArmy(2, t8, p4); //should output error message (invalid number of armies; not enough armies to destroy)
 //
 //		std::cout << std::endl;
-//		std::cout << "T1 army count: " << t1->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T3 army count: " << t3->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T4 army count: " << t4->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T8 army count: " << t8->getArmyCount() << " armies." << std::endl;
+//		std::cout << "T1 army count: " << t1->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T3 army count: " << t3->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T4 army count: " << t4->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T8 army count: " << t8->getTotalArmyCount() << " armies." << std::endl;
 //
 //		std::cout << std::endl;
 //		std::cout << "============ BUILDING CITIES ============" << std::endl;
 //
-//		p1->BuildCity(t1);
-//		p1->BuildCity(t1);
-//		p1->BuildCity(t1);
-//		p1->BuildCity(t1); // should output error message (exceeds city count)
-//		p2->BuildCity(t3); // should output error message (no armies present; cannot place city)
+//		p1->buildCity(t1);
+//		p1->buildCity(t1);
+//		p1->buildCity(t1);
+//		p1->buildCity(t1); // should output error message (exceeds city count)
+//		p2->buildCity(t3); // should output error message (no armies present; cannot place city)
 //	}
 //	catch (TerritoryNotFoundException& e)
 //	{
@@ -309,12 +302,12 @@
 //	Player* p2 = new Player("B", 0);
 //
 //	// Create Card pointers
-//	Card* cardOne = new Card("Dire dragon", new Flying, "Place 3 armies and destroy one army");
-//	Card* cardTwo = new Card("Dire giant", new Immune, "Place 3 armies and destroy army");
-//	Card* cardThree = new Card("Dire eye", new Flying, "Place 4 armies");
-//	Card* cardFour = new Card("Dire Ogre", new CoinVPs, "Move 2 armies");
-//	Card* cardFive = new Card("Lake", new SetNameVPs(CardSet::forest), "Place 2 armies and move 3 armies");
-//	Card* cardSix = new Card("Noble Hills", new CompleteSetVPs(3, CardSet::noble), "Place 3 armies");
+//	Card* cardOne = new Card("Dire dragon", new Flying, new Action("Place armies", 3), new Action("Destroy armies", 1), AndOr::AND);
+//	Card* cardTwo = new Card("Dire giant", new Immune, new Action("Place armies", 3), new Action("Destroy armies", 1), AndOr::AND);
+//	Card* cardThree = new Card("Dire eye", new Flying, new Action("Place armies", 4));
+//	Card* cardFour = new Card("Dire Ogre", new CoinVPs, new Action("Move armies", 2));
+//	Card* cardFive = new Card("Lake", new SetNameVPs(CardSet::forest), new Action("Place armies", 2), new Action("Move armies", 3), AndOr::OR);
+//	Card* cardSix = new Card("Noble Hills", new CompleteSetVPs(3, CardSet::noble), new Action("Place armies", 3));
 //
 //	// Example of printing goods and actions of cards
 //	std::cout << "Printing cards: \n";
@@ -436,6 +429,5 @@
 //	std::cout << std::endl << "----------------------------------------" << std::endl;
 //	std::cout << "============ BIDDING DRIVER ============" << std::endl;
 //	std::cout << "----------------------------------------" << std::endl << std::endl;
-//
 //	driveBidding();
 //}

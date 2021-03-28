@@ -35,7 +35,6 @@ private:
 	void placeArmiesOnMap();
 	void setupNonPlayers();
 	void startBidding();
-	void printTerritories();
 
 	int setNumberOfCoins(int numofPlayers);
 	Territory<Region>* getStartingLocation();

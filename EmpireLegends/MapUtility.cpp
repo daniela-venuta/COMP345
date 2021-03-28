@@ -41,3 +41,53 @@ GameMap* MapUtility::createValidMap()
 
 	return m1;
 }
+
+// Prints a list of all the Continents and Regions on a map for informative purposes
+void MapUtility::printTerritories(GameMap* map)
+{
+	std::cout << "List of all Continents and Regions: " << std::endl;
+
+	auto continentIterator = map->terrs.begin();
+	while (continentIterator != map->terrs.end())
+	{
+		std::string name = continentIterator->second->getName();
+		std::cout << name << std::endl;
+
+		auto regionIterator = continentIterator->second->value->terrs.begin();
+		while (regionIterator != continentIterator->second->value->terrs.end())
+		{
+			std::string regionName = regionIterator->second->getName();
+			std::cout << regionName << std::endl;
+
+			// Increment the Iterator to point to next entry
+			++regionIterator;
+		}
+
+		// Increment the Iterator to point to next entry
+		++continentIterator;
+	}
+}
+
+std::map<int, Territory<Region>*> MapUtility::printTerritoriesWithArmies(GameMap* map, Player* player)
+{
+	std::map<int, Territory<Region>*> terrsWithArmies;
+
+	for (auto& continentPair: map->terrs)
+	{
+		Continent* cont = continentPair.second->value;
+		std::cout << cont->getName() << ":" << std::endl;
+
+		for(auto& regionPair: cont->terrs)
+		{
+			const int placedArmies = regionPair.second->getPlacedArmies(player);
+			if (placedArmies > 0)
+			{
+				int num = terrsWithArmies.size() + 1;
+				std::cout << num << "-" << regionPair.second->getName() << " (" + std::to_string(placedArmies) + " armies)" << std::endl;
+				terrsWithArmies[num] = regionPair.second;
+			}
+		}
+	}
+	
+	return terrsWithArmies;
+}

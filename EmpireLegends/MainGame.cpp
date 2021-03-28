@@ -23,6 +23,11 @@ Player* PlayerRotation::getCurrentPlayer()
 	return *current;
 }
 
+int PlayerRotation::getNbPlayers()
+{
+	return players.size();
+}
+
 Player* MainGame::getCurrentPlayer()
 {
 	return players->getCurrentPlayer();
@@ -43,40 +48,35 @@ void MainGame::afterAction()
 	std::cout << getCurrentPlayer()->getName() << " plays next." << std::endl;
 }
 
-void MainGame::mainGameloop(int numOfTurns, vector<Player*> players) {
-
-	int cardposition = 0;
-
+void MainGame::mainGameloop(int numOfTurns) {
 	deck->draw(6);
 	std::cout << *deck->getHand() << std::endl;
 
 	while (numOfTurns > 0) {
 		std::cout << "The number of turns " << numOfTurns << std::endl;
 
-		for (int i = 0; i < players.size(); i++) {
+		for (int i = 0; i < players->getNbPlayers(); i++) {
 
-			std::cout << "\n\nPlayer " << players[i]->getName() << std::endl;
+			Player* player = getCurrentPlayer();
+			std::cout << "\n\nPlayer " << player->getName() << std::endl;
 
-			Card* facecard = nullptr;
+			Card* faceCard = nullptr;
 
-			while (facecard == nullptr) {
-
-				cardposition = pickACard();
+			while (faceCard == nullptr) {
+				const int cardPosition = pickACard();
 				std::cout << "\n";
 
 				Hand* deckHand = deck->getHand();
 
-				facecard = deckHand->exchange(cardposition, players[i]);
+				faceCard = deckHand->exchange(cardPosition, player);
 
-				if (facecard == nullptr) {
+				if (faceCard == nullptr) {
 					std::cout << "Card not added to player" << std::endl;
 				}
 			}
-			players[i]->applyGood(facecard->getGood());
+			std::cout << "Picked card: " << std::endl << *faceCard << std::endl;
 
-			std::cout << "Players card good : " << *facecard->getGood() << std::endl;
-
-			std::cout << "Players card action : " << facecard->getAction() << std::endl;
+			player->applyGood(faceCard->getGood());
 
 			afterAction();
 			std::cout << *deck->getHand() << std::endl;

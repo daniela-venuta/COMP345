@@ -41,7 +41,6 @@ struct Resources
 	map<CardSet, bool> setNameVPs;
 	map<CardSet, bool> completeSetVPs;
 	bool immune = false;
-
 };
 
 class Player
@@ -73,11 +72,13 @@ public:
 	int getBalance() const;
 	void setBalance(int newBalance);
 
-
-	void PlaceNewArmies(int number, Territory<Region>*destination);
-	void MoveArmies(int number, Territory<Region>*from, Territory<Region>*to, GameMap * map);
-	void DestroyArmy(int number, Territory<Region>*location, vector<Player*> currentPlayers);
-	void BuildCity(Territory<Region>*territory);
+	int moveOverLand(Territory<Region>*from, Territory<Region>*to, GameMap * map);
+	void placeNewArmies(int number, Territory<Region>*destination);
+	void moveArmies(int number, Territory<Region>*from, Territory<Region>*to, GameMap * map);
+	void destroyArmy(int number, Territory<Region>*location, Player* player);
+	void buildCity(Territory<Region>*territory);
+	void addOwnedTerritory(Territory<Region>*territory);
+	void removeOwnedTerritory(Territory<Region>*territory);
 
 	void applyGood(Good* addedGood);
 	Resources* getResources() const;
@@ -89,14 +90,13 @@ private:
 	string playerName;
 	vector<Territory<Region>*> playerTerritories;
 	Hand* playerHand;
-	vector<Territory<Region>*> playerArmies;
 	Resources* pResources;
 
 	static const int TOTAL_NUM_ARMIES = 18;
 	static const int TOTAL_NUM_CITIES = 3;
 	static const int TOTAL_NUM_COINS = 9;
 	
-	Territory<Region>* chosenTerritory(vector<Territory<Region>*> regions);
-	void executeAction(string action);
+	Territory<Region>* chooseTerritory(map<int, Territory<Region>*> regions);
+	void executeAction(Action* action, GameMap* map);
 };
 	
