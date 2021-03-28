@@ -11,8 +11,6 @@ using std::ostream;
 
 enum Color { none, red, green, blue, yellow };
 static vector<Player*> currentPlayers;
-static string initialContinent= "Continent 1";
-static string initialRegion = "Region 1";
 static vector<Territory<Region>*> listRegion;
 
 struct Resources
@@ -73,7 +71,7 @@ public:
 	void setBalance(int newBalance);
 
 	int moveOverLand(Territory<Region>*from, Territory<Region>*to, GameMap * map);
-	void placeNewArmies(int number, Territory<Region>*destination);
+	void placeNewArmies(int number, Territory<Region>*destination, Territory<Region>* initialRegion);
 	void moveArmies(int number, Territory<Region>*from, Territory<Region>*to, GameMap * map);
 	void destroyArmy(int number, Territory<Region>*location, Player* player);
 	void buildCity(Territory<Region>*territory);

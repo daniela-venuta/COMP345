@@ -168,16 +168,6 @@ int StartingPhase::setNumberOfCoins(int numofPlayers)
 
 	return playerCoins;
 }
-
-// Retrieve the starting Region for all players based on the game map
-Territory<Region>* StartingPhase::getStartingLocation()
-{	
-	Continent* continent = map->terrs.begin()->second->value;
-	Territory<Region>* region = continent->terrs.begin()->second;
-	
-	return region;
-}
-
 // Method to initiate shuffling of the current deck of cards (changes their order in the vector)
 void StartingPhase::shuffleCardDeck() const
 {
@@ -238,12 +228,12 @@ void StartingPhase::assignPlayerResources()
 // Adds 4 armies to the starting location for each player
 void StartingPhase::setupStartingTerritories()
 {
-	Territory<Region>* startingRegion = getStartingLocation();
+	Territory<Region>* startingRegion = MapUtility::getStartingLocation(map);
 
 	// place 4 armies to start
 	for (Player* player : players)
 	{
-		player->placeNewArmies(4, startingRegion);
+		player->placeNewArmies(4, startingRegion, startingRegion);
 	}
 }
 
@@ -287,7 +277,7 @@ void StartingPhase::placeArmiesOnMap()
 		
 		} while (doesLocationNotExist);
 		
-		nonPlayer1->placeNewArmies(1, destination);
+		nonPlayer1->placeNewArmies(1, destination, MapUtility::getStartingLocation(map));
 	}
 }
 

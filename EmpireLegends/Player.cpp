@@ -194,9 +194,13 @@ void Player::moveArmies(int number, Territory<Region>* from, Territory<Region>* 
 	// check that you can call MoveOverLand with the given territories
 	if (number > 0 && number < pResources->unplacedArmies && moveOverLand(from, to, map) > 0)
 	{
-		from->removeArmies(number, this);
-		to->addArmies(number, this);
-		std::cout << "Moved " << number << " armies." << std::endl;
+		if (from->removeArmies(number, this) && to->addArmies(number, this))
+		{
+			std::cout << "Moved " << number << " armies." << std::endl;
+		} else
+		{
+			std::cout << "Could not perform action (MoveArmies)" << std::endl;
+		}
 	}
 	else
 	{
@@ -209,14 +213,14 @@ void Player::moveArmies(int number, Territory<Region>* from, Territory<Region>* 
 /// </summary>
 /// <param name="number"></param>
 /// <param name="location"></param>
-void Player::placeNewArmies(int number, Territory<Region>* location)
+void Player::placeNewArmies(int number, Territory<Region>* location, Territory<Region>* initialRegion)
 {
 	const bool ownsCity = std::find(playerTerritories.begin(), playerTerritories.end(), location) != playerTerritories.end();
 
 	// check ownership of territory (can place ONLY if your own)
 	if (number > 0 && pResources->unplacedArmies - number >= 0)
 	{
-		if (ownsCity || location->getName() == initialRegion)
+		if (ownsCity || location == initialRegion)
 		{
 			pResources->unplacedArmies -= number;
 			location->addArmies(number, this);
@@ -281,7 +285,7 @@ void Player::buildCity(Territory<Region>* location)
 	{
 		pResources->unplacedCities--;
 		location->addCity(this);
-		std::cout << "City build at " + location->getName() << std::endl;
+		std::cout << "City built at " + location->getName() << std::endl;
 	}
 	else
 	{
@@ -430,48 +434,40 @@ void Player::executeAction(Action* action, GameMap* map)
 
 	//Build City
 	if (build != std::string::npos)
-	{		
+	{
+		std::cout << "You may build a city in one of the regions with at least 1 army: " << std::endl;
 		Territory<Region>* destination = chooseTerritory(MapUtility::printTerritoriesWithArmies(map, this));
 		buildCity(destination);
 	}
-
 	//Move Armies
 	else if (move != std::string::npos)
 	{
-		// Move armies from a region to another
-	}
+		std::cout << "You may move" << action->getMultiplier() << " armies." << std::endl;
+		std::cout << "Please choose the initial region: " << std::endl;
 
+		Territory<Region>* from = chooseTerritory(MapUtility::printTerritoriesWithArmies(map, this));
+		std::cout << "Please choose the destination region: " << std::endl;
+		Territory<Region>* to = chooseTerritory(MapUtility::printTerritoriesWithMap(map));
+
+		while (to == from)
+		{
+			std::cout << "Invalid. Please choose a destination other than the initial region: " << std::endl;
+			to = chooseTerritory(MapUtility::printTerritoriesWithMap(map));
+		}
+
+		moveArmies(action->getMultiplier(), from, to, map);
+	}
 	//Destroy Armies
 	else if (destroy != std::string::npos)
 	{
 		// Destroy enemy army 
 	}
-
-
 	//Place New Armies
 	else if (place != std::string::npos)
 	{
 		// Place new army(ies) on the starting region or on a chosen region that has an owned city
 		int numArmies = action->getMultiplier();
-		Territory<Region>* destination = chooseTerritory(MapUtility::printTerritoriesInVector(map));
-		placeNewArmies(numArmies, destination);
-	}
-}
-
-void Player::setListOfRegion(GameMap* gameMap) {
-	vector<Continent*> continents;
-	for (auto mapContinents : gameMap->terrs)
-	{
-		auto* tempContinent = mapContinents.second->value;
-		continents.push_back(tempContinent);
-	}
-	static vector<Territory<Region>*> listRegion;
-	for (auto cont : continents)
-	{
-		auto mapOfReg = cont->terrs;
-		for (auto terrReg : mapOfReg)
-		{
-			listRegion.push_back(terrReg.second);
-		}
+		Territory<Region>* destination = chooseTerritory(MapUtility::printTerritoriesWithMap(map));
+		placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
 	}
 }

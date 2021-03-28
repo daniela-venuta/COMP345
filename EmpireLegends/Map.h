@@ -122,13 +122,13 @@ public:
     /// </summary>
     /// <param name="number">number of armies to add</param>
     /// <param name="player">armies owner</param>
-    void addArmies(int number, Player* player);
+    bool addArmies(int number, Player* player);
     /// <summary>
     /// Removing armies from the territory
     /// </summary>
     /// <param name="number">number of armies to remove</param>
     /// <param name="player">armies owner</param>
-    void removeArmies(int number, Player* player);
+    bool removeArmies(int number, Player* player);
     /// <summary>
     /// Adding a city to the territory
     /// </summary>

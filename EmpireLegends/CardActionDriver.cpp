@@ -28,36 +28,31 @@ int main() {
 	std::cout << p2->getName() + "'s turn: " << std::endl;
 	std::cout << "\n";
 
-	p2->payCoin(15);//fail
+	p2->payCoin(15);//fail sine funds are insufficient
 	std::cout << "\n\n";
 
-	//PlaceNewArmies() + BuildCity()
-	std::cout << "-- BuildCity() + PlaceNewArmies() Tests --" << std::endl;
-	std::cout << p1->getName() + "'s turn: " << std::endl;
-	p1->buildCity(r1);//fail
-	p1->placeNewArmies(4, r1);//succeed
-	std::cout << "\n";
-
-	std::cout << p2->getName() + "'s turn: " << std::endl;
-	p2->placeNewArmies(3, r1);//succeed
-	p2->buildCity(r4);//fail
-	p2->placeNewArmies(1, r4);//fail
-	std::cout << "\n\n";
+	p1->placeNewArmies(4, r1, r1);//succeed since it's the starting region
 
 	//MoveArmies() + MoveOverLand()
 	std::cout << "-- MoverArmies Tests (Over Land) --" << std::endl;
-
+	p1->moveArmies(2, r2, r3, gameMap); //fail since there are no armies in r2
+	p1->moveArmies(2, r1, r3, gameMap); //success since there are armies in r1
 
 	//MoveArmies() + MoveOverWater()
 	std::cout << "-- MoverArmies Tests (Over Water) --" << std::endl;
 
+	//PlaceNewArmies() + BuildCity()
+	std::cout << "-- BuildCity() + PlaceNewArmies() Tests --" << std::endl;
+	p1->buildCity(r2);//fail because no army is present
+	p1->buildCity(r3);//success since there are armies
+	std::cout << "\n";
 
 	//DestroyArmy()
 	std::cout << "-- DestroyArmy Tests --" << std::endl;
 
 	//AndOrAction()
 	std::cout << "-- AndOrAction Tests --" << std::endl;
-	Card* c1 = new Card("Dire dragon", new Flying, new Action("Place armies", 3), new Action("Destroy armies", 1), AndOr::AND);
+	Card* c1 = new Card("Dire dragon", new Flying, new Action("Build city", 3), new Action("Destroy armies", 1), AndOr::AND);
 	Card* c2 = new Card("Dire giant", new Immune, new Action("Place armies", 3), new Action("Destroy armies", 1), AndOr::AND);
 	Card* c3 = new Card("Dire eye", new Flying, new Action("Place armies", 4));
 	Card* c4 = new Card("Dire Ogre", new CoinVPs, new Action("Move armies", 2));
@@ -65,12 +60,15 @@ int main() {
 	Card* c6 = new Card("Lake", new SetNameVPs(CardSet::forest), new Action("Build city", 2), new Action("Move armies", 3), AndOr::OR);
 
 	std::cout << "AND Action: " << std::endl;
-	p1->andOrAction(c6, gameMap);
+	p1->andOrAction(c1, gameMap);
 	std::cout << "\n";
 	
 	std::cout << "\n";
 
 	std::cout << "OR Action: " << std::endl;
+	p2->andOrAction(c5, gameMap);
+
+	std::cout << "SINGLE Action: " << std::endl;
 	p2->andOrAction(c3, gameMap);
 
 	for (auto* player : currentPlayers)

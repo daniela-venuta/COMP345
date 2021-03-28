@@ -37,7 +37,6 @@ private:
 	void startBidding();
 
 	int setNumberOfCoins(int numofPlayers);
-	Territory<Region>* getStartingLocation();
 
 	int numOfPlayers = 0;
 	Deck* cardDeck;

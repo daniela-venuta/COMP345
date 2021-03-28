@@ -92,7 +92,7 @@ std::map<int, Territory<Region>*> MapUtility::printTerritoriesWithArmies(GameMap
 	return terrsWithArmies;
 }
 
-map<int, Territory<Region>*> MapUtility::printTerritoriesInVector(GameMap* map)
+map<int, Territory<Region>*> MapUtility::printTerritoriesWithMap(GameMap* map)
 {
 	std::cout << "List of all Continents and Regions: " << std::endl;
 	std::map<int, Territory<Region>*> terrs;
@@ -121,4 +121,13 @@ map<int, Territory<Region>*> MapUtility::printTerritoriesInVector(GameMap* map)
 	}
 
 	return terrs;
+}
+
+// Retrieve the starting Region for all players based on the game map
+Territory<Region>* MapUtility::getStartingLocation(GameMap* map)
+{
+	Continent* continent = map->terrs.begin()->second->value;
+	Territory<Region>* region = continent->terrs.begin()->second;
+
+	return region;
 }
