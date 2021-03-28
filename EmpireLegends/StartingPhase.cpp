@@ -192,20 +192,20 @@ void StartingPhase::assignPlayerResources()
 
 	for (int i = 0; i < numOfPlayers; i++)
 	{
-		bool isAvailable = true;
+		bool isColorUnavailable = true;
 		int colorNum;
 		const Player* player = players[i];
 		Resources* resources = players[i]->getResources();
 		Color col = Color::none;
 
-		while(isAvailable)
+		while(isColorUnavailable)
 		{
 			std::cout << player->getName() << ", choose your color: ";
 			std::cin >> colorNum;
 			col = colorUtilities->getColor(colorNum);
-			isAvailable = !colorUtilities->getColorAvailability(col);
+			isColorUnavailable = !colorUtilities->getColorAvailability(col);
 
-			if(isAvailable)
+			if(isColorUnavailable)
 			{
 				std::cout << "\nColor unavailable, try again \n";
 			}
