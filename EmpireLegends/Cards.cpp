@@ -77,6 +77,8 @@ Deck& Deck::operator=(const Deck& deck)
 	this->hand = new Hand(*(deck.hand));
 	return *this;
 }
+
+
 #pragma endregion Deck
 
 #pragma region Hand
@@ -165,6 +167,10 @@ ostream& operator<<(ostream& os, const Hand& hand)
 	os << s << std::endl;
 
 	return os;
+}
+
+vector<Card*> Hand::getHandCards() {
+	return handCards;
 }
 
 #pragma endregion Hand
