@@ -58,97 +58,41 @@ void GameStart::loadMap() {
 
 void GameStart::detPlayerCount() {
 
-	int playerCoins = 0;
-	string playerName1, playerName2, playerName3, playerName4;
+	int playerCoins;
+	string playerName;
 
-	std::cout << "How many players will be playing? Please select a number between 2 and 4: ";
-	std::cin >> numOfPlayers;
-
-	// Assign coins according to numofPlayers
-	switch (numOfPlayers) {
-	case 2:
-
-		playerCoins = 14;
-		players.clear();
-
-		std::cout << "Enter player name 1: ";
-		std::cin.ignore();
-		getline(std::cin, playerName1);
-		players.push_back(new Player(playerName1, playerCoins));
-		std::cout << "Welcome " << playerName1 << " !" << std::endl;
-
-		std::cout << "\nEnter player name 2: ";
-		getline(std::cin, playerName2);
-		players.push_back(new Player(playerName2, playerCoins));
-		std::cout << "Welcome " << playerName2 << " !" << std::endl;
-
-		std::cout << "\nEach player gets 14 coins." << std::endl;
-
-		break;
-
-	case 3:
-
-		playerCoins = 11;
-		players.clear();
-
-		std::cout << "Enter player name 1: ";
-		std::cin.ignore();
-		getline(std::cin, playerName1);
-		players.push_back(new Player(playerName1, playerCoins));
-		std::cout << "Welcome " << playerName1 << " !" << std::endl;
-
-		std::cout << "\nEnter player name 2: ";
-		getline(std::cin, playerName2);
-		players.push_back(new Player(playerName2, playerCoins));
-		std::cout << "Welcome " << playerName2 << " !" << std::endl;
-
-		std::cout << "\nEnter player name 3: ";
-		getline(std::cin, playerName3);
-		players.push_back(new Player(playerName3, playerCoins));
-		std::cout << "Welcome " << playerName3 << " !" << std::endl;
-
-		std::cout << "\nEach player gets 11 coins." << std::endl;
-
-		break;
-
-	case 4:
-
-		playerCoins = 9;
-		players.clear();
-
-		std::cout << "Enter player name 1: ";
-		std::cin.ignore();
-		getline(std::cin, playerName1);
-		players.push_back(new Player(playerName1, playerCoins));
-		std::cout << "Welcome " << playerName1 << " !" << std::endl;
-
-		std::cout << "\nEnter player name 2: ";
-		getline(std::cin, playerName2);
-		players.push_back(new Player(playerName2, playerCoins));
-		std::cout << "Welcome " << playerName2 << " !" << std::endl;
-
-		std::cout << "\nEnter player name 3: ";
-		getline(std::cin, playerName3);
-		players.push_back(new Player(playerName3, playerCoins));
-		std::cout << "Welcome " << playerName3 << " !" << std::endl;
-
-		std::cout << "\nEnter player name 4: ";
-		getline(std::cin, playerName4);
-		players.push_back(new Player(playerName4, playerCoins));
-		std::cout << "Welcome " << playerName4 << " !" << std::endl;
-
-		std::cout << "\nEach player gets 9 coins." << std::endl;
-
-		break;
-
-	default:
-		while (numOfPlayers < 2 || numOfPlayers > 4)
-		{
-			std::cout << "INVALID number of players." << std::endl;
-			std::cout << "Please select a number between 2 and 4: ";
-			std::cin >> numOfPlayers;
-		}
+	while (numOfPlayers < 2 || numOfPlayers > 4)
+	{
+		std::cout << "How many players will be playing? Please select a number between 2 and 4: ";
+		std::cin >> numOfPlayers;
 	}
+
+	// Assign coins according to numOfPlayers
+	switch (numOfPlayers) {
+
+		case 2:
+			playerCoins = 14;
+			break;
+		case 3:
+			playerCoins = 11;
+			break;
+		default: //4
+			playerCoins = 9;
+			break;
+	}
+
+	players.clear();
+	std::cin.ignore();
+
+	for (auto i = 0; i < numOfPlayers; i++)
+	{
+		std::cout << "Enter player name " << i + 1 << ": ";
+		getline(std::cin, playerName);
+		players.push_back(new Player(playerName, playerCoins));
+		std::cout << "Welcome " << playerName << " !" << std::endl;
+	}
+
+	std::cout << "\nEach player gets " << playerCoins << " coins." << std::endl;
 }
 
 void GameStart::playerBidding() {
