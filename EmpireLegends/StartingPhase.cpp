@@ -277,7 +277,7 @@ void StartingPhase::placeArmiesOnMap()
 				
 			}
 			catch(TerritoryNotFoundException e){
-				std::cout << "This continent does not exist. Try again. \n";
+				std::cout << "This continent or region does not exist. Try again. \n";
 				doesLocationNotExist = true;
 			}
 		
