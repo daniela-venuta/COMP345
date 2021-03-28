@@ -97,5 +97,6 @@ private:
 	static const int TOTAL_NUM_COINS = 9;
 	
 	Territory<Region>* chosenTerritory(vector<Territory<Region>*> regions);
+	void executeAction(string action);
 };
 	

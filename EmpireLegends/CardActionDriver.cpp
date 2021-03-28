@@ -1,7 +1,5 @@
 #include "Player.h"
 #include "MapLoader.h"
-#include <string>
-
 
 //Tests for Part 4 in A2 
 
@@ -20,7 +18,6 @@ int main() {
 	currentPlayers.push_back(p1);
 	auto* p2 = new Player("PlayerB");
 	currentPlayers.push_back(p2);
-	p1->getResources();
 	
 	std::cout << "===== Tests of Main Loop Game - Card Actions =====" << std::endl;
 	std::cout << "\n";
@@ -75,16 +72,16 @@ int main() {
 
 	//AndOrAction()
 	std::cout << "-- AndOrAction Tests --" << std::endl;
-	Card* c1 = new Card("Dire Dragon", new Flying, "Move 3 Armies", "Destroy 1 Army");
+	Card* c1 = new Card("Dire Dragon", new Flying, "Move 3 Armies", "Destroy 1 Army", "and");
 	Card* c2 = new Card("Dire Ogre", new CoinVPs, "Move 2 armies");
-	Card* c3 = new Card("Dire Giant", new Immune, "Place 3 armies", "Destroy 1 Army");
+	Card* c3 = new Card("Dire Giant", new Immune, "Place 3 armies", "Destroy 1 Army", "or");
 
 	std::cout << p1->getName() + "'s turn: " << std::endl;
 	p1->andOrAction(c2, gameMap);//fail - Card has only one action
 	std::cout << "\n";
 
 	Player* p3 = new Player();
-	p3->setName("Not-initialised Player");
+	p3->setName("Not-initialized Player");
 	std::cout << p3->getName() + "'s turn: " << std::endl;
 	p3->andOrAction(c1, gameMap); // fail due to not having stuff
 	
@@ -93,9 +90,10 @@ int main() {
 	std::cout << p2->getName() + "'s turn: " << std::endl;
 	p2->andOrAction(c3, gameMap);
 
-	for (auto i : currentPlayers)
+	for (auto* player : currentPlayers)
 	{
-		delete i;
+		delete player;
+		player = nullptr;
 	}
 	delete p3;
 

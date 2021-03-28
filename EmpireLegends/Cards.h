@@ -169,12 +169,19 @@ private:
 	string setSize;
 };
 
+enum class AndOr
+{
+	AND,
+	OR,
+	SINGLE
+};
+
 class Card
 {
 public:
 	Card() = default;
 	Card(string nameStr, Good* good, string actionDesc);
-	Card(string nameStr, Good* good, string firstActionDesc, string secondActionDesc);
+	Card(string nameStr, Good* good, string firstActionDesc, string secondActionDesc, AndOr andOr);
 	~Card();
 
 	// copy constructor
@@ -191,12 +198,14 @@ public:
 	Good* getGood() const;
 	string getAction() const;
 	string getSecondAction() const;
+	AndOr getAndOr() const;
 
 private:
 	string name;
 	Good* good;
 	string action;
 	string secondAction;
+	AndOr andOr;
 };
 
 class Action

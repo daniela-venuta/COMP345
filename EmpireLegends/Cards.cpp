@@ -217,14 +217,16 @@ Card::Card(string nameStr, Good* good, string actionDesc)
 	this->good = good;
 	this->action = std::move(actionDesc);
 	this->secondAction = "";
+	this->andOr = AndOr::SINGLE;
 }
 
-Card::Card(string nameStr, Good* good, string firstActionDesc, string secondActionDesc) 
+Card::Card(string nameStr, Good* good, string firstActionDesc, string secondActionDesc, AndOr andOr)
 {
 	this->name = std::move(nameStr);
 	this->good = good;
 	this->action = std::move(firstActionDesc);
 	this->secondAction = std::move(secondActionDesc);
+	this->andOr = andOr;
 }
 
 Card::~Card()
@@ -270,6 +272,11 @@ string Card::getAction() const
 string Card::getSecondAction() const
 {
 	return secondAction;
+}
+
+AndOr Card::getAndOr() const
+{
+	return andOr;
 }
 
 Good* Card::getGood() const

@@ -417,59 +417,64 @@ void Player::applyGood(Good* addedGood)
 /// </summary>
 /// <param name="cardTwoAction"></param>
 /// <param name="gm"></param>
-void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
+void Player::andOrAction(Card* card, GameMap* gm) {
 
-	string action1 = cardTwoAction->getAction();
-	string action2 = cardTwoAction->getSecondAction();
+	string action1 = card->getAction();
+	string action2 = card->getSecondAction();
 	int option = 0;
-	string chosenAction = "";
+	string chosenAction;
 
 	//Checking if it is truly a card with two actions
-	if (action2 == "")
+	if (action1.empty() || action2.empty())
 	{
 		std::cout << "Error: The card entered isn't a card with two actions." << std::endl;
 		return;
 	}
-	else
+	std::cout << "This card has two actions, " + action1 + " and " + action2 << std::endl;
+
+	if (card->getAndOr() == AndOr::OR)
 	{
-		std::cout << "This card has two actions, " + action1 + " and " + action2 << std::endl;
+		while (chosenAction.empty())
+		{
+			std::cout << "You must chose which action to use." << std::endl;
+			std::cout << "Please enter the number next to the desired action:" << std::endl;
+			std::cout << "1 : " + action1 << std::endl;
+			std::cout << "2 : " + action2 << std::endl;
+			std::cin >> option;
+
+			if (std::cin.fail())
+			{
+				std::cout << "The value you entered isn't a valid option. Please input a valid option. \n(Make sure that it is an integer)" << std::endl;
+				cin.clear();
+				cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			}
+			else
+			{
+
+				switch (option) {
+				case 1:
+					chosenAction = action1;
+					std::cout << "You have chosen " + action1 + "." << std::endl;
+					break;
+				case 2:
+					chosenAction = action2;
+					std::cout << "You have chosen " + action2 + "." << std::endl;
+					break;
+				default:
+					std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
+				}
+			}
+		}
+		
+		executeAction(chosenAction);
+	} else
+	{
+		executeAction(action1);
+		executeAction(action2);
 	}
 
 	//The player choose which action they want to do
 	//And returns to them to the other option if the chosen action was impossible
-	while (chosenAction == "")
-	{
-		std::cout << "Please enter the number next to the action you would like to do :" << std::endl;
-		std::cout << "1 : " + action1 << std::endl;
-		std::cout << "2 : " + action2 << std::endl;
-		std::cin >> option;
-
-		if (std::cin.fail())
-		{
-			std::cout << "The value you entered isn't a valid option. Please input a valid option. \n(Make sure that it is an integer)" << std::endl;
-			std::cout << "Please enter the number next to the action you would like to do :" << std::endl;
-			cin.clear();
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		}
-		else
-		{
-
-			switch (option) {
-			case 1:
-				chosenAction = action1;
-				std::cout << "You have chosen " + action1 + "." << std::endl;
-				break;
-			case 2:
-				chosenAction = action2;
-				std::cout << "You have chosen " + action2 + "." << std::endl;
-				break;
-			default:
-				std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
-			}
-
-		}
-
-	};
 
 	bool check = false;
 	int notpossible = 0;
@@ -483,193 +488,6 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 			numOfAction = chosenAction[i];
 		}
 	}
-
-
-
-	while (notpossible != 2)
-	{
-		std::size_t build = chosenAction.find("Build");
-		std::size_t destroy = chosenAction.find("Destroy");
-		std::size_t place = chosenAction.find("Place");
-		std::size_t move = chosenAction.find("Move");
-
-		//Build City
-		if (build != std::string::npos && canBuild == true)
-		{
-			if (!playerArmies.empty() || pResources->unplacedCities == 0)
-			{
-				std::cout<< "You have chose to build a city."<<std::endl;
-
-				vector<Territory<Region>*> possibleRegions;
-				for (auto reg : playerArmies) {
-					auto it = find(possibleRegions.begin(), possibleRegions.end(), reg);
-					if (it == possibleRegions.end())
-					{
-						possibleRegions.push_back(reg);
-					}
-				}
-
-				if (possibleRegions.empty())
-				{
-					std::cout << "Build City cannot be done" << std::endl;
-					canBuild = false;
-					notpossible++;
-					break;
-				}
-
-				Territory<Region>* regionToPass =  chosenTerritory(possibleRegions);
-				BuildCity(regionToPass);
-			}
-			else
-			{
-				std::cout << "Build City cannot be done" << std::endl;
-				canBuild = false;
-				notpossible++;
-			}
-		}
-
-		//Move Armies
-		else if (move != std::string::npos && canMove == true)
-		{
-			if (!playerArmies.empty() && !(pResources->totalCoins == 0))
-			{
-				std::cout << "You have chose to move armies." << std::endl;
-
-				vector<Territory<Region>*> possibleRegions;
-				for (auto reg : playerArmies) {
-					auto it = find(possibleRegions.begin(), possibleRegions.end(), reg);
-					if (it == possibleRegions.end())
-					{
-						possibleRegions.push_back(reg);
-					}
-				}
-
-				if (possibleRegions.empty())
-				{
-					std::cout << "Move Armies cannot be done" << std::endl;
-					canMove = false;
-					notpossible++;
-					break;
-				}
-				std::cout << "Choose the region where your armies are from: " << std::endl;
-				Territory<Region>* from = chosenTerritory(possibleRegions);
-				
-				Territory<Region>* to = nullptr;
-				if (listRegion.empty()) 
-				{
-					std::cout << "Move Armies cannot be done" << std::endl;
-					canMove = false;
-					notpossible++;
-				}
-				do 
-				{
-					std::cout << "Choose the region where your armies are going to: " << std::endl;
-				
-					to = chosenTerritory(listRegion);
-					if (to->getName() == from->getName())
-					{
-						std::cout<< "The territory given is the same as the territory that the armies are from."<<std::endl;
-						std::cout << "Please enter a choose a different region." << std::endl;
-						to = nullptr;
-					}
-				} while (to==nullptr);
-
-				MoveArmies(numOfAction, from, to, gm);
-			}
-			else
-			{
-				std::cout << "Move Armies cannot be done" << std::endl;
-				canMove = false;
-				notpossible++;
-			}
-		}
-
-		//Destroy Armies
-		else if (destroy != std::string::npos && canDestroy == true)
-		{
-			if (!playerArmies.empty())
-			{
-				std::cout << "You have chose to destroy a city." << std::endl;
-
-				vector<Territory<Region>*> possibleRegions;
-				for (auto reg : playerArmies) {
-					auto it = find(possibleRegions.begin(), possibleRegions.end(), reg);
-					if (it == possibleRegions.end())
-					{
-						possibleRegions.push_back(reg);
-					}
-				}
-				if (possibleRegions.empty())
-				{
-					std::cout << "Destroy Armies cannot be done" << std::endl;
-					canDestroy = false;
-					notpossible++;
-					break;
-				}
-					
-				Territory<Region>* regionToPass = chosenTerritory(possibleRegions);
-				DestroyArmy(numOfAction, regionToPass, currentPlayers);
-			}
-
-			canDestroy = false;
-			notpossible++;
-		}
-
-
-		//Place New Armies
-		else if (place != std::string::npos && canPlace == true)
-		{
-			if (pResources->unplacedArmies == 0)
-			{
-				std::cout << "You have chose to destroy a city." << std::endl;
-
-				vector<Territory<Region>*> possibleRegions;
-				Territory<Region>* originPoint = gm->findTerritory(initialContinent)->value->findTerritory(initialRegion);
-				possibleRegions.push_back(originPoint);
-				for (auto reg : playerArmies) {
-					auto it = find(possibleRegions.begin(), possibleRegions.end(), reg);
-					if (it == possibleRegions.end())
-					{
-						possibleRegions.push_back(reg);
-					}
-				}
-				if (possibleRegions.empty())
-				{
-					std::cout << "Place New Armies cannot be done" << std::endl;
-					canPlace = false;
-					notpossible++;
-					break;
-				}
-
-				Territory<Region>* regionToPass = chosenTerritory(possibleRegions);
-			PlaceNewArmies(numOfAction, regionToPass);
-			}
-			else{
-				std::cout << "Place New Armies cannot be done" << std::endl;
-				canPlace = false;
-				notpossible++;
-			}
-			
-		}
-
-		//If the player already tried to do both actions and failed
-		if (notpossible == 2)
-		{
-			std::cout << "None of the two actions could be done. (" + action1 + " & " + action2 + ")"  << std::endl;
-			break;
-		}
-
-		//Try the other action to see if it the Player could still use this card
-		if (chosenAction == action1)
-		{
-			chosenAction = action2;
-		}
-		else 
-		{
-			chosenAction = action1;
-		}
-			
-	};
 	
 }
 
@@ -688,9 +506,9 @@ Territory<Region>* Player::chosenTerritory(vector<Territory<Region>*> regions)
 		for (int i = 0; i < regions.size(); i++)
 		{
 			string optNum = to_string(i + 1);
-			std::cout << optNum + ": " + regions.at(i)->getName() + ";" << std::endl;
+			std::cout << i + 1 << ": " + regions.at(i)->getName() + ";" << std::endl;
 		}
-		std::cout << "Please enter the number next to the region to want: " << std::endl;
+		std::cout << "Please enter the number next to the region you want: " << std::endl;
 
 		std::cin >> optionChosen;
 
@@ -711,7 +529,41 @@ Territory<Region>* Player::chosenTerritory(vector<Territory<Region>*> regions)
 		}
 
 	} while (chosenRegion == nullptr);
+	
 	return chosenRegion;
+}
+
+void Player::executeAction(string action)
+{
+	std::size_t build = action.find("Build");
+	std::size_t destroy = action.find("Destroy");
+	std::size_t place = action.find("Place");
+	std::size_t move = action.find("Move");
+
+	//Build City
+	if (build != std::string::npos)
+	{
+		// Build city if there is at least 1 owned army on the chosen region
+	}
+
+	//Move Armies
+	else if (move != std::string::npos)
+	{
+		// Move armies from a region to another
+	}
+
+	//Destroy Armies
+	else if (destroy != std::string::npos)
+	{
+		// Destroy enemy army 
+	}
+
+
+	//Place New Armies
+	else if (place != std::string::npos)
+	{
+		// Plane new army(ies) on the starting region or on a chosen region that has an owned city
+	}
 }
 	
 void Player:: setListOfRegion(GameMap* gameMap) {
