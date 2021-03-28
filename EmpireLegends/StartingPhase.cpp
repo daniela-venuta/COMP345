@@ -235,11 +235,8 @@ void StartingPhase::placeArmiesOnMap()
 		int index = i % 4;
 
 		if (index == 3)
-		{
-			continentName = getStartingLocation();
-			territoryName = getRandomTerritory();
-			
-			destination = map->findTerritory(continentName)->value->findTerritory(territoryName);
+		{	
+			destination = getStartingLocation();
 			nonPlayer->PlaceNewArmies(1, destination);
 		}
 		else
