@@ -152,7 +152,7 @@ void StartingPhase::startGame(GameMap* gameMap, const vector<Player*> playerVect
 	this->map = gameMap;
 	
 	shuffleCardDeck();
-	assignPlayerCoins();
+	assignPlayerResources();
 	setupStartingTerritories();
 	setupNonPlayers();
 	placeArmiesOnMap();
@@ -205,7 +205,7 @@ void StartingPhase::shuffleCardDeck() const
 	std::cout << *cardDeck;
 }
 
-void StartingPhase::assignPlayerCoins()
+void StartingPhase::assignPlayerResources()
 {
 	string color;
 
@@ -226,12 +226,14 @@ void StartingPhase::assignPlayerCoins()
 		std::cout << player->getName() << ", choose your color: ";
 		std::cin >> color;
 
-
 		Color col = colorUtilities->parseColor(color);
 		resources->playerColor = col;
 
 		// mark color as unavailable
 		colorUtilities->setColorAvailability(color, false);
+
+		player->getResources()->unplacedCities = 3;
+		player->getResources()->unplacedArmies = 18;
 	}
 }
 

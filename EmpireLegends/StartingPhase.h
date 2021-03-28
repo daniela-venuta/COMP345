@@ -31,7 +31,7 @@ public:
 
 private:
 	void shuffleCardDeck() const;
-	void assignPlayerCoins();
+	void assignPlayerResources();
 	void setupStartingTerritories();
 	void placeArmiesOnMap();
 	void setupNonPlayers();
