@@ -7,21 +7,15 @@
 GameStart::GameStart() {
 	mapType = 0;
 	numOfPlayers = 0;
-	p1 = nullptr;
-	p2 = nullptr;
-	p3 = nullptr;
-	p4 = nullptr;
 	biddingFacility = new BiddingFacility();
 }
 
 GameStart::~GameStart() {
 	mapType = 0;
 	numOfPlayers = 0;
-	playerName1 = "";
-	playerName2 = "";
-	playerName3 = "";
-	playerName4 = "";
-	delete p1, p2, p3, p4;
+	for (Player* player : players) {
+		delete player;
+	}
 	biddingFacility = nullptr;
 }
 
@@ -65,6 +59,7 @@ void GameStart::loadMap() {
 void GameStart::detPlayerCount() {
 
 	int playerCoins = 0;
+	string playerName1, playerName2, playerName3, playerName4;
 
 	std::cout << "How many players will be playing? Please select a number between 2 and 4: ";
 	std::cin >> numOfPlayers;
@@ -74,16 +69,17 @@ void GameStart::detPlayerCount() {
 	case 2:
 
 		playerCoins = 14;
+		players.clear();
 
 		std::cout << "Enter player name 1: ";
 		std::cin.ignore();
 		getline(std::cin, playerName1);
-		p1 = new Player(playerName1, playerCoins);
+		players.push_back(new Player(playerName1, playerCoins));
 		std::cout << "Welcome " << playerName1 << " !" << std::endl;
 
 		std::cout << "\nEnter player name 2: ";
 		getline(std::cin, playerName2);
-		p2 = new Player(playerName2, playerCoins);
+		players.push_back(new Player(playerName2, playerCoins));
 		std::cout << "Welcome " << playerName2 << " !" << std::endl;
 
 		std::cout << "\nEach player gets 14 coins." << std::endl;
@@ -93,21 +89,22 @@ void GameStart::detPlayerCount() {
 	case 3:
 
 		playerCoins = 11;
+		players.clear();
 
 		std::cout << "Enter player name 1: ";
 		std::cin.ignore();
 		getline(std::cin, playerName1);
-		p1 = new Player(playerName1, playerCoins);
+		players.push_back(new Player(playerName1, playerCoins));
 		std::cout << "Welcome " << playerName1 << " !" << std::endl;
 
 		std::cout << "\nEnter player name 2: ";
 		getline(std::cin, playerName2);
-		p2 = new Player(playerName2, playerCoins);
+		players.push_back(new Player(playerName2, playerCoins));
 		std::cout << "Welcome " << playerName2 << " !" << std::endl;
 
 		std::cout << "\nEnter player name 3: ";
 		getline(std::cin, playerName3);
-		p3 = new Player(playerName3, playerCoins);
+		players.push_back(new Player(playerName3, playerCoins));
 		std::cout << "Welcome " << playerName3 << " !" << std::endl;
 
 		std::cout << "\nEach player gets 11 coins." << std::endl;
@@ -117,26 +114,27 @@ void GameStart::detPlayerCount() {
 	case 4:
 
 		playerCoins = 9;
+		players.clear();
 
 		std::cout << "Enter player name 1: ";
 		std::cin.ignore();
 		getline(std::cin, playerName1);
-		p1 = new Player(playerName1, playerCoins);
+		players.push_back(new Player(playerName1, playerCoins));
 		std::cout << "Welcome " << playerName1 << " !" << std::endl;
 
 		std::cout << "\nEnter player name 2: ";
 		getline(std::cin, playerName2);
-		p2 = new Player(playerName2, playerCoins);
+		players.push_back(new Player(playerName2, playerCoins));
 		std::cout << "Welcome " << playerName2 << " !" << std::endl;
 
 		std::cout << "\nEnter player name 3: ";
 		getline(std::cin, playerName3);
-		p3 = new Player(playerName3, playerCoins);
+		players.push_back(new Player(playerName3, playerCoins));
 		std::cout << "Welcome " << playerName3 << " !" << std::endl;
 
 		std::cout << "\nEnter player name 4: ";
 		getline(std::cin, playerName4);
-		p4 = new Player(playerName4, playerCoins);
+		players.push_back(new Player(playerName4, playerCoins));
 		std::cout << "Welcome " << playerName4 << " !" << std::endl;
 
 		std::cout << "\nEach player gets 9 coins." << std::endl;
@@ -144,7 +142,8 @@ void GameStart::detPlayerCount() {
 		break;
 
 	default:
-		while (numOfPlayers > 4 || numOfPlayers < 2) {
+		while (numOfPlayers < 2 || numOfPlayers > 4)
+		{
 			std::cout << "INVALID number of players." << std::endl;
 			std::cout << "Please select a number between 2 and 4: ";
 			std::cin >> numOfPlayers;
@@ -156,43 +155,5 @@ void GameStart::playerBidding() {
 	biddingFacility = new BiddingFacility();
 
 	std::cout << "Entering the bidding phase with " << numOfPlayers << " players..." << std::endl;
-
-	// Allow players to place their bids
-	switch (numOfPlayers) {
-	case 2:
-
-		biddingPlayers.clear();
-		biddingPlayers.push_back(p1);
-		biddingPlayers.push_back(p2);
-
-		biddingFacility->placeBids(biddingPlayers);
-
-		break;
-
-	case 3:
-
-		biddingPlayers.clear();
-		biddingPlayers.push_back(p1);
-		biddingPlayers.push_back(p2);
-		biddingPlayers.push_back(p3);
-
-		biddingFacility->placeBids(biddingPlayers);
-
-		break;
-
-	case 4:
-
-		biddingPlayers.clear();
-		biddingPlayers.push_back(p1);
-		biddingPlayers.push_back(p2);
-		biddingPlayers.push_back(p3);
-		biddingPlayers.push_back(p4);
-
-		biddingFacility->placeBids(biddingPlayers);
-
-		break;
-
-	default:
-		biddingPlayers.clear();
-	}
+	biddingFacility->placeBids(players);
 }

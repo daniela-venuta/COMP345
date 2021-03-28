@@ -15,8 +15,7 @@ public:
 private:
 	int mapType;
 	int numOfPlayers;
-	Player* p1, * p2, * p3, * p4;
-	string playerName1, playerName2, playerName3, playerName4;
+	vector<Player*> players;
 	BiddingFacility* biddingFacility;
 	vector<Player*> biddingPlayers;
 };
