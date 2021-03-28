@@ -293,8 +293,6 @@ void StartingPhase::setupNonPlayers()
 	resources2->playerColor = color2;
 	resources2->unplacedCities = 3;
 	resources2->unplacedArmies = 18;
-
-	
 }
 
 void StartingPhase::startBidding()
