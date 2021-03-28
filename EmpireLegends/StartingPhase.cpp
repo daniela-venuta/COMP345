@@ -110,10 +110,6 @@ StartingPhase::StartingPhase()
 	colorUtilities = new ColorUtilities();
 	cardDeck = nullptr;
 	numOfPlayers = 0;
-
-	// get map
-	MapLoader* mapLoader = new MapLoader();
-	map = mapLoader->load("valid_map_1.json");
 }
 
 StartingPhase::~StartingPhase()
@@ -125,11 +121,12 @@ StartingPhase::~StartingPhase()
 	delete map;
 }
 
-void StartingPhase::startGame(const vector<Player*> playerVector, Deck* deck, int numPlayers)
+void StartingPhase::startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers)
 {
 	this->players = playerVector;
 	this->cardDeck = deck;
 	this->numOfPlayers = numPlayers;
+	this->map = gameMap;
 	
 	shuffleCardDeck();
 	assignPlayerCoins();

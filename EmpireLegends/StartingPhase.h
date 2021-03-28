@@ -26,7 +26,7 @@ public:
 	StartingPhase();
 	~StartingPhase();
 
-	void startGame(const vector<Player*> playerVector, Deck* deck, int numPlayers);
+	void startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
 
 private:
 	void shuffleCardDeck() const;
@@ -38,7 +38,6 @@ private:
 
 	int setNumberOfCoins(int numofPlayers);
 	Territory<Region>* getStartingLocation();
-	string getRandomTerritory();
 
 	int numOfPlayers = 0;
 	Deck* cardDeck;

@@ -1,3 +1,4 @@
+#include "MapLoader.h"
 #include "StartingPhase.h"
 
 int main()
@@ -28,9 +29,12 @@ int main()
 	// Create deck and add cards (this creates a card hand as well)
 	Deck* cardDeck = new Deck(cardVector);
 
+	// get map
+	MapLoader* mapLoader = new MapLoader();
+	GameMap* map = mapLoader->load("valid_map_1.json");
 	
 	StartingPhase* startingPhase = new StartingPhase();
-	startingPhase->startGame(players, cardDeck, 2);
+	startingPhase->startGame(map, players, cardDeck, 2);
 
 	delete startingPhase;
 	startingPhase = nullptr;
