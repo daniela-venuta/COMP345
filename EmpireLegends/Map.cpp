@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "Player.h"
 #include <iostream>
 #include <queue>
 
@@ -82,7 +83,6 @@ std::string Territory<T>::getName() const
 template <class T>
 Territory<T>::Territory(const Territory<T>& territory)
 {
-    this->armyCount = 0;
     this->value = new T(*territory.value);
 }
 
@@ -163,35 +163,62 @@ int Territory<T>::getTravelCost(Territory<T>* destination)
 }
 
 template <class T>
-void Territory<T>::addArmies(int number)
+void Territory<T>::addArmies(int number, Player* player)
 {
-    if (number > 0 && number <= 18 && (armyCount + number) <= 72)
+    if (number > 0 && number <= 18 && (armies[player] + number) <= 72)
     {
-        armyCount = armyCount + number;
+        armies[player] = armies[player] + number;
+
+    	// Adding ownership of the territory if only owned armies are on it
+        if (armies[player] == getTotalArmyCount())
+        {
+            player->addOwnedTerritory(dynamic_cast<Territory<Region>*>(this));
+        }
     }
     else
     {
-        std::cout << "Cannot add specified number of armies.";
+        std::cout << "Cannot add specified number of armies." << std::endl;;
     }
 }
 
 template <class T>
-void Territory<T>::removeArmies(int number)
+void Territory<T>::removeArmies(int number, Player* player)
 {
-    if (number > 0 && number <= 18 && (armyCount - number > 0))
+    if (number > 0 && number <= 18 && armies[player] - number > 0)
     {
-        armyCount = armyCount - number;
+        armies[player] = armies[player] - number;
+
+        // Removing ownership of the territory if no owned armies are on it
+    	if (armies[player] == 0)
+    	{
+            player->removeOwnedTerritory(dynamic_cast<Territory<Region>*>(this));
+    	}
+
+    	for(auto& army: armies)
+    	{
+            // Adding ownership of the territory if someone else owns it now
+            if (army.second == getTotalArmyCount())
+            {
+                player->addOwnedTerritory(dynamic_cast<Territory<Region>*>(this));
+            }
+    	}
     }
     else
     {
-        std::cout << "Cannot remove specified number of armies.";
+        std::cout << "Cannot remove specified number of armies." << std::endl;;
     }
 }
 
 template <class T>
-int Territory<T>::getArmyCount() const
+int Territory<T>::getTotalArmyCount() const
 {
-    return armyCount;
+    int totalCount = 0;
+
+    for (auto& army : armies)
+    {
+        totalCount += army.second;
+    }
+    return totalCount;
 }
 
 #pragma endregion territory

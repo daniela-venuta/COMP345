@@ -30,6 +30,9 @@
     <ClInclude Include="GameStart.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="StartingPhase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map.cpp">
@@ -76,6 +79,12 @@
     </ClCompile>
     <ClCompile Include="GameStart.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StartingPhase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StartupPhaseDriver.cpp">
+      <Filter>Driver Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

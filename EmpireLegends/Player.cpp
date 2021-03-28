@@ -158,7 +158,7 @@ void Player::setBalance(int newBalance)
 }
 
 // Player moves from one territory to another
-int Player::MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap* map)
+int Player::moveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap* map)
 {
 	// check that destination territory is valid (graph traversal + valid travel points)
 	GameMap gameMap = *map;
@@ -169,13 +169,13 @@ int Player::MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap
 }
 
 // Move specified number of armies from one territory to another
-void Player::MoveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map)
+void Player::moveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map)
 {
 	// check that you can call MoveOverLand with the given territories
-	if (number > 0 && number < pResources->unplacedArmies && MoveOverLand(from, to, map) > 0)
+	if (number > 0 && number < pResources->unplacedArmies && moveOverLand(from, to, map) > 0)
 	{
-		from->removeArmies(number);
-		to->addArmies(number);
+		from->removeArmies(number, this);
+		to->addArmies(number, this);
 		std::cout << "Moved " << number << " armies." << std::endl;
 	} else
 	{
@@ -184,14 +184,14 @@ void Player::MoveArmies(int number, Territory<Region>* from, Territory<Region>* 
 }
 
 // Place armies at the specified location
-void Player::PlaceNewArmies(int number, Territory<Region>* location)
+void Player::placeNewArmies(int number, Territory<Region>* location)
 {
 	const int unplacedArmies = pResources->unplacedArmies;
 	// check ownership of territory (can place ONLY if your own)
 	if (number > 0 && unplacedArmies - number >= 0 && (TOTAL_NUM_ARMIES - unplacedArmies + number) <= TOTAL_NUM_ARMIES)
 	{
 		pResources->unplacedArmies -= number;
-		location->addArmies(number);
+		location->addArmies(number, this);
 		std::cout << "Added " << number << " armies at " << location->getName() << std::endl;
 	} else
 	{
@@ -200,17 +200,17 @@ void Player::PlaceNewArmies(int number, Territory<Region>* location)
 }
 
 // Destroy all enemy armies found at the specified location
-void Player::DestroyArmy(int number, Territory<Region>* location)
+void Player::destroyArmy(int number, Territory<Region>* location, Player* player)
 {
 	// check that there are other armies at the specified location
 	// destroy specified number of armies found at the specified location
 	// identify original owner of territory and reduce number of placedArmies > increase number of unplacedArmies
-	if (number > 0 && location->getArmyCount() - number > 0)
+	if (number > 0 && location->getTotalArmyCount() - number > 0)
 	{
-		location->removeArmies(number);
+		location->removeArmies(number, player);
 		pResources->unplacedArmies += number;
 		
-		std::cout << "Successfully destroyed " << number << " armies at " << location->getName() << " ." << std::endl;
+		std::cout << "Successfully destroyed " << number << " armies owned by" << player->getName() <<  " at " << location->getName() << " ." << std::endl;
 	} else
 	{
 		std::cout << "Action not permissible (DestroyArmies at " << location->getName() << ")" << std::endl;
@@ -218,11 +218,11 @@ void Player::DestroyArmy(int number, Territory<Region>* location)
 }
 
 // Builds a city at the specified location
-void Player::BuildCity(Territory<Region>* location)
+void Player::buildCity(Territory<Region>* location)
 {
 	// check ownership of region (MUST HAVE AT LEAST ONE ARMY THERE)
 	const int unplacedCities = pResources->unplacedCities;
-	if (unplacedCities - 1 >= 0 && (TOTAL_NUM_CITIES - unplacedCities + 1) <= TOTAL_NUM_CITIES && location->getArmyCount() > 0)
+	if (unplacedCities - 1 >= 0 && (TOTAL_NUM_CITIES - unplacedCities + 1) <= TOTAL_NUM_CITIES && location->getTotalArmyCount() > 0)
 	{
 		pResources->unplacedCities -= 1;
 		// add city at specified location
@@ -230,6 +230,30 @@ void Player::BuildCity(Territory<Region>* location)
 	} else if (pResources->unplacedCities - 1 < 0 || (TOTAL_NUM_CITIES - unplacedCities + 1) > TOTAL_NUM_CITIES)
 	{
 		std::cout << "This action is not permissible (BuildCity)." << std::endl;
+	}
+}
+
+void Player::addOwnedTerritory(Territory<Region>* territory)
+{
+	const auto itr = std::find(playerTerritories.begin(), playerTerritories.end(), territory);
+
+	// Add to the vector only when it's not already present
+	if (itr == playerTerritories.end())
+	{
+		playerTerritories.push_back(territory);
+		std::cout << this->getName() << " now owns " << territory->getName() << "." << std::endl;
+	}
+}
+
+void Player::removeOwnedTerritory(Territory<Region>* territory)
+{
+	const auto itr = std::find(playerTerritories.begin(), playerTerritories.end(), territory);
+
+	// Remove from the vector only when it's present
+	if (itr != playerTerritories.end())
+	{
+		playerTerritories.erase(itr);
+		std::cout << this->getName() << " loses ownership over " << territory->getName() << "." << std::endl;
 	}
 }
 

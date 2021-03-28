@@ -70,17 +70,19 @@ public:
 	int getBalance() const;
 	void setBalance(int newBalance);
 
-	int MoveOverLand(Territory<Region>*from, Territory<Region>*to, GameMap * map);
-	void PlaceNewArmies(int number, Territory<Region>*destination);
-	void MoveArmies(int number, Territory<Region>*from, Territory<Region>*to, GameMap * map);
-	void DestroyArmy(int number, Territory<Region>*location);
-	void BuildCity(Territory<Region>*territory);
+	int moveOverLand(Territory<Region>*from, Territory<Region>*to, GameMap * map);
+	void placeNewArmies(int number, Territory<Region>*destination);
+	void moveArmies(int number, Territory<Region>*from, Territory<Region>*to, GameMap * map);
+	void destroyArmy(int number, Territory<Region>*location, Player* player);
+	void buildCity(Territory<Region>*territory);
+	void addOwnedTerritory(Territory<Region>*territory);
+	void removeOwnedTerritory(Territory<Region>*territory);
 
 	Resources* getResources() const;
 
 private:
 	string playerName;
-	vector<Territory<Region>> playerTerritories;
+	vector<Territory<Region>*> playerTerritories;
 	Hand* playerHand;
 
 	Resources* pResources;
