@@ -251,12 +251,15 @@ void StartingPhase::placeArmiesOnMap()
 
 		std::cout << "\n"<< name << ", enter 1 or 2 for the additional army:";
 		std::cin >> num;
+		std::cin.ignore();
 		
 		std::cout <<"Enter continent: ";
-		std::cin >> continentName;
+		std::getline(std::cin, continentName);
+		std::cin.ignore();
 
 		std::cout << "Enter region: ";
-		std::cin >> territoryName;
+		std::getline(std::cin, territoryName);
+		std::cin.ignore();
 
 		Territory<Region>*  destination = map->findTerritory(continentName)->value->findTerritory(territoryName);
 
@@ -279,9 +282,19 @@ void StartingPhase::setupNonPlayers()
 
 	Color color2 = colorUtilities->getNewColor();
 	colorUtilities->setColorAvailability(color2, false);
+
+	Resources* resources1 = nonPlayer1->getResources();
+	Resources* resources2 = nonPlayer2->getResources();
 	
-	nonPlayer1->getResources()->playerColor = color1;
-	nonPlayer2->getResources()->playerColor = color2;
+	resources1->playerColor = color1;
+	resources1->unplacedCities = 3;
+	resources1->unplacedArmies = 18;
+	
+	resources2->playerColor = color2;
+	resources2->unplacedCities = 3;
+	resources2->unplacedArmies = 18;
+
+	
 }
 
 void StartingPhase::startBidding()
