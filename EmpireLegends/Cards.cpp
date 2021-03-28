@@ -1,4 +1,6 @@
 #include "Cards.h"
+#include <stdlib.h>
+#include <time.h> 
 
 #include <utility>
 #include "Player.h"
@@ -46,8 +48,24 @@ void Deck::draw(const int count)
 	}
 }
 
-void Deck::shuffle()
+bool Deck::shuffle()
 {
+	bool success = false;
+	if(!this->isEmpty())
+	{
+		std::srand(time(0));
+
+		int numCards = cardDeck.capacity();
+		for (int i = 0; i < numCards; i++)
+		{
+			int rand = i + (std::rand() % (numCards)-i);
+			this->swap(rand, i);
+		}
+
+		success = true;
+	}
+	
+	return success;
 }
 
 Hand* Deck::getHand() const
@@ -76,6 +94,18 @@ Deck& Deck::operator=(const Deck& deck)
 	this->cardDeck = deck.cardDeck;
 	this->hand = new Hand(*(deck.hand));
 	return *this;
+}
+
+void Deck::swap(int indexOne, int indexTwo)
+{
+	Card* temp = cardDeck[indexOne];
+	cardDeck[indexOne] = cardDeck[indexTwo];
+	cardDeck[indexTwo] = temp;
+}
+
+bool Deck::isEmpty() const
+{
+	return (cardDeck.capacity() > 0) ? false : true;
 }
 #pragma endregion Deck
 

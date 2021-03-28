@@ -1,4 +1,5 @@
 #include "Player.h"
+
 #include "Map.h"
 
 #include <iostream>
@@ -7,6 +8,9 @@ using namespace std;
 
 //default constructor 
 Player::Player() {
+
+	pResources = new Resources();
+	
 	playerName = "";
 	pResources = new Resources;
 	pResources->totalCoins = 0;
@@ -233,4 +237,3 @@ Resources* Player::getResources() const
 {
 	return pResources;
 }
-

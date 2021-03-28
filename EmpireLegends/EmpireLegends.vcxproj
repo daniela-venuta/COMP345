@@ -142,6 +142,7 @@
     <ClInclude Include="GameStart.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="StartingPhase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameStartDriver.cpp" />
@@ -151,6 +152,8 @@
     <ClCompile Include="AfterActionDriver.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapDriver.cpp" />
+    <ClCompile Include="StartingPhase.cpp" />
+    <ClCompile Include="StartupPhaseDriver.cpp" />
     <ClCompile Include="GameStart.cpp" />
   </ItemGroup>
   <ItemGroup>
