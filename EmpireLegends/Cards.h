@@ -246,13 +246,21 @@ public:
 	Deck& operator = (const Deck& deck);
 
 	void draw(const int count);
-	void shuffle();
-
+	bool shuffle();
+	
 	Hand* getHand() const;
 
 private:
 	vector<Card*> cardDeck;
 	Hand* hand;
+
+	void swap(int indexOne, int indexTwo);
+	bool isEmpty() const;
+};
+
+struct CardCost
+{
+	vector<int> cardCost = {};
 };
 
 
