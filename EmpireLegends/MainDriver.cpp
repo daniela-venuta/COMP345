@@ -21,13 +21,6 @@
 //	auto* p3 = new Player("player3");
 //	auto* p4 = new Player("player4");
 //
-//	// Create list player pointers - Changes due to modification of Destroy Armies 
-//	vector<Player*> allPlayers;
-//	allPlayers.push_back(p1);
-//	allPlayers.push_back(p2);
-//	allPlayers.push_back(p3);
-//	allPlayers.push_back(p4);
-//
 //	std::cout << std::endl;
 //	std::cout << "P1 balance: " << p1->getBalance() << " coins." << std::endl;
 //	std::cout << "P2 balance: " << p2->getBalance() << " coins." << std::endl;
@@ -35,10 +28,10 @@
 //	std::cout << "P4 balance: " << p4->getBalance() << " coins." << std::endl;
 //
 //	std::cout << std::endl;
-//	p1->payCoin(2);
-//	p2->payCoin(0);
-//	p3->payCoin(9);
-//	p4->payCoin(-5); // should output error message claiming unsufficient funds
+//	p1->PayCoin(2);
+//	p2->PayCoin(0);
+//	p3->PayCoin(9);
+//	p4->PayCoin(-5); // should output error message claiming unsufficient funds
 //
 //	std::cout << std::endl;
 //	std::cout << "P1 balance: " << p1->getBalance() << " coins." << std::endl;
@@ -100,12 +93,12 @@
 //		std::cout << std::endl;
 //		std::cout << "============ DESTROYING ARMIES ============" << std::endl;
 //
-//		p1->DestroyArmy(3, t4, allPlayers);
-//		p2->DestroyArmy(8, t4, allPlayers); //should output error message (invalid number of armies; not enough armies to destroy)
-//		p2->DestroyArmy(2, t4, allPlayers);
-//		p3->DestroyArmy(-9, t8, allPlayers); // should output error message (invalid number of armies; negative)
-//		p3->DestroyArmy(15, t8, allPlayers);
-//		p4->DestroyArmy(7, t8, allPlayers); //should output error message (invalid number of armies; not enough armies to destroy)
+//		p1->DestroyArmy(3, t4);
+//		p2->DestroyArmy(8, t4); //should output error message (invalid number of armies; not enough armies to destroy)
+//		p2->DestroyArmy(2, t4);
+//		p3->DestroyArmy(-9, t8); // should output error message (invalid number of armies; negative)
+//		p3->DestroyArmy(15, t8);
+//		p4->DestroyArmy(7, t8); //should output error message (invalid number of armies; not enough armies to destroy)
 //
 //		std::cout << std::endl;
 //		std::cout << "T1 army count: " << t1->getArmyCount() << " armies." << std::endl;
@@ -183,7 +176,7 @@
 //	c3->addTerritory(new Territory<Region>(*t6));
 //
 //	auto* m1 = new GameMap("Map 1");
-//	//auto* m2 = new GameMap("Map 2");
+//	auto* m2 = new GameMap("Map 2");
 //	auto* t9 = new Territory<Continent>(c1);
 //	auto* t10 = new Territory<Continent>(c2);
 //	auto* t11 = new Territory<Continent>(c3);
@@ -193,10 +186,10 @@
 //	m1->addEdge("Continent 1", "Continent 2", 3);
 //
 //	Territory<Continent>* t9Copy = new Territory<Continent>(*t9);
-//	/*m2->addTerritory(t9Copy);
+//	m2->addTerritory(t9Copy);
 //	m2->addTerritory(t11);
 //	m2->addEdge("Continent 1", "Continent 3", 3);
-//	*/
+//	
 //	std::cout << "----------------------------------------------------------------------------------" << std::endl;
 //	std::cout << "\nTravel cost (1->2): " << m1->getTravelCost(t1, t3) << std::endl; // Should be 1
 //	std::cout << "----------------------------------------------------------------------------------" << std::endl;
@@ -220,7 +213,7 @@
 //	{
 //		//m1 should validate
 //		m1->validate();
-//		//m2->validate();
+//		m2->validate();
 //	}
 //	catch (InvalidMapException& e)
 //	{
@@ -249,7 +242,7 @@
 //	}
 //
 //	delete m1;
-//	//delete m2;
+//	delete m2;
 //}
 //
 //void driveMapLoader()
