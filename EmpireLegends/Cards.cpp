@@ -181,6 +181,11 @@ int Hand::getCardCost(int position)
 	return cardCost;
 }
 
+vector<Card*> Hand::getCards()
+{
+	return handCards;
+}
+
 ostream& operator<<(ostream& os, const Hand& hand)
 {
 	string s = "The following cards remain in the hand: ";
@@ -386,7 +391,7 @@ CompleteSetVPs& CompleteSetVPs::operator=(const CompleteSetVPs& good)
 
 void CoinVPs::applyGood(Resources* resources)
 {
-	resources->coinVPs++;
+	resources->coinVPs = true;
 }
 
 CoinVPs& CoinVPs::operator=(const CoinVPs& good)
@@ -407,6 +412,7 @@ std::map<CardSet, string> CardSetMap::createMap()
 	map.operator[](CardSet::mountain) = "Mountain";
 	map.operator[](CardSet::arcane) = "Arcane";
 	map.operator[](CardSet::cursed) = "Cursed";
+	map.operator[](CardSet::night) = "Night";
 	return map;
 }
 

@@ -33,7 +33,7 @@ struct Resources
 	int extraArmies{};
 	int flying{};
 	int elixir{};
-	int coinVPs{};
+	bool coinVPs = false;
 	map<CardSet, bool> setNameVPs;
 	map<CardSet, bool> completeSetVPs;
 	bool immune = false;
@@ -59,11 +59,9 @@ public:
 	Player& operator=(const Player& player);
 
 	string getName() const;
-
 	void setName(string name);
 
 	int getCoins() const;
-
 	void setCoins(int coins);
 
 	void PayCoin(int price);
@@ -78,15 +76,40 @@ public:
 
 	Resources* getResources() const;
 
+	void countCardTypes();
+	int computeScore();
+
 private:
 	string playerName;
 	vector<Territory<Region>> playerTerritories;
 	Hand* playerHand;
-
 	Resources* pResources;
 
+	int victoryPoints;
+
+	// Resources
 	static const int TOTAL_NUM_ARMIES = 18;
 	static const int TOTAL_NUM_CITIES = 3;
 	static const int TOTAL_NUM_COINS = 9;
+
+	// Cardset types
+	int forestCards{};
+	int direCards{};
+	int ancientCards{};
+	int nobleCards{};
+	int mountainCards{};
+	int arcaneCards{};
+	int cursedCards{};
+	int nightCards{};
+
+	// Total cards per set
+	static const int MAX_NUM_FOREST_CARDS = 4;
+	static const int MAX_NUM_DIRE_CARDS = 5;
+	static const int MAX_NUM_ANCIENT_CARDS = 3;
+	static const int MAX_NUM_NOBLE_CARDS = 3;
+	static const int MAX_NUM_MOUNTAIN_CARDS = 2;
+	static const int MAX_NUM_ARCANE_CARDS = 2;
+	static const int MAX_NUM_CURSED_CARDS = 5;
+	static const int MAX_NUM_NIGHT_CARDS = 2;
 };
 	

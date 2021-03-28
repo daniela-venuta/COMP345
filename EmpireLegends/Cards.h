@@ -21,7 +21,8 @@ enum class CardSet
 	noble,
 	mountain,
 	arcane,
-	cursed
+	cursed,
+	night
 };
 
 // String switch paridgam   
@@ -218,6 +219,8 @@ public:
 
 	Card* exchange(int rowPosition, Player* player);
 	void addCard(Card* card);
+
+	vector<Card*> getCards();
 
 private:
 	static int getCardCost(int position);
