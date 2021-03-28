@@ -222,7 +222,6 @@ public:
 	Card* exchange(int rowPosition, Player* player);
 	void addCard(Card* card);
 	static int getCardCost(int position);
-	vector<Card*> getHandCards();
 
 private:
 

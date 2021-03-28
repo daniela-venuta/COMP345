@@ -35,6 +35,10 @@ void Deck::draw(const int count)
 {
 	for (int i = 0; i < count; i++)
 	{
+		if (cardDeck.empty()) {
+			std::cout << "The deck is empty so no draw can be made" << std::endl; 	
+			return; 
+		}
 		// get card to add to the hand
 		Card* drawCard = cardDeck.at(cardDeck.size() - 1);
 
@@ -109,15 +113,20 @@ Card* Hand::exchange(int rowPosition, Player* player)
 {
 	const int cardCost = getCardCost(rowPosition);
 	Card* exchangeCard = nullptr;
-
-	if (player->getBalance() >= cardCost)
+		
+	if (handCards.empty()) {
+		std::cout << "The hand is empty" << std::endl; 
+	} else if(rowPosition >= handCards.size()){
+		std::cout << "Invalid card position" << std::endl; 
+	}
+	else if (player->getBalance() >= cardCost)
 	{
 		exchangeCard = handCards.at(rowPosition - 1);
 
 		// remove card from Hand
 		handCards.erase(handCards.begin() + rowPosition - 1);
 
-		if (cardCost > 0)
+		if (cardCost > -1)
 		{
 			player->payCoin(cardCost);
 		}
@@ -168,11 +177,6 @@ ostream& operator<<(ostream& os, const Hand& hand)
 
 	return os;
 }
-
-vector<Card*> Hand::getHandCards() {
-	return handCards;
-}
-
 #pragma endregion Hand
 
 #pragma region Card
