@@ -252,6 +252,9 @@ void StartingPhase::placeArmiesOnMap()
 		std::cout << "\n"<< name << ", enter 1 or 2 for the additional army:";
 		std::cin >> num;
 		std::cin.ignore();
+
+
+		printTerritories();
 		
 		std::cout <<"Enter continent: ";
 		std::getline(std::cin, continentName);
@@ -299,4 +302,28 @@ void StartingPhase::startBidding()
 {
 	// Players place bids
 	biddingFacility->placeBids(players);
+}
+
+void StartingPhase::printTerritories()
+{
+	std::cout << "List of all Continents and Regions: " << std::endl;
+
+	auto continentIterator = map->terrs.begin();
+	while (continentIterator != map->terrs.end())
+	{
+		string name = continentIterator->second->getName();
+		std::cout << name << std::endl;
+
+		auto regionIterator = continentIterator->second->value->terrs.begin();
+		while(regionIterator != continentIterator->second->value->terrs.end())
+		{
+			string regionName = regionIterator->second->getName();
+			std::cout << regionName << std::endl;
+
+			regionIterator++;
+		}
+		
+		// Increment the Iterator to point to next entry
+		continentIterator++;
+	}
 }
