@@ -44,7 +44,6 @@ private:
 	Deck* cardDeck;
 	vector<Player*> players;
 	Player* nonPlayer1;
-	Player* nonPlayer2;
 	BiddingFacility* biddingFacility;
 	GameMap* map;
 	ColorUtilities* colorUtilities;

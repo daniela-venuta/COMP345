@@ -103,7 +103,6 @@ Color ColorUtilities::getColor(int index)
 StartingPhase::StartingPhase()
 {
 	nonPlayer1 = new Player("CPU1", 0);
-	nonPlayer2 = new Player("CPU2", 0);
 	
 	biddingFacility = new BiddingFacility();
 	colorUtilities = new ColorUtilities();
@@ -114,7 +113,6 @@ StartingPhase::StartingPhase()
 StartingPhase::~StartingPhase()
 {
 	delete nonPlayer1;
-	delete nonPlayer2;
 	delete biddingFacility;
 	delete colorUtilities;
 
@@ -238,23 +236,19 @@ void StartingPhase::setupStartingTerritories()
 
 void StartingPhase::placeArmiesOnMap()
 {
-	int num;
 	string continentName;
 	string territoryName;
 	Territory<Region>* destination = nullptr;
-	
-	// place armies
+	std::cin.ignore();
+
+	printTerritories();
+
 	for (int i = 0; i < NUM_ARMIES_TO_PLACE; i++)
 	{
 		int index = i % 2;
 
 		string name = players[i]->getName();
-
-		std::cout << "\n" << name << ", enter 1 or 2 to select which non player army to place on the board:";
-		std::cin >> num;
-		std::cin.ignore();
-
-		printTerritories();
+		std::cout << "\n" << name << ", place the non player army on the board. \n";
 		
 		bool doesLocationNotExist;
 		do
@@ -263,11 +257,9 @@ void StartingPhase::placeArmiesOnMap()
 			{
 				std::cout << "Enter continent: ";
 				std::getline(std::cin, continentName);
-				std::cin.ignore();
-
+				
 				std::cout << "Enter region: ";
 				std::getline(std::cin, territoryName);
-				std::cin.ignore();
 
 				doesLocationNotExist = false;
 				
@@ -277,22 +269,13 @@ void StartingPhase::placeArmiesOnMap()
 				
 			}
 			catch(TerritoryNotFoundException e){
-				std::cout << "This continent or region does not exist. Try again. \n";
+				std::cout << (territoryName.empty() ? territoryName : continentName) << " does not exist. Try again. \n";
 				doesLocationNotExist = true;
 			}
 		
 		} while (doesLocationNotExist);
 		
-
-		if(num == 1)
-		{
-			nonPlayer1->PlaceNewArmies(1, destination);
-		}
-		else if(num == 2)
-		{
-			nonPlayer2->PlaceNewArmies(1, destination);
-		}
-			
+		nonPlayer1->PlaceNewArmies(1, destination);
 	}
 }
 
@@ -301,19 +284,11 @@ void StartingPhase::setupNonPlayers()
 	Color color1 = colorUtilities->getNewColor();
 	colorUtilities->setColorAvailability(color1, false);
 
-	Color color2 = colorUtilities->getNewColor();
-	colorUtilities->setColorAvailability(color2, false);
-
 	Resources* resources1 = nonPlayer1->getResources();
-	Resources* resources2 = nonPlayer2->getResources();
 	
 	resources1->playerColor = color1;
 	resources1->unplacedCities = 3;
 	resources1->unplacedArmies = 18;
-	
-	resources2->playerColor = color2;
-	resources2->unplacedCities = 3;
-	resources2->unplacedArmies = 18;
 }
 
 void StartingPhase::startBidding()
