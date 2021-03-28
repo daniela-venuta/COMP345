@@ -159,7 +159,13 @@ void Player::setBalance(int newBalance)
 	pResources->totalCoins = newBalance;
 }
 
-// Player moves from one territory to another
+/// <summary>
+/// Calculate the cost of the movement between two Regions
+/// </summary>
+/// <param name="from"></param>
+/// <param name="to"></param>
+/// <param name="map"></param>
+/// <returns></returns>
 int Player::MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap* map)
 {
 	// check that destination territory is valid (graph traversal + valid travel points)
@@ -169,7 +175,13 @@ int Player::MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap
 	// check that travel points in cards are sufficient to move to destination
 }
 
-// Move specified number of armies from one territory to another
+/// <summary>
+/// Takes care of the changes that come from moving Armies
+/// </summary>
+/// <param name="number"></param>
+/// <param name="from"></param>
+/// <param name="to"></param>
+/// <param name="map"></param>
 void Player::MoveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map)
 {
 	
@@ -217,7 +229,11 @@ void Player::MoveArmies(int number, Territory<Region>* from, Territory<Region>* 
 	
 }
 
-// Place armies at the specified location
+/// <summary>
+/// Takes care of what the changes that comes form Placing an Armies
+/// </summary>
+/// <param name="number"></param>
+/// <param name="location"></param>
 void Player::PlaceNewArmies(int number, Territory<Region>* location)
 {
 	int unplacedArmies = pResources->unplacedArmies;
@@ -262,7 +278,12 @@ void Player::PlaceNewArmies(int number, Territory<Region>* location)
 	}
 }
 
-// Destroy all enemy armies found at the specified location
+/// <summary>
+/// Takes cares of the changes that comes from Destroying Armies in a specific region
+/// </summary>
+/// <param name="number"></param>
+/// <param name="location"></param>
+/// <param name="currentPlayers"></param>
 void Player::DestroyArmy(int number, Territory<Region>* location, vector<Player*> currentPlayers)
 {
 	// check that there are other armies at the specified location
@@ -341,7 +362,10 @@ void Player::DestroyArmy(int number, Territory<Region>* location, vector<Player*
 
 }
 
-// Builds a city at the specified location
+/// <summary>
+/// 
+/// </summary>
+/// <param name="location"></param>
 void Player::BuildCity(Territory<Region>* location)
 {
 	// check ownership of region (MUST HAVE AT LEAST ONE OF YOUR ARMY THERE)
@@ -385,7 +409,7 @@ void Player::applyGood(Good* addedGood)
 }
 
 /// <summary>
-/// 
+/// Ask for Player for which action they will call
 /// </summary>
 /// <param name="cardTwoAction"></param>
 /// <param name="gm"></param>
@@ -481,7 +505,10 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 				}
 
 				if (possibleRegions.empty())
+				{
 					break;
+					//write error message
+				}
 
 				Territory<Region>* regionToPass =  chosenTerritory(possibleRegions);
 				BuildCity(regionToPass);
@@ -504,7 +531,10 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 			}
 
 			if (possibleRegions.empty())
+			{
 				break;
+				//write error message
+			}
 
 			Territory<Region>* from = chosenTerritory(possibleRegions);
 			Territory<Region>* to = nullptr;
@@ -525,8 +555,11 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 					}
 				}
 				if (possibleRegions.empty())
+				{
 					break;
-
+					//write error message
+				}
+					
 				Territory<Region>* regionToPass = chosenTerritory(possibleRegions);
 				DestroyArmy(numOfAction, regionToPass, currentPlayers);
 			}
@@ -550,7 +583,10 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 					}
 				}
 				if (possibleRegions.empty())
+				{
 					break;
+					//write error message
+				}
 
 				Territory<Region>* regionToPass = chosenTerritory(possibleRegions);
 			PlaceNewArmies(numOfAction, regionToPass);
@@ -580,7 +616,11 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 	
 }
 
-
+/// <summary>
+/// Give the Player the power to chose which region is affected by card action
+/// </summary>
+/// <param name="regions"></param>
+/// <returns></returns>
 Territory<Region>* Player::chosenTerritory(vector<Territory<Region>*> regions)
 {
 	Territory<Region>* chosenRegion = nullptr;
