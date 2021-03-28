@@ -235,7 +235,7 @@ void StartingPhase::shuffleCardDeck() const
 void StartingPhase::assignPlayerResources()
 {
 	
-	std::cout << "Color options \n 1.Red \n 2.Green  \n 3.Blue \n 4. Yellow \n";
+	std::cout << "\nColor options \n 1.Red \n 2.Green  \n 3.Blue \n 4. Yellow \n";
 	
 	// Assign number of coins based on players
 	int playerCoins = setNumberOfCoins(numOfPlayers);
@@ -257,7 +257,7 @@ void StartingPhase::assignPlayerResources()
 
 			if(isAvailable)
 			{
-				std::cout << "Color unavailable, try again \n";
+				std::cout << "\nColor unavailable, try again \n";
 			}
 		}
 		
@@ -299,7 +299,7 @@ void StartingPhase::placeArmiesOnMap()
 
 		string name = players[i]->getName();
 
-		std::cout << name << ", enter 1 or 2 for the additional army:";
+		std::cout << "\n"<< name << ", enter 1 or 2 for the additional army:";
 		std::cin >> num;
 		
 		std::cout <<"Enter continent: ";
