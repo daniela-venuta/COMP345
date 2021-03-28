@@ -80,7 +80,7 @@ public:
 
 	//"Ask Prompt to Player" of Player Actions
 	bool PlaceNewArmies(GameMap* gm);
-	bool MoveArmies();
+	bool MoveArmies(GameMap* gm);
 	bool DestroyArmy();
 	bool BuildCity();
 

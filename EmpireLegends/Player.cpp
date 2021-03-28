@@ -202,11 +202,11 @@ void Player::MoveArmies(int number, Territory<Region>* from, Territory<Region>* 
 				}
 				std::cout << "This action will cost " << cost << " travel points" << std::endl;
 				payCoin(cost);
-				std::cout << getName() + " moved " << number << " armies." << std::endl;
+				std::cout << "You moved " << number << " armies." << std::endl;
 			}
 			else
 			{
-				std::cout << getName() + " couldn't move any armies due to a lack of coins or of armies" << std::endl;
+				std::cout << "You could not move any of your armies due to a lack of coins or of armies" << std::endl;
 			}
 
 		}
@@ -244,17 +244,17 @@ void Player::PlaceNewArmies(int number, Territory<Region>* location)
 			{
 				playerArmies.push_back(location);
 			}
-			std::cout << getName() + " added " << number << " armies at " << location->getName() << std::endl;
+			std::cout << "You added " << number << " armies at " << location->getName() << std::endl;
 		}
 		else
 		{
-			std::cout << getName() + " cannot add armies at " << location->getName() + " because they have no city in this region." << std::endl;
+			std::cout << "You cannot add armies at " << location->getName() + " because you have no city in this region." << std::endl;
 		}
 
 	}
 	else if (unplacedArmies - number < 0)
 	{
-		std::cout << getName() + " does not have enough armies to perform this action (PlaceNewArmies)." << std::endl;
+		std::cout << "You do not have enough armies to perform this action (PlaceNewArmies)." << std::endl;
 	}
 	else
 	{
@@ -280,7 +280,7 @@ void Player::DestroyArmy(int number, Territory<Region>* location, vector<Player*
 
 
 	int check = location->getArmyCount() - number;
-	if (numOfYourArmy > 0 && number > 0 && numOfYourArmy >= check && check > 0)
+	if (numOfYourArmy > 0 && number > 0 && check > 0)
 	{
 		location->removeArmies(number);
 		
@@ -384,7 +384,11 @@ void Player::applyGood(Good* addedGood)
 	addedGood->applyGood(pResources);
 }
 
-//Give player the possible actions within their turn if they have an "And/Or" card
+/// <summary>
+/// 
+/// </summary>
+/// <param name="cardTwoAction"></param>
+/// <param name="gm"></param>
 void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 
 	string action1 = cardTwoAction->getAction();
@@ -392,130 +396,138 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 	int option = 0;
 	string chosenAction = "";
 
+	//Checking if it is truly a card with two actions
 	if (action2 == "")
 	{
 		std::cout << "Error: The card entered isn't a card with two actions." << std::endl;
 		return;
 	}
+	else
+	{
+		std::cout << "This card has two actions, " + action1 + " and " + action2 << std::endl;
+	}
 
-	std::cout << "This card has two actions, " + action1 + " and " + action2 << std::endl;
-
-	
-
-	do
+	//The player choose which action they want to do
+	//And returns to them to the other option if the chosen action was impossible
+	while (chosenAction == "")
 	{
 		std::cout << "Please enter the number next to the action you would like to do :" << std::endl;
 		std::cout << "1 : " + action1 << std::endl;
 		std::cout << "2 : " + action2 << std::endl;
 		std::cin >> option;
 
-		switch (option) {
-		case 1:
-			chosenAction = action1; 
-			std::cout << getName() + " have chosen " + action1 +"." << std::endl;
-			break;
-		case 2:
-			chosenAction = action2;
-			std::cout << getName() + " have chosen " + action2 + "." << std::endl;
-			break;
-		default:
-			std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
+		if (std::cin.fail())
+		{
+			std::cout << "The value you entered isn't a valid option. Please input a valid option. \n(Make sure that it is an integer)" << std::endl;
+			std::cout << "Please enter the number next to the action you would like to do :" << std::endl;
+			cin.clear();
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+		else
+		{
+
+			switch (option) {
+			case 1:
+				chosenAction = action1;
+				std::cout << "You have chosen " + action1 + "." << std::endl;
+				break;
+			case 2:
+				chosenAction = action2;
+				std::cout << "You have chosen " + action2 + "." << std::endl;
+				break;
+			default:
+				std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
+			}
+
 		}
 
-	} while (chosenAction == "");
+	};
 
 	bool check = false;
 	int notpossible = 0;
 	bool canBuild, canMove, canDestroy, canPlace;
 	canBuild = canMove = canDestroy = canPlace = true;
 
-	do 
+	while (notpossible != 2)
 	{
-		if (chosenAction == "Build City")
+		if (chosenAction == "Build City" && canBuild == true)
 		{
-			if (canBuild == true) 
+			if (BuildCity() == true)
 			{
-				std::cout << "You have chosen to build a city." << std::endl;
+				break;
+			}
+			canBuild = false;
+			notpossible++;
+		}
+		else if (chosenAction == "Move Armies" && canMove == true)
+		{
+			if (MoveArmies() == true)
+			{
+				break;
+			}
+			canMove = false;
+			notpossible++;
+		}
+		else if (chosenAction == "Destroy Army" && canDestroy == true)
+		{
+			if (DestroyArmy() == true)
+			{
+				break;
+			}
+			canDestroy = false;
+			notpossible++;
+		}
+		else if (chosenAction == "Place New Armies" && canPlace == true)
+		{
+			if (PlaceNewArmies(gm) == true)
+			{
+				break;
+			}
+			canPlace = false;
+			notpossible++;
+		}
 
-				if (BuildCity() == true)
-				{
-					check = true;
-				}
-				else
-				{
-					canBuild = false;
-					notpossible += 1;
-				}
-			}
-			else 
-			{
-				std::cout <<"You have already tried to build a city, but something made it impossible to be done. Please choose another option"<< std::endl;
-			}
+		//If the player already tried to do both actions and failed
+		if (notpossible == 2)
+		{
+			std::cout << "None of the two actions could be done. (" + action1 + " & " + action2 + ")"  << std::endl;
+			break;
+		}
+
+		//Try the other action to see if it the Player could still use this card
+		if (chosenAction == action1)
+		{
+			chosenAction = action2;
+		}
+		else 
+		{
+			chosenAction = action1;
+		}
 			
-		}
-
-		else if (chosenAction == "Move Armies")
-		{
-			if (canMove == true)
-			{
-				std::cout << "You have chosen to move some armies." << std::endl;
-
-				if (MoveArmies() == true)
-				{
-					check = true;
-				}
-				else
-				{
-					canMove = false;
-					notpossible += 1;
-				}
-			}
-			else
-			{
-				std::cout << "You have already tried to move some armies, but something made it impossible to be done. Please choose another option." << std::endl;
-			}
-
-
-		}
-
-		else if (chosenAction == "Destroy Army" )
-		{
-			if (canDestroy == true)
-			{
-				std::cout << "You have chosen to destroy some armies." << std::endl;
-
-				if (DestroyArmy() == true)
-				{
-					check = true;
-				}
-				else
-				{
-					canDestroy = false;
-					notpossible += 1;
-				}
-			}
-			else
-			{
-				std::cout << "You have already tried to move some armies, but something made it impossible to be done. Please choose another option." << std::endl;
-			}
-		}
-
-		else if (chosenAction == "Place New Armies")
-		{
-			std::cout << "You have chosen to place new armies." << std::endl;
-			check = PlaceNewArmies(gm);
-		}
-
-	} while (check != true);
+	};
 	
 }
 
+
+#pragma region New Version of Player Actions
+
+/// <summary>
+///		Purpose:
+///			Placing new Armies to a specific Region
+///		Methology: 
+///			Methodology:
+///			Checks if the Player could do the action 
+///			and then takes in the information given directly by the Player
+/// </summary>
+/// <param name="gm"> the GameMap, to check where could the new armies be placed at </param>
+/// <returns>	A bool to check if the function was successful or failed	</returns>
 bool Player::PlaceNewArmies(GameMap* gm)
 {
-	std::cout << getName() + ": You try to PLACE NEW ARMIES." << std::endl;
+	std::cout << " You try to PLACE NEW ARMIES." << std::endl;
 	if (pResources->unplacedArmies == 0)
 	{
-		std::cout << "Unfortunataly, you cannot build a city due to having no armies on the map \n or you don't have enough material left to build a city." << std::endl;
+		std::cout << "Unfortunataly, you cannot build a city due to having no armies on the map" << std::endl;
+		std::cout << "or you don't have enough material left to build a city." << std::endl;
 		return false;
 	}
 
@@ -524,6 +536,15 @@ bool Player::PlaceNewArmies(GameMap* gm)
 	possibleRegions.push_back(originPoint);
 	int options = 0;
 	for (auto reg : playerArmies)
+	{
+		auto it = find(possibleRegions.begin(), possibleRegions.end(), reg);
+		if (it == possibleRegions.end())
+		{
+			options += 1;
+			possibleRegions.push_back(reg);
+		}
+	}
+	for (auto reg : playerTerritories)
 	{
 		auto it = find(possibleRegions.begin(), possibleRegions.end(), reg);
 		if (it == possibleRegions.end())
@@ -554,7 +575,15 @@ bool Player::PlaceNewArmies(GameMap* gm)
 			std::cout << "Please enter the number next to the region you wish to add armies to: " << std::endl;
 
 			std::cin >> optionChosen;
-			if (optionChosen > 0 && optionChosen <= options)
+
+			if (std::cin.fail())
+			{
+				std::cout << "The value you entered isn't a valid option. Please input a valid option. \n(Make sure that it is an integer)" << std::endl;
+				std::cout << "Please enter the number next to the action you would like to do :" << std::endl;
+				cin.clear();
+				cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			}
+			else if (optionChosen > 0 && optionChosen <= options)
 			{
 				int index = optionChosen - 1;
 				armyReg = possibleRegions.at(index);
@@ -570,10 +599,19 @@ bool Player::PlaceNewArmies(GameMap* gm)
 
 	do 
 	{
-		std::cout << "Please enter the number of armies you wish to put within : (You have a maximum of " << pResources->unplacedArmies + ")." << std::endl;
+		std::cout << "Please enter the number of armies you wish to put within : " << std::endl;
+		string possibility = to_string(pResources->unplacedArmies);
+		std::cout << "(You have a maximum of " << possibility + ")." << std::endl;
 
 		std::cin >> numOfArmies;
-		if (numOfArmies <= 0 || numOfArmies > pResources->unplacedArmies)
+		if (std::cin.fail())
+		{
+			std::cout << "The value you entered isn't a valid option. Please input a valid option. \n(Make sure that it is an integer)" << std::endl;
+			std::cout << "Please enter the number next to the action you would like to do :" << std::endl;
+			cin.clear();
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+		else if (numOfArmies <= 0 || numOfArmies > pResources->unplacedArmies)
 		{
 			std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
 		}
@@ -586,16 +624,51 @@ bool Player::PlaceNewArmies(GameMap* gm)
 	return true;
 }
 
-bool Player::MoveArmies()
+
+/// <summary>
+///		Purpose:
+///			Moving Armies from a Region to another 
+///		Methology: 
+///			Methodology:
+///			Checks if the Player could do the action 
+///			and then takes in the information given directly by the Player
+/// </summary>
+/// <returns>	A bool to check if the function was successful or failed	</returns>
+bool Player::MoveArmies(GameMap* gm)
 {
+	if (pResources->unplacedArmies == 0 )
+	{
+		std::cout << "Unfortunataly, you cannot move armies due to having no armies on the map" << std::endl;
+		std::cout << "or you don't have enough material left to build a city." << std::endl;
+		return false;
+	}
 	return true;
 }
 
+
+/// <summary>
+///		Purpose:
+///			Destroy a certain number of Armies at a specific Region
+///		Methology: 
+///			Methodology:
+///			Checks if the Player could do the action 
+///			and then takes in the information given directly by the Player
+/// </summary>
+/// <returns>	A bool to check if the function was successful or failed	</returns>
 bool Player::DestroyArmy()
 {
 	return true;
 }
 
+
+/// <summary>
+///		Purpose:
+///			Builds one City at a specific Region
+///		Methodology:
+///			Checks if the Player could do the action 
+///			and then takes in the information given directly by the Player
+/// </summary>
+/// <returns>	A bool to check if the function was successful or failed	</returns>
 bool Player::BuildCity()
 {
 	std::cout << getName() + ": You try to BUILD A CITY." << std::endl;
@@ -637,7 +710,14 @@ bool Player::BuildCity()
 			std::cout << "Please enter the number next to the region you wish to build a city in: " << std::endl;
 
 			std::cin >> optionChosen;
-			if (optionChosen > 0 && optionChosen <= options)
+			if (std::cin.fail())
+			{
+				std::cout << "The value you entered isn't a valid option. Please input a valid option. \n(Make sure that it is an integer)" << std::endl;
+				std::cout << "Please enter the number next to the action you would like to do :" << std::endl;
+				cin.clear();
+				cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			}
+			else if (optionChosen > 0 && optionChosen <= options)
 			{
 				int index = optionChosen - 1;
 				cityReg = possibleRegions.at(index);
@@ -653,13 +733,13 @@ bool Player::BuildCity()
 	
 	}
 
+	//Remove a city from the ressources of Player
+	// and add the region to the territories where Player has a City
 	pResources->unplacedCities -= 1;
-	// add city at specified location
-
 	playerTerritories.push_back(cityReg);
-
 	std::cout << getName() + " built a city at " + cityReg->getName() << std::endl;
 
 	return true;
 }
 	
+#pragma endregion New Version of Player Actions
