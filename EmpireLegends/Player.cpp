@@ -478,7 +478,7 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 	int numOfAction = 1;
 	for (int i = 0; i < chosenAction.size(); i++) 
 	{
-		if (isalnum(chosenAction[i])) 
+		if (!isalpha(chosenAction[i])) 
 		{
 			numOfAction = chosenAction[i];
 		}
@@ -624,7 +624,8 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 				std::cout << "You have chose to destroy a city." << std::endl;
 
 				vector<Territory<Region>*> possibleRegions;
-				possibleRegions.push_back(gm->findTerritory(initialContinent)->value->findTerritory(initialRegion));
+				Territory<Region>* originPoint = gm->findTerritory(initialContinent)->value->findTerritory(initialRegion);
+				possibleRegions.push_back(originPoint);
 				for (auto reg : playerArmies) {
 					auto it = find(possibleRegions.begin(), possibleRegions.end(), reg);
 					if (it == possibleRegions.end())

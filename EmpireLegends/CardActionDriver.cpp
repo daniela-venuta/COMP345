@@ -11,7 +11,6 @@ int main() {
 	auto* gameMap = mapLoader->load("valid_map_1.json");
 
 
-
 	auto* r1 = gameMap->findTerritory("Continent 1")->value->findTerritory("Region 1");
 	auto* r2 = gameMap->findTerritory("Continent 1")->value->findTerritory("Region 2");
 	auto* r3 = gameMap->findTerritory("Continent 1")->value->findTerritory("Region 3");
@@ -22,7 +21,6 @@ int main() {
 	auto* p2 = new Player("PlayerB");
 	currentPlayers.push_back(p2);
 	p1->getResources();
-	p1->setListOfRegion(gameMap);
 	
 	std::cout << "===== Tests of Main Loop Game - Card Actions =====" << std::endl;
 	std::cout << "\n";
@@ -89,10 +87,22 @@ int main() {
 	p3->setName("Not-initialised Player");
 	std::cout << p3->getName() + "'s turn: " << std::endl;
 	p3->andOrAction(c1, gameMap); // fail due to not having stuff
+	
 	std::cout << "\n";
 
 	std::cout << p2->getName() + "'s turn: " << std::endl;
 	p2->andOrAction(c3, gameMap);
+
+	for (auto i : currentPlayers)
+	{
+		delete i;
+	}
+	delete p3;
+
+	delete c1;
+	delete c2;
+	delete c3;
+
 
 	return 0;
 }
