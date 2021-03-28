@@ -451,7 +451,10 @@ void Player::executeAction(Action* action, GameMap* map)
 	//Place New Armies
 	else if (place != std::string::npos)
 	{
-		// Plane new army(ies) on the starting region or on a chosen region that has an owned city
+		// Place new army(ies) on the starting region or on a chosen region that has an owned city
+		int numArmies = action->getMultiplier();
+		Territory<Region>* destination = chooseTerritory(MapUtility::printTerritoriesInVector(map));
+		placeNewArmies(numArmies, destination);
 	}
 }
 

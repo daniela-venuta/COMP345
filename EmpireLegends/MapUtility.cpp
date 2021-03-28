@@ -91,3 +91,34 @@ std::map<int, Territory<Region>*> MapUtility::printTerritoriesWithArmies(GameMap
 	
 	return terrsWithArmies;
 }
+
+map<int, Territory<Region>*> MapUtility::printTerritoriesInVector(GameMap* map)
+{
+	std::cout << "List of all Continents and Regions: " << std::endl;
+	std::map<int, Territory<Region>*> terrs;
+	
+	auto continentIterator = map->terrs.begin();
+	while (continentIterator != map->terrs.end())
+	{
+		std::string name = continentIterator->second->getName();
+		std::cout << name << std::endl;
+
+		auto regionIterator = continentIterator->second->value->terrs.begin();
+		while (regionIterator != continentIterator->second->value->terrs.end())
+		{
+			int num = terrs.size() + 1;
+			terrs[num] = regionIterator->second;
+			std::string regionName = regionIterator->second->getName();
+			std::cout << num << "-" << regionName << std::endl;
+
+			// Increment the Iterator to point to next entry
+			++regionIterator;
+			
+		}
+
+		// Increment the Iterator to point to next entry
+		++continentIterator;
+	}
+
+	return terrs;
+}
