@@ -52,6 +52,26 @@ void ColorUtilities::setColorAvailability(string color, bool isAvailable)
 	}
 }
 
+void ColorUtilities::setColorAvailability(Color color, bool isAvailable)
+{
+	if (color == Color::blue)
+	{
+		blue = isAvailable;
+	}
+	else if (color == Color::yellow)
+	{
+		yellow = isAvailable;
+	}
+	else if (color == Color::red)
+	{
+		red = isAvailable;
+	}
+	else
+	{
+		green = isAvailable;
+	}
+}
+
 Color ColorUtilities::getNewColor()
 {
 	Color freeColor = Color::none;
@@ -105,7 +125,9 @@ Color ColorUtilities::parseColor(string color)
 
 StartingPhase::StartingPhase()
 {
-	nonPlayer = new Player("CPU", 0);
+	nonPlayer1 = new Player("CPU1", 0);
+	nonPlayer2 = new Player("CPU2", 0);
+	
 	biddingFacility = new BiddingFacility();
 	colorUtilities = new ColorUtilities();
 	cardDeck = nullptr;
@@ -114,7 +136,8 @@ StartingPhase::StartingPhase()
 
 StartingPhase::~StartingPhase()
 {
-	delete nonPlayer;
+	delete nonPlayer1;
+	delete nonPlayer2;
 	delete biddingFacility;
 	delete colorUtilities;
 
@@ -131,8 +154,8 @@ void StartingPhase::startGame(GameMap* gameMap, const vector<Player*> playerVect
 	shuffleCardDeck();
 	assignPlayerCoins();
 	setupStartingTerritories();
+	setupNonPlayers();
 	placeArmiesOnMap();
-	setupNonPlayer();
 	startBidding();
 }
 
@@ -200,7 +223,7 @@ void StartingPhase::assignPlayerCoins()
 		const Player* player = players[i];
 		Resources* resources = players[i]->getResources();
 
-		std::cout << player->getName() << "Choose your color: ";
+		std::cout << player->getName() << ", choose your color: ";
 		std::cin >> color;
 
 
@@ -225,39 +248,52 @@ void StartingPhase::setupStartingTerritories()
 
 void StartingPhase::placeArmiesOnMap()
 {
+	int num;
 	string continentName;
 	string territoryName;
 	Territory<Region>* destination;
-
+	
+	
 	// place armies
 	for (int i = 0; i < NUM_ARMIES_TO_PLACE; i++)
 	{
-		int index = i % 4;
+		int index = i % 2;
 
-		if (index == 3)
-		{	
-			destination = getStartingLocation();
-			nonPlayer->PlaceNewArmies(1, destination);
-		}
-		else
-		{
-			std::cout << "Enter continent: ";
-			std::cin >> continentName;
+		string name = players[i]->getName();
 
-			std::cout << "Enter region: ";
-			std::cin >> territoryName;
+		std::cout << name << ", enter 1 or 2 for the additional army:";
+		std::cin >> num;
+		
+		std::cout <<"Enter continent: ";
+		std::cin >> continentName;
+
+		std::cout << "Enter region: ";
+		std::cin >> territoryName;
 
 			destination = map->findTerritory(continentName)->value->findTerritory(territoryName);
-			players[i]->PlaceNewArmies(1, destination);
+
+		if(num == 1)
+		{
+			nonPlayer1->PlaceNewArmies(1, destination);
 		}
+		else if(num == 2)
+		{
+			nonPlayer2->PlaceNewArmies(1, destination);
+		}
+			
 	}
 }
 
-void StartingPhase::setupNonPlayer()
+void StartingPhase::setupNonPlayers()
 {
-	// get unassigned color
-	// assign CPU color
-	nonPlayer->getResources()->playerColor = colorUtilities->getNewColor();
+	Color color1 = colorUtilities->getNewColor();
+	colorUtilities->setColorAvailability(color1, false);
+
+	Color color2 = colorUtilities->getNewColor();
+	colorUtilities->setColorAvailability(color2, false);
+	
+	nonPlayer1->getResources()->playerColor = color1;
+	nonPlayer2->getResources()->playerColor = color2;
 }
 
 void StartingPhase::startBidding()

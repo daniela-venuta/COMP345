@@ -15,6 +15,7 @@ struct ColorUtilities
 
 	bool getColorAvailability(string color);
 	void setColorAvailability(string color, bool isAvailable);
+	void setColorAvailability(Color color, bool isAvailable);
 	Color getNewColor();
 	Color parseColor(string color);
 };
@@ -33,7 +34,7 @@ private:
 	void assignPlayerCoins();
 	void setupStartingTerritories();
 	void placeArmiesOnMap();
-	void setupNonPlayer();
+	void setupNonPlayers();
 	void startBidding();
 
 	int setNumberOfCoins(int numofPlayers);
@@ -42,7 +43,8 @@ private:
 	int numOfPlayers = 0;
 	Deck* cardDeck;
 	vector<Player*> players;
-	Player* nonPlayer;
+	Player* nonPlayer1;
+	Player* nonPlayer2;
 	BiddingFacility* biddingFacility;
 	GameMap* map;
 	ColorUtilities* colorUtilities;
