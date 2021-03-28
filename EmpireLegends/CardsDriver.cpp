@@ -27,10 +27,7 @@
 //	vector<Card*> cardVector;
 //	cardVector.push_back(cardOne);
 //	cardVector.push_back(cardTwo);
-//	cardVector.push_back(cardThree);
-//	cardVector.push_back(cardFour);
-//	cardVector.push_back(cardFive);
-//	cardVector.push_back(cardSix);
+//	
 //
 //	// Create deck and add cards (this creates a card hand as well)
 //	std::cout << "Printing deck: \n";

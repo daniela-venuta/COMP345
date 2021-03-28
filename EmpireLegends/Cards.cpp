@@ -1,4 +1,6 @@
 #include "Cards.h"
+#include <stdlib.h>
+#include <time.h> 
 
 #include <utility>
 #include "Player.h"
@@ -35,6 +37,10 @@ void Deck::draw(const int count)
 {
 	for (int i = 0; i < count; i++)
 	{
+		if (cardDeck.empty()) {
+			std::cout << "The deck is empty so no draw can be made" << std::endl; 	
+			return; 
+		}
 		// get card to add to the hand
 		Card* drawCard = cardDeck.at(cardDeck.size() - 1);
 
@@ -46,8 +52,24 @@ void Deck::draw(const int count)
 	}
 }
 
-void Deck::shuffle()
+bool Deck::shuffle()
 {
+	bool success = false;
+	if(!this->isEmpty())
+	{
+		std::srand(time(0));
+
+		int numCards = cardDeck.capacity();
+		for (int i = 0; i < numCards; i++)
+		{
+			int rand = i + (std::rand() % (numCards)-i);
+			this->swap(rand, i);
+		}
+
+		success = true;
+	}
+	
+	return success;
 }
 
 Hand* Deck::getHand() const
@@ -78,7 +100,17 @@ Deck& Deck::operator=(const Deck& deck)
 	return *this;
 }
 
+void Deck::swap(int indexOne, int indexTwo)
+{
+	Card* temp = cardDeck[indexOne];
+	cardDeck[indexOne] = cardDeck[indexTwo];
+	cardDeck[indexTwo] = temp;
+}
 
+bool Deck::isEmpty() const
+{
+	return (cardDeck.capacity() > 0) ? false : true;
+}
 #pragma endregion Deck
 
 #pragma region Hand
@@ -109,15 +141,20 @@ Card* Hand::exchange(int rowPosition, Player* player)
 {
 	const int cardCost = getCardCost(rowPosition);
 	Card* exchangeCard = nullptr;
-
-	if (player->getBalance() >= cardCost)
+		
+	if (handCards.empty()) {
+		std::cout << "The hand is empty" << std::endl; 
+	} else if(rowPosition > handCards.size()){
+		std::cout << "Invalid card position" << std::endl; 
+	}
+	else if (player->getBalance() >= cardCost)
 	{
 		exchangeCard = handCards.at(rowPosition - 1);
 
 		// remove card from Hand
 		handCards.erase(handCards.begin() + rowPosition - 1);
 
-		if (cardCost > 0)
+		if (cardCost > -1)
 		{
 			player->payCoin(cardCost);
 		}
@@ -168,11 +205,6 @@ ostream& operator<<(ostream& os, const Hand& hand)
 
 	return os;
 }
-
-vector<Card*> Hand::getHandCards() {
-	return handCards;
-}
-
 #pragma endregion Hand
 
 #pragma region Card

@@ -183,7 +183,7 @@
 //	c3->addTerritory(new Territory<Region>(*t6));
 //
 //	auto* m1 = new GameMap("Map 1");
-//	//auto* m2 = new GameMap("Map 2");
+//	auto* m2 = new GameMap("Map 2");
 //	auto* t9 = new Territory<Continent>(c1);
 //	auto* t10 = new Territory<Continent>(c2);
 //	auto* t11 = new Territory<Continent>(c3);
@@ -193,10 +193,10 @@
 //	m1->addEdge("Continent 1", "Continent 2", 3);
 //
 //	Territory<Continent>* t9Copy = new Territory<Continent>(*t9);
-//	/*m2->addTerritory(t9Copy);
+//	m2->addTerritory(t9Copy);
 //	m2->addTerritory(t11);
 //	m2->addEdge("Continent 1", "Continent 3", 3);
-//	*/
+//	
 //	std::cout << "----------------------------------------------------------------------------------" << std::endl;
 //	std::cout << "\nTravel cost (1->2): " << m1->getTravelCost(t1, t3) << std::endl; // Should be 1
 //	std::cout << "----------------------------------------------------------------------------------" << std::endl;
@@ -220,7 +220,7 @@
 //	{
 //		//m1 should validate
 //		m1->validate();
-//		//m2->validate();
+//		m2->validate();
 //	}
 //	catch (InvalidMapException& e)
 //	{
@@ -249,7 +249,7 @@
 //	}
 //
 //	delete m1;
-//	//delete m2;
+//	delete m2;
 //}
 //
 //void driveMapLoader()
