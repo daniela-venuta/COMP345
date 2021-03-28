@@ -1,7 +1,6 @@
 #include "StartingPhase.h"
 #include <algorithm>
 #include "MapLoader.h"
-#include <stdlib.h>
 
 static const int NUM_ARMIES_TO_PLACE = 10;
 
