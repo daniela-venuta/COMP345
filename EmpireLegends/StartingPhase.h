@@ -18,6 +18,7 @@ struct ColorUtilities
 	void setColorAvailability(Color color, bool isAvailable);
 	Color getNewColor();
 	Color parseColor(string color);
+	Color parseColor(int index);
 };
 #endif
 

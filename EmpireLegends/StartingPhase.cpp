@@ -123,6 +123,34 @@ Color ColorUtilities::parseColor(string color)
 	return col;
 }
 
+Color ColorUtilities::parseColor(int index)
+{
+	Color col = Color::none;
+
+	if (index == Color::red)
+	{
+		col = Color::red;
+		std::cout << "Selected Red\n";
+	}
+	else if (index == Color::green)
+	{
+		col = Color::green;
+		std::cout << "Selected Green\n";
+	}
+	else if (index == Color::blue)
+	{
+		col = Color::green;
+		std::cout << "Selected Blue\n";
+	}
+	else if (index == Color::yellow)
+	{
+		col = Color::yellow;
+		std::cout << "Selected Yellow\n";
+	}
+
+	return col;
+}
+
 StartingPhase::StartingPhase()
 {
 	nonPlayer1 = new Player("CPU1", 0);
@@ -207,8 +235,9 @@ void StartingPhase::shuffleCardDeck() const
 
 void StartingPhase::assignPlayerResources()
 {
-	string color;
-
+	int colorNum;
+	std::cout << "Color options \n 1.Red \n 2.Green  \n 3.Blue \n 4. Yellow \n";
+	
 	// Assign number of coins based on players
 	int playerCoins = setNumberOfCoins(numOfPlayers);
 
@@ -216,15 +245,15 @@ void StartingPhase::assignPlayerResources()
 	{
 		const Player* player = players[i];
 		Resources* resources = players[i]->getResources();
-
+		
 		std::cout << player->getName() << ", choose your color: ";
-		std::cin >> color;
+		std::cin >> colorNum;
 
-		Color col = colorUtilities->parseColor(color);
+		Color col = colorUtilities->parseColor(colorNum);
 		resources->playerColor = col;
-
+		
 		// mark color as unavailable
-		colorUtilities->setColorAvailability(color, false);
+		colorUtilities->setColorAvailability(col, false);
 
 		// assign cities and armies
 		resources->unplacedCities = 3;
