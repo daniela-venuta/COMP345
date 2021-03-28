@@ -1,6 +1,5 @@
 #include "Player.h"
 #include "MapLoader.h"
-#include "MapUtility.h"
 #include <string>
 
 
@@ -10,7 +9,8 @@ int main() {
 
 	MapLoader* mapLoader = new MapLoader();
 	auto* gameMap = mapLoader->load("valid_map_1.json");
-	gameMap = MapUtility::createValidMap();
+
+
 
 	auto* r1 = gameMap->findTerritory("Continent 1")->value->findTerritory("Region 1");
 	auto* r2 = gameMap->findTerritory("Continent 1")->value->findTerritory("Region 2");
@@ -22,7 +22,7 @@ int main() {
 	auto* p2 = new Player("PlayerB");
 	currentPlayers.push_back(p2);
 	p1->getResources();
-
+	p1->setListOfRegion(gameMap);
 	
 	std::cout << "===== Tests of Main Loop Game - Card Actions =====" << std::endl;
 	std::cout << "\n";
@@ -77,8 +77,9 @@ int main() {
 
 	//AndOrAction()
 	std::cout << "-- AndOrAction Tests --" << std::endl;
-	Card* c1 = new Card("Dire Dragon", new Flying, "Move 3 Armies", "Destroy 1 Armies");
+	Card* c1 = new Card("Dire Dragon", new Flying, "Move 3 Armies", "Destroy 1 Army");
 	Card* c2 = new Card("Dire Ogre", new CoinVPs, "Move 2 armies");
+	Card* c3 = new Card("Dire Giant", new Immune, "Place 3 armies", "Destroy 1 Army");
 
 	std::cout << p1->getName() + "'s turn: " << std::endl;
 	p1->andOrAction(c2, gameMap);//fail - Card has only one action
@@ -91,7 +92,7 @@ int main() {
 	std::cout << "\n";
 
 	std::cout << p2->getName() + "'s turn: " << std::endl;
-	p2->andOrAction(c1, gameMap);
+	p2->andOrAction(c3, gameMap);
 
 	return 0;
 }

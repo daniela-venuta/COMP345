@@ -13,6 +13,7 @@ enum Color { none, red, green, blue, yellow };
 static vector<Player*> currentPlayers;
 static string initialContinent= "Continent 1";
 static string initialRegion = "Region 1";
+static vector<Territory<Region>*> listRegion;
 
 struct Resources
 {
@@ -82,6 +83,7 @@ public:
 	Resources* getResources() const;
 	void andOrAction(Card* cardTwoAction, GameMap* gm);
 	int MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap* map);
+	void setListOfRegion(GameMap* gameMap);
 
 private:
 	string playerName;

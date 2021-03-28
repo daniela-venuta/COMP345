@@ -1,5 +1,5 @@
 #include "Player.h"
-
+#include "StartingPhase.h"
 #include "Map.h"
 #include "Cards.h"
 #include <algorithm>
@@ -475,7 +475,7 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 	int notpossible = 0;
 	bool canBuild, canMove, canDestroy, canPlace;
 	canBuild = canMove = canDestroy = canPlace = true;
-	int numOfAction = 0;
+	int numOfAction = 1;
 	for (int i = 0; i < chosenAction.size(); i++) 
 	{
 		if (isalnum(chosenAction[i])) 
@@ -493,6 +493,7 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 		std::size_t place = chosenAction.find("Place");
 		std::size_t move = chosenAction.find("Move");
 
+		//Build City
 		if (build != std::string::npos && canBuild == true)
 		{
 			if (!playerArmies.empty() || pResources->unplacedCities == 0)
@@ -510,40 +511,80 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 
 				if (possibleRegions.empty())
 				{
+					std::cout << "Build City cannot be done" << std::endl;
+					canBuild = false;
+					notpossible++;
 					break;
-					//write error message
 				}
 
 				Territory<Region>* regionToPass =  chosenTerritory(possibleRegions);
 				BuildCity(regionToPass);
 			}
-			canBuild = false;
-			notpossible++;
+			else
+			{
+				std::cout << "Build City cannot be done" << std::endl;
+				canBuild = false;
+				notpossible++;
+			}
 		}
+
+		//Move Armies
 		else if (move != std::string::npos && canMove == true)
 		{
 			if (!playerArmies.empty() && !(pResources->totalCoins == 0))
+			{
 				std::cout << "You have chose to move armies." << std::endl;
 
-			vector<Territory<Region>*> possibleRegions;
-			for (auto reg : playerArmies) {
-				auto it = find(possibleRegions.begin(), possibleRegions.end(), reg);
-				if (it == possibleRegions.end())
-				{
-					possibleRegions.push_back(reg);
+				vector<Territory<Region>*> possibleRegions;
+				for (auto reg : playerArmies) {
+					auto it = find(possibleRegions.begin(), possibleRegions.end(), reg);
+					if (it == possibleRegions.end())
+					{
+						possibleRegions.push_back(reg);
+					}
 				}
-			}
 
-			if (possibleRegions.empty())
+				if (possibleRegions.empty())
+				{
+					std::cout << "Move Armies cannot be done" << std::endl;
+					canMove = false;
+					notpossible++;
+					break;
+				}
+				std::cout << "Choose the region where your armies are from: " << std::endl;
+				Territory<Region>* from = chosenTerritory(possibleRegions);
+				
+				Territory<Region>* to = nullptr;
+				if (listRegion.empty()) 
+				{
+					std::cout << "Move Armies cannot be done" << std::endl;
+					canMove = false;
+					notpossible++;
+				}
+				do 
+				{
+					std::cout << "Choose the region where your armies are going to: " << std::endl;
+				
+					to = chosenTerritory(listRegion);
+					if (to->getName() == from->getName())
+					{
+						std::cout<< "The territory given is the same as the territory that the armies are from."<<std::endl;
+						std::cout << "Please enter a choose a different region." << std::endl;
+						to = nullptr;
+					}
+				} while (to==nullptr);
+
+				MoveArmies(numOfAction, from, to, gm);
+			}
+			else
 			{
-				break;
-				//write error message
+				std::cout << "Move Armies cannot be done" << std::endl;
+				canMove = false;
+				notpossible++;
 			}
-
-			Territory<Region>* from = chosenTerritory(possibleRegions);
-			Territory<Region>* to = nullptr;
-			MoveArmies(numOfAction,from,to,gm);
 		}
+
+		//Destroy Armies
 		else if (destroy != std::string::npos && canDestroy == true)
 		{
 			if (!playerArmies.empty())
@@ -560,8 +601,10 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 				}
 				if (possibleRegions.empty())
 				{
+					std::cout << "Destroy Armies cannot be done" << std::endl;
+					canDestroy = false;
+					notpossible++;
 					break;
-					//write error message
 				}
 					
 				Territory<Region>* regionToPass = chosenTerritory(possibleRegions);
@@ -571,6 +614,9 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 			canDestroy = false;
 			notpossible++;
 		}
+
+
+		//Place New Armies
 		else if (place != std::string::npos && canPlace == true)
 		{
 			if (pResources->unplacedArmies == 0)
@@ -588,15 +634,21 @@ void Player::andOrAction(Card* cardTwoAction, GameMap* gm) {
 				}
 				if (possibleRegions.empty())
 				{
+					std::cout << "Place New Armies cannot be done" << std::endl;
+					canPlace = false;
+					notpossible++;
 					break;
-					//write error message
 				}
 
 				Territory<Region>* regionToPass = chosenTerritory(possibleRegions);
 			PlaceNewArmies(numOfAction, regionToPass);
 			}
-			canPlace = false;
-			notpossible++;
+			else{
+				std::cout << "Place New Armies cannot be done" << std::endl;
+				canPlace = false;
+				notpossible++;
+			}
+			
 		}
 
 		//If the player already tried to do both actions and failed
@@ -661,4 +713,20 @@ Territory<Region>* Player::chosenTerritory(vector<Territory<Region>*> regions)
 	return chosenRegion;
 }
 	
-#pragma endregion New Version of Player Actions
+void Player:: setListOfRegion(GameMap* gameMap) {
+	vector<Continent*> continents;
+	for (auto mapContinents : gameMap->terrs)
+	{
+		auto* tempContinent = mapContinents.second->value;
+		continents.push_back(tempContinent);
+	}
+	static vector<Territory<Region>*> listRegion;
+	for (auto cont : continents)
+	{
+		auto mapOfReg = cont->terrs;
+		for (auto terrReg : mapOfReg)
+		{
+			listRegion.push_back(terrReg.second);
+		}
+	}
+}
