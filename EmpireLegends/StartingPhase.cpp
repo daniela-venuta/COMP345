@@ -2,8 +2,10 @@
 #include <algorithm>
 #include "MapLoader.h"
 
+// Number of armies of non player colour that need to be placed on the map in a two player game
 static const int NUM_ARMIES_TO_PLACE = 10;
 
+// Method to check if a user has selected a color or if it is free
 bool ColorUtilities::getColorAvailability(Color color)
 {
 	bool isAvailable;
@@ -28,6 +30,7 @@ bool ColorUtilities::getColorAvailability(Color color)
 	return isAvailable;
 }
 
+// Helper method to mark a color as free or taken
 void ColorUtilities::setColorAvailability(Color color, bool isAvailable)
 {
 	if (color == Color::blue)
@@ -48,6 +51,7 @@ void ColorUtilities::setColorAvailability(Color color, bool isAvailable)
 	}
 }
 
+// Returns first color that is available
 Color ColorUtilities::getNewColor()
 {
 	Color freeColor = Color::none;
@@ -71,6 +75,7 @@ Color ColorUtilities::getNewColor()
 	return freeColor;
 }
 
+// Returns a color mapped to the Color enum found in Player
 Color ColorUtilities::getColor(int index)
 {
 	Color col = Color::none;
@@ -99,6 +104,7 @@ Color ColorUtilities::getColor(int index)
 	return col;
 }
 
+// Default constructor for the Starting Phase to initialize all pointers
 StartingPhase::StartingPhase()
 {
 	nonPlayer1 = new Player("CPU1", 0);
@@ -109,6 +115,7 @@ StartingPhase::StartingPhase()
 	numOfPlayers = 0;
 }
 
+// Destructor for the StartingPhase class for cleanup
 StartingPhase::~StartingPhase()
 {
 	delete nonPlayer1;
@@ -118,6 +125,7 @@ StartingPhase::~StartingPhase()
 	delete map;
 }
 
+// Method to start the sequence of actions that are needed in the starting phase
 void StartingPhase::startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers)
 {
 	this->players = playerVector;
@@ -133,6 +141,7 @@ void StartingPhase::startGame(GameMap* gameMap, const vector<Player*> playerVect
 	startBidding();
 }
 
+// Retrieve number of starting coins per player
 int StartingPhase::setNumberOfCoins(int numofPlayers)
 {
 	int playerCoins;
@@ -159,6 +168,7 @@ int StartingPhase::setNumberOfCoins(int numofPlayers)
 	return playerCoins;
 }
 
+// Retrieve the starting Region for all players based on the game map
 Territory<Region>* StartingPhase::getStartingLocation()
 {	
 	Continent* continent = map->terrs.begin()->second->value;
@@ -167,6 +177,7 @@ Territory<Region>* StartingPhase::getStartingLocation()
 	return region;
 }
 
+// Method to initiate shuffling of the current deck of cards (changes their order in the vector)
 void StartingPhase::shuffleCardDeck() const
 {
 	std::cout << *cardDeck;
@@ -179,6 +190,7 @@ void StartingPhase::shuffleCardDeck() const
 	std::cout << *cardDeck;
 }
 
+// Assigns colours to the players and provides coins, armies and cities
 void StartingPhase::assignPlayerResources()
 {
 	
@@ -222,6 +234,7 @@ void StartingPhase::assignPlayerResources()
 	}
 }
 
+// Adds 4 armies to the starting location for each player
 void StartingPhase::setupStartingTerritories()
 {
 	Territory<Region>* startingRegion = getStartingLocation();
@@ -233,6 +246,7 @@ void StartingPhase::setupStartingTerritories()
 	}
 }
 
+// Allows players to take turns placing non player color armies on map
 void StartingPhase::placeArmiesOnMap()
 {
 	string continentName;
@@ -248,7 +262,8 @@ void StartingPhase::placeArmiesOnMap()
 
 		string name = players[i]->getName();
 		std::cout << "\n" << name << ", place the non player army on the board. \n";
-		
+
+		// Keep prompting to enter a continent and region as long as it can't be found in the map
 		bool doesLocationNotExist;
 		do
 		{
@@ -261,14 +276,14 @@ void StartingPhase::placeArmiesOnMap()
 				std::getline(std::cin, territoryName);
 
 				doesLocationNotExist = false;
-				
-				auto continent = map->findTerritory(continentName);
-				auto region = continent->value->findTerritory(territoryName);
+
+				auto continent = map->findTerritory(continentName); // Throws territory not found exception
+				auto region = continent->value->findTerritory(territoryName); // Throws territory not found exception
 				destination = region;
 				
 			}
 			catch(TerritoryNotFoundException e){
-				std::cout << (territoryName.empty() ? territoryName : continentName) << " does not exist. Try again. \n";
+				std::cout << (territoryName.empty() ? territoryName : continentName) << " does not exist. Try again. \n"; // Territory or region string was invalid
 				doesLocationNotExist = true;
 			}
 		
@@ -278,6 +293,7 @@ void StartingPhase::placeArmiesOnMap()
 	}
 }
 
+// Assigns a remaining colour to a non-player and assigns them armies to be placed on the board
 void StartingPhase::setupNonPlayers()
 {
 	Color color1 = colorUtilities->getNewColor();
@@ -290,12 +306,14 @@ void StartingPhase::setupNonPlayers()
 	resources1->unplacedArmies = 18;
 }
 
+// Initiates the bidding phase
 void StartingPhase::startBidding()
 {
 	// Players place bids
 	biddingFacility->placeBids(players);
 }
 
+// Prints a list of all the Continents and Regions on the map for informative purposes
 void StartingPhase::printTerritories()
 {
 	std::cout << "List of all Continents and Regions: " << std::endl;
@@ -312,6 +330,7 @@ void StartingPhase::printTerritories()
 			string regionName = regionIterator->second->getName();
 			std::cout << regionName << std::endl;
 
+			// Increment the Iterator to point to next entry
 			regionIterator++;
 		}
 		
