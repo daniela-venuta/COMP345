@@ -212,12 +212,6 @@ void StartingPhase::assignPlayerResources()
 	// Assign number of coins based on players
 	int playerCoins = setNumberOfCoins(numOfPlayers);
 
-	// Get players
-	for (int i = 0; i < numOfPlayers; i++) {
-		players[i]->getResources()->totalCoins = playerCoins;
-	}
-
-	// select colors
 	for (int i = 0; i < numOfPlayers; i++)
 	{
 		const Player* player = players[i];
@@ -232,8 +226,12 @@ void StartingPhase::assignPlayerResources()
 		// mark color as unavailable
 		colorUtilities->setColorAvailability(color, false);
 
-		player->getResources()->unplacedCities = 3;
-		player->getResources()->unplacedArmies = 18;
+		// assign cities and armies
+		resources->unplacedCities = 3;
+		resources->unplacedArmies = 18;
+
+		// assign coins
+		resources->totalCoins = playerCoins;
 	}
 }
 
