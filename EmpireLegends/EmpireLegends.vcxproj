@@ -139,16 +139,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GameStart.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Map.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameStartDriver.cpp" />
     <ClCompile Include="jsoncpp.cpp" />
     <ClCompile Include="MainDriver.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="AfterActionDriver.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapDriver.cpp" />
+    <ClCompile Include="GameStart.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MapLoader.h" />
@@ -175,6 +178,9 @@
     <None Include="invalid_map_disconnected.json" />
     <None Include="invalid_map_missing_edges_field.json" />
     <None Include="invalid_map_missing_name_field.json" />
+    <None Include="map_L.json" />
+    <None Include="map_rectangle.json" />
+    <None Include="map_T.json" />
     <None Include="valid_map_1.json" />
     <None Include="valid_map_2.json" />
   </ItemGroup>

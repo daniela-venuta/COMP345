@@ -27,6 +27,9 @@
     <ClInclude Include="MainGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameStart.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map.cpp">
@@ -68,6 +71,12 @@
     <ClCompile Include="AfterActionDriver.cpp">
       <Filter>Driver Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameStartDriver.cpp">
+      <Filter>Driver Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStart.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -103,6 +112,15 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="invalid_map_missing_edges_field.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="map_rectangle.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="map_L.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="map_T.json">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
