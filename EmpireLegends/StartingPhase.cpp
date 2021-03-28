@@ -241,6 +241,7 @@ void StartingPhase::placeArmiesOnMap()
 	int num;
 	string continentName;
 	string territoryName;
+	Territory<Region>* destination = nullptr;
 	
 	// place armies
 	for (int i = 0; i < NUM_ARMIES_TO_PLACE; i++)
@@ -249,22 +250,40 @@ void StartingPhase::placeArmiesOnMap()
 
 		string name = players[i]->getName();
 
-		std::cout << "\n"<< name << ", enter 1 or 2 to select which non player army to place on the board:";
+		std::cout << "\n" << name << ", enter 1 or 2 to select which non player army to place on the board:";
 		std::cin >> num;
 		std::cin.ignore();
 
-
 		printTerritories();
 		
-		std::cout <<"Enter continent: ";
-		std::getline(std::cin, continentName);
-		std::cin.ignore();
+		bool doesLocationNotExist;
+		do
+		{
+			try
+			{
+				std::cout << "Enter continent: ";
+				std::getline(std::cin, continentName);
+				std::cin.ignore();
 
-		std::cout << "Enter region: ";
-		std::getline(std::cin, territoryName);
-		std::cin.ignore();
+				std::cout << "Enter region: ";
+				std::getline(std::cin, territoryName);
+				std::cin.ignore();
 
-		Territory<Region>*  destination = map->findTerritory(continentName)->value->findTerritory(territoryName);
+				doesLocationNotExist = false;
+				//destination = map->findTerritory(continentName)->value->findTerritory(territoryName);
+				
+				auto continent = map->findTerritory(continentName);
+				auto region = continent->value->findTerritory(territoryName);
+				destination = region;
+				
+			}
+			catch(TerritoryNotFoundException e){
+				std::cout << "This continent does not exist. Try again. \n";
+				doesLocationNotExist = true;
+			}
+		
+		} while (doesLocationNotExist);
+		
 
 		if(num == 1)
 		{
