@@ -249,7 +249,7 @@ void StartingPhase::placeArmiesOnMap()
 
 		string name = players[i]->getName();
 
-		std::cout << "\n"<< name << ", enter 1 or 2 for the additional army:";
+		std::cout << "\n"<< name << ", enter 1 or 2 to select which non player army to place on the board:";
 		std::cin >> num;
 		std::cin.ignore();
 
