@@ -67,7 +67,7 @@ int main() {
 	std::cout << "AND Action: " << std::endl;
 	p1->andOrAction(c6, gameMap);
 	std::cout << "\n";
-	
+	p1->andOrAction(c1, gameMap);
 	std::cout << "\n";
 
 	std::cout << "OR Action: " << std::endl;

@@ -85,6 +85,7 @@ public:
 	void andOrAction(Card* cardTwoAction, GameMap* gm);
 	int MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap* map);
 	void setListOfRegion(GameMap* gameMap);
+	Player* chooseEnemy(Territory<Region>* location, int numArmies);
 
 private:
 	string playerName;

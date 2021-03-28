@@ -444,15 +444,20 @@ void Player::executeAction(Action* action, GameMap* map)
 	//Destroy Armies
 	else if (destroy != std::string::npos)
 	{
-		// Destroy enemy army 
+		int numArmies = action->getMultiplier();
+		std::cout << "You many destroy " << numArmies << " enemy armies. Please choose a region: \n";
+		Territory<Region>* location = chooseTerritory(MapUtility::printTerritoriesWithEnemyArmies(map, this, numArmies));
+		Player* enemyPlayer = chooseEnemy(location, numArmies);
+		
+		destroyArmy(numArmies, location, enemyPlayer);
 	}
-
 
 	//Place New Armies
 	else if (place != std::string::npos)
 	{
 		// Place new army(ies) on the starting region or on a chosen region that has an owned city
 		int numArmies = action->getMultiplier();
+		std::cout << "You many place " << numArmies << " armies. Please choose a region: \n";
 		Territory<Region>* destination = chooseTerritory(MapUtility::printTerritoriesInVector(map));
 		placeNewArmies(numArmies, destination);
 	}
@@ -474,4 +479,47 @@ void Player::setListOfRegion(GameMap* gameMap) {
 			listRegion.push_back(terrReg.second);
 		}
 	}
+}
+
+
+Player* Player::chooseEnemy(Territory<Region>* location, int numArmies)
+{
+	Player* choosePlayer = nullptr;
+	vector<Player*> enemyPlayers;
+	int num = 0;
+	for (auto& armyPair : location->armies)
+	{
+		Player* player = armyPair.first;
+		if (player != this && location->getPlacedArmies(player) >= numArmies)
+		{
+			++num;
+			enemyPlayers.push_back(player);
+			std::cout << num << "-" << player->getName() << std::endl;
+		}
+	}
+	
+	do
+	{
+		int optionChosen;
+		std::cout << "Please enter the number associated to the wanted player " << std::endl;
+
+		std::cin >> optionChosen;
+
+		if (std::cin.fail())
+		{
+			std::cout << "The value you entered isn't a valid option. Please input a valid option. \n(Make sure that it is an integer)" << std::endl;
+			cin.clear();
+		}
+		else if (optionChosen > 0 && optionChosen <= enemyPlayers.size())
+		{
+			choosePlayer = enemyPlayers.at(optionChosen -1);
+		}
+		else
+		{
+			std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
+		}
+
+	} while (choosePlayer == nullptr);
+
+	return choosePlayer;
 }

@@ -59,12 +59,12 @@ struct Region : Location
 template <class T>
 class Territory
 {
-	std::map<Player*, int> armies;
 	std::map<Player*, int> cities;
 
 	// Calculating the travel cost recursively
     int getTravelCostWithVisits(Territory<T>* destination, std::vector<Territory<T>*>& visited);
 public:
+    std::map<Player*, int> armies;
     typedef std::pair<int, Territory<T>*> TerritoryEdge;
     std::vector<TerritoryEdge> adjacency;
     T* value;
