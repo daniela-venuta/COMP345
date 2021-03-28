@@ -37,7 +37,7 @@ private:
 	void startBidding();
 
 	int setNumberOfCoins(int numofPlayers);
-	string getRandomContinent();
+	Territory<Region>* getStartingLocation();
 	string getRandomTerritory();
 
 	int numOfPlayers = 0;
