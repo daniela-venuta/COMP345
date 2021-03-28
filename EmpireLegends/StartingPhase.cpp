@@ -270,7 +270,6 @@ void StartingPhase::placeArmiesOnMap()
 				std::cin.ignore();
 
 				doesLocationNotExist = false;
-				//destination = map->findTerritory(continentName)->value->findTerritory(territoryName);
 				
 				auto continent = map->findTerritory(continentName);
 				auto region = continent->value->findTerritory(territoryName);
