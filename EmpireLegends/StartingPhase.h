@@ -13,7 +13,7 @@ struct ColorUtilities
 	bool green = true;
 	bool red = true;
 
-	bool getColorAvailability(string color);
+	bool getColorAvailability(Color color);
 	void setColorAvailability(string color, bool isAvailable);
 	void setColorAvailability(Color color, bool isAvailable);
 	Color getNewColor();

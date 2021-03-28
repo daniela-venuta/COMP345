@@ -5,20 +5,19 @@
 
 static const int NUM_ARMIES_TO_PLACE = 10;
 
-bool ColorUtilities::getColorAvailability(string color)
+bool ColorUtilities::getColorAvailability(Color color)
 {
 	bool isAvailable;
-	Color col = parseColor(color);
 
-	if (col == Color::blue)
+	if (color == Color::blue)
 	{
 		isAvailable = blue;
 	}
-	else if (col == Color::yellow)
+	else if (color == Color::yellow)
 	{
 		isAvailable = yellow;
 	}
-	else if (col == Color::red)
+	else if (color == Color::red)
 	{
 		isAvailable = red;
 	}
@@ -235,7 +234,7 @@ void StartingPhase::shuffleCardDeck() const
 
 void StartingPhase::assignPlayerResources()
 {
-	int colorNum;
+	
 	std::cout << "Color options \n 1.Red \n 2.Green  \n 3.Blue \n 4. Yellow \n";
 	
 	// Assign number of coins based on players
@@ -243,13 +242,25 @@ void StartingPhase::assignPlayerResources()
 
 	for (int i = 0; i < numOfPlayers; i++)
 	{
+		bool isAvailable = true;
+		int colorNum;
 		const Player* player = players[i];
 		Resources* resources = players[i]->getResources();
-		
-		std::cout << player->getName() << ", choose your color: ";
-		std::cin >> colorNum;
+		Color col = Color::none;
 
-		Color col = colorUtilities->parseColor(colorNum);
+		while(isAvailable)
+		{
+			std::cout << player->getName() << ", choose your color: ";
+			std::cin >> colorNum;
+			col = colorUtilities->parseColor(colorNum);
+			isAvailable = !colorUtilities->getColorAvailability(col);
+
+			if(isAvailable)
+			{
+				std::cout << "Color unavailable, try again \n";
+			}
+		}
+		
 		resources->playerColor = col;
 		
 		// mark color as unavailable
