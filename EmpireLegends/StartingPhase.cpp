@@ -251,8 +251,6 @@ void StartingPhase::placeArmiesOnMap()
 	int num;
 	string continentName;
 	string territoryName;
-	Territory<Region>* destination;
-	
 	
 	// place armies
 	for (int i = 0; i < NUM_ARMIES_TO_PLACE; i++)
@@ -270,7 +268,7 @@ void StartingPhase::placeArmiesOnMap()
 		std::cout << "Enter region: ";
 		std::cin >> territoryName;
 
-			destination = map->findTerritory(continentName)->value->findTerritory(territoryName);
+		Territory<Region>*  destination = map->findTerritory(continentName)->value->findTerritory(territoryName);
 
 		if(num == 1)
 		{
