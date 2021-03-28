@@ -393,7 +393,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-
-.idea
-EmpireLegends/EmpireLegends.vcxproj
-EmpireLegends/EmpireLegends.vcxproj.filters
