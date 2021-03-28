@@ -144,7 +144,7 @@ Card* Hand::exchange(int rowPosition, Player* player)
 		
 	if (handCards.empty()) {
 		std::cout << "The hand is empty" << std::endl; 
-	} else if(rowPosition >= handCards.size()){
+	} else if(rowPosition > handCards.size()){
 		std::cout << "Invalid card position" << std::endl; 
 	}
 	else if (player->getBalance() >= cardCost)
