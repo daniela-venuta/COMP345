@@ -300,9 +300,14 @@ Flying& Flying::operator=(const Flying& good)
 	return *this;
 }
 
+Elixir::Elixir(int numElixirs) : Good("Elixir")
+{
+	elixirs = numElixirs;
+}
+
 void Elixir::applyGood(Resources* resources)
 {
-	resources->elixir++;
+	resources->elixir += elixirs;
 }
 
 Elixir& Elixir::operator=(const Elixir& good)

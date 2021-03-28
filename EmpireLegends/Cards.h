@@ -93,11 +93,13 @@ class Elixir : public Good
 {
 public:
 
-	explicit Elixir() : Good("Elixir") {}
+	explicit Elixir(int num);
 
 	void applyGood(Resources* resources) override;
 
 	Elixir& operator=(const Elixir& good);
+private:
+	int elixirs;
 };
 
 class GainCoins : public Good
