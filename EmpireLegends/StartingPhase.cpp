@@ -242,7 +242,7 @@ void StartingPhase::setupStartingTerritories()
 	// place 4 armies to start
 	for (Player* player : players)
 	{
-		player->PlaceNewArmies(4, startingRegion);
+		player->placeNewArmies(4, startingRegion);
 	}
 }
 
@@ -289,7 +289,7 @@ void StartingPhase::placeArmiesOnMap()
 		
 		} while (doesLocationNotExist);
 		
-		nonPlayer1->PlaceNewArmies(1, destination);
+		nonPlayer1->placeNewArmies(1, destination);
 	}
 }
 

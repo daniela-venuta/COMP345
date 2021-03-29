@@ -50,70 +50,69 @@
 //
 //		std::cout << std::endl;
 //		std::cout << "preliminary placement of armies...." << std::endl;
-//		p1->PlaceNewArmies(3, t1);
-//		p2->PlaceNewArmies(2, t1);
-//		p3->PlaceNewArmies(15, t4);
-//		p4->PlaceNewArmies(17, t4);
+//		p1->placeNewArmies(3, t1);
+//		p2->placeNewArmies(2, t1);
+//		p3->placeNewArmies(15, t4);
+//		p4->placeNewArmies(17, t4);
 //
 //		std::cout << std::endl;
 //		std::cout << "============ MOVING ARMIES ============" << std::endl;
 //
-//		p1->MoveArmies(3, t1, t4, gameMap);
-//		p2->MoveArmies(-5, t3, t8, gameMap); // should output error message (invalid number of armies; negative number)
-//		p2->MoveArmies(2, t1, t4, gameMap);
-//		p3->MoveArmies(20, t4, t8, gameMap); // should output error message (invalid number of armies; insufficient armies)
-//		p3->MoveArmies(15, t4, t8, gameMap);
-//		p4->MoveArmies(10, t1, t1, gameMap); // should output error message (invalid destination region)
-//		p4->MoveArmies(17, t4, t8, gameMap);
+//		p1->moveArmies(3, t1, t4, gameMap);
+//		p2->moveArmies(-5, t3, t8, gameMap); // should output error message (invalid number of armies; negative number)
+//		p2->moveArmies(2, t1, t4, gameMap);
+//		p3->moveArmies(20, t4, t8, gameMap); // should output error message (invalid number of armies; insufficient armies)
+//		p3->moveArmies(15, t4, t8, gameMap);
+//		p4->moveArmies(10, t1, t1, gameMap); // should output error message (invalid destination region)
+//		p4->moveArmies(17, t4, t8, gameMap);
 //
 //		std::cout << std::endl;
-//		std::cout << "T1 army count: " << t1->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T3 army count: " << t3->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T4 army count: " << t4->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T8 army count: " << t8->getArmyCount() << " armies." << std::endl;
+//		std::cout << "T1 army count: " << t1->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T3 army count: " << t3->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T4 army count: " << t4->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T8 army count: " << t8->getTotalArmyCount() << " armies." << std::endl;
 //
 //		std::cout << std::endl;
 //		std::cout << "============ PLACING NEW ARMIES ============" << std::endl;
 //
-//		p1->PlaceNewArmies(20, t4); // should output error message (invalid number of armies; insufficient armies)
-//		p1->PlaceNewArmies(4, t4);
-//		p2->PlaceNewArmies(-5, t4); // should output error message (invalid number of armies; negative number)
-//		p2->PlaceNewArmies(1, t4);
-//		p3->PlaceNewArmies(0, t8); // should output error message (invalid number of armies; can't add zero)
-//		p3->PlaceNewArmies(3, t8);
-//		p4->PlaceNewArmies(5, t8); // should output error message (invalid number of armies; insufficient armies)
-//		p4->PlaceNewArmies(1, t8);
+//		p1->placeNewArmies(20, t4); // should output error message (invalid number of armies; insufficient armies)
+//		p1->placeNewArmies(4, t4);
+//		p2->placeNewArmies(-5, t4); // should output error message (invalid number of armies; negative number)
+//		p2->placeNewArmies(1, t4);
+//		p3->placeNewArmies(0, t8); // should output error message (invalid number of armies; can't add zero)
+//		p3->placeNewArmies(3, t8);
+//		p4->placeNewArmies(5, t8); // should output error message (invalid number of armies; insufficient armies)
+//		p4->placeNewArmies(1, t8);
 //
 //		std::cout << std::endl;
-//		std::cout << "T1 army count: " << t1->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T3 army count: " << t3->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T4 army count: " << t4->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T8 army count: " << t8->getArmyCount() << " armies." << std::endl;
+//		std::cout << "T1 army count: " << t1->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T3 army count: " << t3->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T4 army count: " << t4->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T8 army count: " << t8->getTotalArmyCount() << " armies." << std::endl;
 //
 //		std::cout << std::endl;
 //		std::cout << "============ DESTROYING ARMIES ============" << std::endl;
 //
-//		p1->DestroyArmy(3, t4);
-//		p2->DestroyArmy(8, t4); //should output error message (invalid number of armies; not enough armies to destroy)
-//		p2->DestroyArmy(2, t4);
-//		p3->DestroyArmy(-9, t8); // should output error message (invalid number of armies; negative)
-//		p3->DestroyArmy(15, t8);
-//		p4->DestroyArmy(7, t8); //should output error message (invalid number of armies; not enough armies to destroy)
+//		p1->destroyArmy(1, t4, p2);
+//		p1->destroyArmy(8, t4, p2); //should output error message (invalid number of armies; not enough armies to destroy)
+//		p2->destroyArmy(2, t4, p1);
+//		p3->destroyArmy(-9, t8, p4); // should output error message (invalid number of armies; negative)
+//		p3->destroyArmy(2, t8, p4); //should output error message (invalid number of armies; not enough armies to destroy)
 //
 //		std::cout << std::endl;
-//		std::cout << "T1 army count: " << t1->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T3 army count: " << t3->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T4 army count: " << t4->getArmyCount() << " armies." << std::endl;
-//		std::cout << "T8 army count: " << t8->getArmyCount() << " armies." << std::endl;
+//		std::cout << "T1 army count: " << t1->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T3 army count: " << t3->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T4 army count: " << t4->getTotalArmyCount() << " armies." << std::endl;
+//		std::cout << "T8 army count: " << t8->getTotalArmyCount() << " armies." << std::endl;
 //
 //		std::cout << std::endl;
 //		std::cout << "============ BUILDING CITIES ============" << std::endl;
 //
-//		p1->BuildCity(t1);
-//		p1->BuildCity(t1);
-//		p1->BuildCity(t1);
-//		p1->BuildCity(t1); // should output error message (exceeds city count)
-//		p2->BuildCity(t3); // should output error message (no armies present; cannot place city)
+//		p1->buildCity(t1);
+//		p1->buildCity(t1);
+//		p1->buildCity(t1);
+//		p1->buildCity(t1); // should output error message (exceeds city count)
+//		p2->buildCity(t3); // should output error message (no armies present; cannot place city)
 //	}
 //	catch (TerritoryNotFoundException& e)
 //	{
@@ -410,25 +409,25 @@
 //
 //int main()
 //{
-//	std::cout << std::endl << "------------------------------------" << std::endl;
-//	std::cout << "============ MAP DRIVER ============";
-//	std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
-//	driveMap();
-//	std::cout << std::endl << "----------------------------------------" << std::endl;
-//	std::cout << "============ MAP LOADER DRIVER ============";
-//	std::cout << std::endl << "-------------------------------------------" << std::endl << std::endl;
-//	driveMapLoader();
-//	std::cout << std::endl << "----------------------------------------" << std::endl;
+//	//std::cout << std::endl << "------------------------------------" << std::endl;
+//	//std::cout << "============ MAP DRIVER ============";
+//	//std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
+//	//driveMap();
+//	//std::cout << std::endl << "----------------------------------------" << std::endl;
+//	//std::cout << "============ MAP LOADER DRIVER ============";
+//	//std::cout << std::endl << "-------------------------------------------" << std::endl << std::endl;
+//	//driveMapLoader();
+//	//std::cout << std::endl << "----------------------------------------" << std::endl;
 //	std::cout << "============ PLAYER DRIVER ============";
 //	std::cout << std::endl << "---------------------------------------" << std::endl << std::endl;
 //	drivePlayer();
-//	std::cout << std::endl << "----------------------------------------" << std::endl;
-//	std::cout << "============ CARDS DRIVER ============";
-//	std::cout << std::endl << "--------------------------------------" << std::endl << std::endl;
-//	driveCards();
-//	std::cout << std::endl << "----------------------------------------" << std::endl;
-//	std::cout << "============ BIDDING DRIVER ============" << std::endl;
-//	std::cout << "----------------------------------------" << std::endl << std::endl;
+//	//std::cout << std::endl << "----------------------------------------" << std::endl;
+//	//std::cout << "============ CARDS DRIVER ============";
+//	//std::cout << std::endl << "--------------------------------------" << std::endl << std::endl;
+//	//driveCards();
+//	//std::cout << std::endl << "----------------------------------------" << std::endl;
+//	//std::cout << "============ BIDDING DRIVER ============" << std::endl;
+//	//std::cout << "----------------------------------------" << std::endl << std::endl;
 //
 //	driveBidding();
 //}

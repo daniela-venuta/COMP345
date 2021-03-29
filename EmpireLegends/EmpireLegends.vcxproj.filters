@@ -83,9 +83,6 @@
     <ClCompile Include="StartingPhase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ComputeScoreDriver.cpp">
-      <Filter>Driver Files</Filter>
-    </ClCompile>
     <ClCompile Include="StartupPhaseDriver.cpp">
       <Filter>Driver Files</Filter>
     </ClCompile>
