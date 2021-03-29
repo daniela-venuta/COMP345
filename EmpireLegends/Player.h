@@ -78,6 +78,7 @@ public:
 	void addOwnedTerritory(Territory<Region>*territory);
 	void removeOwnedTerritory(Territory<Region>*territory);
 
+	void addCard(Card* card);
 	void applyGood(Good* addedGood);
 	Resources* getResources() const;
 	void andOrAction(Card* cardTwoAction, GameMap* gm);

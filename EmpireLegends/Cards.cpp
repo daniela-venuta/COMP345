@@ -21,7 +21,7 @@ Deck::~Deck()
 	for (Card* card : cardDeck)
 	{
 		delete card;
-		card = nullptr;;
+		card = nullptr;
 	}
 
 	cardDeck.clear();

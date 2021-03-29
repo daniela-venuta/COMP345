@@ -5,27 +5,17 @@
 
 class BiddingFacility {
 
-	int bid;
-	std::map<Player*, int> bids;
+	static int bid;
+	static std::map<Player*, int> bids;
 
-	void addPlayerBid(Player* player, int playerBid);
-	int getPlayerBid(Player* player);
+	static void addPlayerBid(Player* player, int playerBid);
+	static int getPlayerBid(Player* player);
+	// default constructor 
+	BiddingFacility() = default;
 
 public:
 	
-	void placeBids(vector <Player*> biddingPlayers);
-	int getCurrentBid() const;
-	void setCurrentBid(int bid);
-
-	// default constructor 
-	BiddingFacility();
-
-	// copy constructor
-	BiddingFacility(const BiddingFacility& obj);
-
-	// stream insertion operator 
-	friend ostream& operator<<(ostream& output, const BiddingFacility& BDF);
-
-	// Assignment operator
-	BiddingFacility& operator=(const BiddingFacility& rhs);
+	static void placeBids(vector <Player*> biddingPlayers);
+	static int getCurrentBid();
+	static void setCurrentBid(int bid);
 };

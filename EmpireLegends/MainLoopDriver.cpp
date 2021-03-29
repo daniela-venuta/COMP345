@@ -1,6 +1,4 @@
 //#include "MainGame.h"
-//#include "Player.h"
-//#include "Cards.h"
 //#include <vector>
 //#include <iostream>
 //#include <algorithm>
@@ -11,7 +9,7 @@
 //	cardVector.reserve(27);
 //	vector<Player*> players;
 //	int numOfTurns = 0;
-//	int PlayerCount = 0;
+//	int playerCount = 0;
 //
 //	Card* card1 = new Card("Dire Dragon", new Flying, new Action("Place armies", 3) , new Action("Destroy armies", 3), AndOr::AND);
 //	Card* card2 = new Card("Dire Giant", new Immune, new Action("Place armies", 3), new Action("Destroy armies", 3), AndOr::AND);
@@ -71,58 +69,40 @@
 //
 //	Deck* deck = new Deck(cardVector);
 //
-//	/*std::cout << "Face up cards: \n";
-//	std::cout << "1- " << *card6;
-//	std::cout << "2- " << *card5;
-//	std::cout << "3- " << *card4;
-//	std::cout << "4- " << *card3;
-//	std::cout << "5- " << *card2;
-//	std::cout << "6- " << *card1 << std::endl;*/
-//
 //	do {
 //		std::cout << "How many players will be playing (2-4)?  ";
-//		std::cin >> PlayerCount;
-//	} while (PlayerCount > 4 || PlayerCount < 2);
+//		std::cin >> playerCount;
+//	} while (playerCount > 4 || playerCount < 2);
 //
 //
-//	switch (PlayerCount) {
+//	switch (playerCount) {
+//		case 2:
+//			players.push_back(new Player("John", 14));
+//			players.push_back(new Player("Bob", 14));
+//			numOfTurns = 13;
+//			break;
 //
-//	case 2:
-//		players.push_back(new Player("John", 14));
-//		players.push_back(new Player("Bob", 14));
-//		numOfTurns = 13;
-//		break;
+//		case 3:
+//			players.push_back(new Player("John", 11));
+//			players.push_back(new Player("Bob", 11));
+//			players.push_back(new Player("Anna", 11));
+//			numOfTurns = 10;
+//			break;
 //
-//	case 3:
-//		players.push_back(new Player("John", 11));
-//		players.push_back(new Player("Bob", 11));
-//		players.push_back(new Player("Anna", 11));
-//		numOfTurns = 10;
-//		break;
-//
-//	case 4:
-//		players.push_back(new Player("John", 9));
-//		players.push_back(new Player("Bob", 9));
-//		players.push_back(new Player("Jack", 9));
-//		players.push_back(new Player("Anna", 9));
-//		numOfTurns = 8;
-//		break;
+//		case 4:
+//			players.push_back(new Player("John", 9));
+//			players.push_back(new Player("Bob", 9));
+//			players.push_back(new Player("Jack", 9));
+//			players.push_back(new Player("Anna", 9));
+//			numOfTurns = 8;
+//			break;
 //	}
 //
-//	MainGame* mainGame = new MainGame(nullptr, nullptr, deck, players);
+//	MainGame* mainGame = new MainGame(nullptr, deck, players);
 //
 //	mainGame->mainGameloop(numOfTurns);
 //
-//	for (Card* card : cardVector)
-//	{
-//		delete card;
-//		card = nullptr;
-//	}
-//
-//	for (Player* player : players)
-//	{
-//		delete player;
-//	}
+//	delete mainGame;
 //
 //	return 0;
 //}

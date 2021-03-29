@@ -4,44 +4,25 @@
 #include <vector>
 #include <algorithm>
 
-// default constructor 
-BiddingFacility::BiddingFacility() {
-	this->bid = 0;
-}
+int BiddingFacility::bid = 0;
+std::map<Player*, int> BiddingFacility::bids = std::map<Player*, int>();
 
-// copy Constructor 
-BiddingFacility::BiddingFacility(const BiddingFacility& obj) {
-	this->bid = obj.bid;
-}
-
-// stream insertion operator 
-ostream& operator<<(ostream& output, const BiddingFacility& facility) {
-	output << "The bid is : " << facility.getCurrentBid();
-	return output;
-}
-
-// Assignment operator
-BiddingFacility& BiddingFacility::operator=(const BiddingFacility& rhs) {
-	this->bid = rhs.getCurrentBid();
-	return *this;
-}
-
-int BiddingFacility::getCurrentBid() const {
+int BiddingFacility::getCurrentBid() {
 	return bid;
 }
 
 void BiddingFacility::setCurrentBid(int bid) {
-	this->bid = bid;
+	BiddingFacility::bid = bid;
 }
 
 void BiddingFacility::addPlayerBid(Player* player, int playerBid)
 {
-	this->bids.insert(std::make_pair(player, playerBid));
+	bids.insert(std::make_pair(player, playerBid));
 }
 
 int BiddingFacility::getPlayerBid(Player* player)
 {
-	return this->bids[player];
+	return bids[player];
 }
 
 void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
@@ -59,7 +40,7 @@ void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 
 		system("cls");
 
-		this->addPlayerBid(player, playerBid);
+		addPlayerBid(player, playerBid);
 	}
 
 	std::cout << "--------------------------" << std::endl;
@@ -69,7 +50,7 @@ void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 	std::cout << "Bids placed by players: " << std::endl;
 	for (Player* myPlayer : biddingPlayers)
 	{
-		std::cout << "Player " << myPlayer->getName() << "\t" << "bids " << this->getPlayerBid(myPlayer) << " coins." << std::endl;
+		std::cout << "Player " << myPlayer->getName() << "\t" << "bids " << getPlayerBid(myPlayer) << " coins." << std::endl;
 	}
 
 	vector<Player*> maxBidders;
@@ -77,7 +58,7 @@ void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 
 	for (Player* player : biddingPlayers)
 	{
-		const auto currentPlayerBid = this->getPlayerBid(player);
+		const auto currentPlayerBid = getPlayerBid(player);
 		if (maxBid <= currentPlayerBid) {
 			// New max bid
 			if (maxBid < currentPlayerBid)
@@ -116,7 +97,7 @@ void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 	Player* maxBidder = maxBidders.back();
 	const int supply = maxBidder->getCoins() - maxBid;
 	maxBidder->setCoins(supply);
-	this->setCurrentBid(maxBid);
+	setCurrentBid(maxBid);
 
 	std::cout << "\nThe player to start is " << maxBidder->getName() << "! They now have " << maxBidder->getCoins() << " coins.\n";
 }
