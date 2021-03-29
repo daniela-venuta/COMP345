@@ -8,6 +8,16 @@ PlayerRotation::PlayerRotation(const vector<Player*>& players)
 	this->current = this->players.begin();
 }
 
+PlayerRotation::~PlayerRotation()
+{
+	for(auto* player: players)
+	{
+		delete player;
+		player = nullptr;
+	}
+	players.clear();
+}
+
 void PlayerRotation::rotate()
 {
 	++current;
@@ -33,12 +43,18 @@ Player* MainGame::getCurrentPlayer()
 	return players->getCurrentPlayer();
 }
 
-MainGame::MainGame(BiddingFacility* biddingFacility, GameMap* map, Deck* deck, vector<Player*> players)
+MainGame::MainGame(GameMap* map, Deck* deck, vector<Player*>& players)
 {
-	this->biddingFacility = biddingFacility;
 	this->map = map;
 	this->deck = deck;
 	this->players = new PlayerRotation(players);
+}
+
+MainGame::~MainGame()
+{
+	delete map;
+	delete deck;
+	delete players;
 }
 
 void MainGame::afterAction()
@@ -76,7 +92,7 @@ void MainGame::mainGameloop(int numOfTurns) {
 			}
 			std::cout << "Picked card: " << std::endl << *faceCard << std::endl;
 
-			player->applyGood(faceCard->getGood());
+			player->addCard(faceCard);
 
 			afterAction();
 			std::cout << *deck->getHand() << std::endl;

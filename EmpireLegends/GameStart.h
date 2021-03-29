@@ -10,12 +10,10 @@ public:
 
 	void loadMap();
 	void detPlayerCount();
-	void playerBidding();
 
 private:
 	int mapType;
 	int numOfPlayers;
 	vector<Player*> players;
-	BiddingFacility* biddingFacility;
 	vector<Player*> biddingPlayers;
 };

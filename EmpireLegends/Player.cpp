@@ -26,6 +26,7 @@ Player::Player(string name, int coins) {
 	playerName = name;
 	pResources = new Resources;
 	pResources->totalCoins = coins;
+	playerHand = new Hand();
 }
 
 string Player::getName() const {
@@ -305,6 +306,12 @@ void Player::removeOwnedTerritory(Territory<Region>* territory)
 Resources* Player::getResources() const
 {
 	return pResources;
+}
+
+void Player::addCard(Card* card)
+{
+	playerHand->addCard(card);
+	applyGood(card->getGood());
 }
 
 void Player::applyGood(Good* addedGood)

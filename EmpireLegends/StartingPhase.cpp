@@ -110,7 +110,6 @@ StartingPhase::StartingPhase()
 {
 	nonPlayer1 = new Player("CPU1", 0);
 	
-	biddingFacility = new BiddingFacility();
 	colorUtilities = new ColorUtilities();
 	cardDeck = nullptr;
 	numOfPlayers = 0;
@@ -120,9 +119,7 @@ StartingPhase::StartingPhase()
 StartingPhase::~StartingPhase()
 {
 	delete nonPlayer1;
-	delete biddingFacility;
 	delete colorUtilities;
-
 	delete map;
 }
 
@@ -298,5 +295,5 @@ void StartingPhase::setupNonPlayers()
 void StartingPhase::startBidding()
 {
 	// Players place bids
-	biddingFacility->placeBids(players);
+	BiddingFacility::placeBids(players);
 }
