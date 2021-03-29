@@ -1,5 +1,4 @@
 #pragma once
-
 #include <string>
 #include <vector>
 #include "Map.h"
@@ -11,6 +10,8 @@ using std::map;
 using std::ostream;
 
 enum Color { none, red, green, blue, yellow };
+static vector<Player*> currentPlayers;
+static vector<Territory<Region>*> listRegion;
 
 struct Resources
 {
@@ -27,6 +28,7 @@ struct Resources
 	int unplacedCities{};
 	int unplacedArmies{};
 	int totalCoins{};
+	
 	
 	// Abilities
 	int extraMoves{};
@@ -64,15 +66,14 @@ public:
 	int getCoins() const;
 	void setCoins(int coins);
 
-	void PayCoin(int price);
+	void payCoin(int price);
 	int getBalance() const;
 	void setBalance(int newBalance);
 
-	int moveOverLand(Territory<Region>*from, Territory<Region>*to, GameMap * map);
-	void placeNewArmies(int number, Territory<Region>*destination);
-	void moveArmies(int number, Territory<Region>*from, Territory<Region>*to, GameMap * map);
-	void destroyArmy(int number, Territory<Region>*location, Player* player);
-	void buildCity(Territory<Region>*territory);
+	void moveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map);
+	void placeNewArmies(int number, Territory<Region>* destination, Territory<Region>* initialRegion);
+	void destroyArmy(int number, Territory<Region>* location, Player* player);
+	void buildCity(Territory<Region>* territory);
 	void addOwnedTerritory(Territory<Region>*territory);
 	void removeOwnedTerritory(Territory<Region>*territory);
 
@@ -84,11 +85,18 @@ public:
 	int getVictoryPoints();
 	vector<Territory<Region>*> getTerritories();
 
+	void applyGood(Good* addedGood);
+	void andOrAction(Card* cardTwoAction, GameMap* gm);
+	Player* chooseEnemy(Territory<Region>* location, int numArmies);
+
 private:
 	string playerName;
 	vector<Territory<Region>*> playerTerritories;
 	Hand* playerHand;
 	Resources* pResources;
+
+	Territory<Region>* chooseTerritory(map<int, Territory<Region>*> regions);
+	void executeAction(Action* action, GameMap* map);
 
 	int victoryPoints;
 

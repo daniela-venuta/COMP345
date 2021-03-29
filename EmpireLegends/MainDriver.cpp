@@ -1,3 +1,4 @@
+//
 //// Tommy Andrews 40094870
 //// Émilie Martin 40095423
 //// Amélie Singoye 40094316
@@ -28,10 +29,10 @@
 //	std::cout << "P4 balance: " << p4->getBalance() << " coins." << std::endl;
 //
 //	std::cout << std::endl;
-//	p1->PayCoin(2);
-//	p2->PayCoin(0);
-//	p3->PayCoin(9);
-//	p4->PayCoin(-5); // should output error message claiming unsufficient funds
+//	p1->payCoin(2);
+//	p2->payCoin(0);
+//	p3->payCoin(9);
+//	p4->payCoin(-5); // should output error message claiming unsufficient funds
 //
 //	std::cout << std::endl;
 //	std::cout << "P1 balance: " << p1->getBalance() << " coins." << std::endl;
@@ -301,12 +302,12 @@
 //	Player* p2 = new Player("B", 0);
 //
 //	// Create Card pointers
-//	Card* cardOne = new Card("Dire dragon", new Flying, "Place 3 armies and destroy one army");
-//	Card* cardTwo = new Card("Dire giant", new Immune, "Place 3 armies and destroy army");
-//	Card* cardThree = new Card("Dire eye", new Flying, "Place 4 armies");
-//	Card* cardFour = new Card("Dire Ogre", new CoinVPs, "Move 2 armies");
-//	Card* cardFive = new Card("Lake", new SetNameVPs(CardSet::forest), "Place 2 armies and move 3 armies");
-//	Card* cardSix = new Card("Noble Hills", new CompleteSetVPs(3, CardSet::noble), "Place 3 armies");
+//	Card* cardOne = new Card("Dire dragon", new Flying, new Action("Place armies", 3), new Action("Destroy armies", 1), AndOr::AND);
+//	Card* cardTwo = new Card("Dire giant", new Immune, new Action("Place armies", 3), new Action("Destroy armies", 1), AndOr::AND);
+//	Card* cardThree = new Card("Dire eye", new Flying, new Action("Place armies", 4));
+//	Card* cardFour = new Card("Dire Ogre", new CoinVPs, new Action("Move armies", 2));
+//	Card* cardFive = new Card("Lake", new SetNameVPs(CardSet::forest), new Action("Place armies", 2), new Action("Move armies", 3), AndOr::OR);
+//	Card* cardSix = new Card("Noble Hills", new CompleteSetVPs(3, CardSet::noble), new Action("Place armies", 3));
 //
 //	// Example of printing goods and actions of cards
 //	std::cout << "Printing cards: \n";
@@ -409,25 +410,24 @@
 //
 //int main()
 //{
-//	//std::cout << std::endl << "------------------------------------" << std::endl;
-//	//std::cout << "============ MAP DRIVER ============";
-//	//std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
-//	//driveMap();
-//	//std::cout << std::endl << "----------------------------------------" << std::endl;
-//	//std::cout << "============ MAP LOADER DRIVER ============";
-//	//std::cout << std::endl << "-------------------------------------------" << std::endl << std::endl;
-//	//driveMapLoader();
-//	//std::cout << std::endl << "----------------------------------------" << std::endl;
+//	std::cout << std::endl << "------------------------------------" << std::endl;
+//	std::cout << "============ MAP DRIVER ============";
+//	std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
+//	driveMap();
+//	std::cout << std::endl << "----------------------------------------" << std::endl;
+//	std::cout << "============ MAP LOADER DRIVER ============";
+//	std::cout << std::endl << "-------------------------------------------" << std::endl << std::endl;
+//	driveMapLoader();
+//	std::cout << std::endl << "----------------------------------------" << std::endl;
 //	std::cout << "============ PLAYER DRIVER ============";
 //	std::cout << std::endl << "---------------------------------------" << std::endl << std::endl;
 //	drivePlayer();
-//	//std::cout << std::endl << "----------------------------------------" << std::endl;
-//	//std::cout << "============ CARDS DRIVER ============";
-//	//std::cout << std::endl << "--------------------------------------" << std::endl << std::endl;
-//	//driveCards();
-//	//std::cout << std::endl << "----------------------------------------" << std::endl;
-//	//std::cout << "============ BIDDING DRIVER ============" << std::endl;
-//	//std::cout << "----------------------------------------" << std::endl << std::endl;
-//
+//	std::cout << std::endl << "----------------------------------------" << std::endl;
+//	std::cout << "============ CARDS DRIVER ============";
+//	std::cout << std::endl << "--------------------------------------" << std::endl << std::endl;
+//	driveCards();
+//	std::cout << std::endl << "----------------------------------------" << std::endl;
+//	std::cout << "============ BIDDING DRIVER ============" << std::endl;
+//	std::cout << "----------------------------------------" << std::endl << std::endl;
 //	driveBidding();
 //}

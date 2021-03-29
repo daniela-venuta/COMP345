@@ -41,3 +41,118 @@ GameMap* MapUtility::createValidMap()
 
 	return m1;
 }
+
+// Prints a list of all the Continents and Regions on a map for informative purposes
+void MapUtility::printTerritories(GameMap* map)
+{
+	std::cout << "List of all Continents and Regions: " << std::endl;
+
+	auto continentIterator = map->terrs.begin();
+	while (continentIterator != map->terrs.end())
+	{
+		std::string name = continentIterator->second->getName();
+		std::cout << name << std::endl;
+
+		auto regionIterator = continentIterator->second->value->terrs.begin();
+		while (regionIterator != continentIterator->second->value->terrs.end())
+		{
+			std::string regionName = regionIterator->second->getName();
+			std::cout << regionName << std::endl;
+
+			// Increment the Iterator to point to next entry
+			++regionIterator;
+		}
+
+		// Increment the Iterator to point to next entry
+		++continentIterator;
+	}
+}
+
+std::map<int, Territory<Region>*> MapUtility::printTerritoriesWithArmies(GameMap* map, Player* player)
+{
+	std::map<int, Territory<Region>*> terrsWithArmies;
+
+	for (auto& continentPair: map->terrs)
+	{
+		Continent* cont = continentPair.second->value;
+		std::cout << cont->getName() << ":" << std::endl;
+
+		for(auto& regionPair: cont->terrs)
+		{
+			const int placedArmies = regionPair.second->getPlacedArmies(player);
+			if (placedArmies > 0)
+			{
+				int num = terrsWithArmies.size() + 1;
+				std::cout << num << "-" << regionPair.second->getName() << " (" + std::to_string(placedArmies) + " armies)" << std::endl;
+				terrsWithArmies[num] = regionPair.second;
+			}
+		}
+	}
+	
+	return terrsWithArmies;
+}
+
+map<int, Territory<Region>*> MapUtility::printTerritoriesWithMap(GameMap* map)
+{
+	std::cout << "List of all Continents and Regions: " << std::endl;
+	std::map<int, Territory<Region>*> terrs;
+	
+	auto continentIterator = map->terrs.begin();
+	while (continentIterator != map->terrs.end())
+	{
+		std::string name = continentIterator->second->getName();
+		std::cout << name << std::endl;
+
+		auto regionIterator = continentIterator->second->value->terrs.begin();
+		while (regionIterator != continentIterator->second->value->terrs.end())
+		{
+			int num = terrs.size() + 1;
+			terrs[num] = regionIterator->second;
+			std::string regionName = regionIterator->second->getName();
+			std::cout << num << "-" << regionName << std::endl;
+
+			// Increment the Iterator to point to next entry
+			++regionIterator;
+			
+		}
+
+		// Increment the Iterator to point to next entry
+		++continentIterator;
+	}
+
+	return terrs;
+}
+
+// Retrieve the starting Region for all players based on the game map
+Territory<Region>* MapUtility::getStartingLocation(GameMap* map)
+{
+	Continent* continent = map->terrs.begin()->second->value;
+	Territory<Region>* region = continent->terrs.begin()->second;
+
+	return region;
+}
+
+std::map<int, Territory<Region>*> MapUtility::printTerritoriesWithEnemyArmies(GameMap* map, Player* player, int numArmiesToDestroy)
+{
+	std::map<int, Territory<Region>*> terrsWithEnemyArmies;
+
+	for (auto& continentPair : map->terrs)
+	{
+		Continent* cont = continentPair.second->value;
+		std::cout << cont->getName() << ":" << std::endl;
+
+		for (auto& regionPair : cont->terrs)
+		{
+			const int placedArmies = regionPair.second->getPlacedArmies(player);
+			const int totalArmies = regionPair.second->getTotalArmyCount();
+			if (totalArmies - placedArmies >= numArmiesToDestroy)
+			{
+				int num = terrsWithEnemyArmies.size() + 1;
+				std::cout << num << "-" << regionPair.second->getName() << " (" + std::to_string(totalArmies-placedArmies) + " enemy armies)" << std::endl;
+				terrsWithEnemyArmies[num] = regionPair.second;
+			}
+		}
+	}
+
+	return terrsWithEnemyArmies;
+}
