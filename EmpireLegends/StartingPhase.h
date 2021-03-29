@@ -42,7 +42,6 @@ private:
 	Deck* cardDeck;
 	vector<Player*> players;
 	Player* nonPlayer1;
-	BiddingFacility* biddingFacility;
 	GameMap* map;
 	ColorUtilities* colorUtilities;
 };

@@ -85,6 +85,7 @@ public:
 	int getVictoryPoints();
 	vector<Territory<Region>*> getTerritories();
 
+	void addCard(Card* card);
 	void applyGood(Good* addedGood);
 	void andOrAction(Card* cardTwoAction, GameMap* gm);
 	Player* chooseEnemy(Territory<Region>* location, int numArmies);

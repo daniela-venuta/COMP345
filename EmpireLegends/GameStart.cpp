@@ -7,7 +7,6 @@
 GameStart::GameStart() {
 	mapType = 0;
 	numOfPlayers = 0;
-	biddingFacility = new BiddingFacility();
 }
 
 GameStart::~GameStart() {
@@ -16,7 +15,6 @@ GameStart::~GameStart() {
 	for (Player* player : players) {
 		delete player;
 	}
-	biddingFacility = nullptr;
 }
 
 void GameStart::loadMap() {
@@ -93,11 +91,4 @@ void GameStart::detPlayerCount() {
 	}
 
 	std::cout << "\nEach player gets " << playerCoins << " coins." << std::endl;
-}
-
-void GameStart::playerBidding() {
-	biddingFacility = new BiddingFacility();
-
-	std::cout << "Entering the bidding phase with " << numOfPlayers << " players..." << std::endl;
-	biddingFacility->placeBids(players);
 }

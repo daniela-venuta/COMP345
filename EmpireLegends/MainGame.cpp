@@ -1,11 +1,22 @@
 #include "MainGame.h"
 #include "Player.h"
 #include "Cards.h"
+#include <algorithm>
 
 PlayerRotation::PlayerRotation(const vector<Player*>& players)
 {
 	this->players = players;
 	this->current = this->players.begin();
+}
+
+PlayerRotation::~PlayerRotation()
+{
+	for (auto* player : players)
+	{
+		delete player;
+		player = nullptr;
+	}
+	players.clear();
 }
 
 void PlayerRotation::rotate()
@@ -33,12 +44,18 @@ Player* MainGame::getCurrentPlayer()
 	return players->getCurrentPlayer();
 }
 
-MainGame::MainGame(BiddingFacility* biddingFacility, GameMap* map, Deck* deck, vector<Player*> players)
+MainGame::MainGame(GameMap* map, Deck* deck, vector<Player*>& players)
 {
-	this->biddingFacility = biddingFacility;
 	this->map = map;
 	this->deck = deck;
 	this->players = new PlayerRotation(players);
+}
+
+MainGame::~MainGame()
+{
+	delete map;
+	delete deck;
+	delete players;
 }
 
 void MainGame::afterAction()
@@ -76,7 +93,7 @@ void MainGame::mainGameloop(int numOfTurns) {
 			}
 			std::cout << "Picked card: " << std::endl << *faceCard << std::endl;
 
-			player->applyGood(faceCard->getGood());
+			player->addCard(faceCard);
 
 			afterAction();
 			std::cout << *deck->getHand() << std::endl;
@@ -109,18 +126,50 @@ void MainGame::chooseWinner() {
 	}
 
 	//1VP per owned continent
-	for (int i = 0; i < allPlayers.size() - 1; i++) {
-		int regionCount = 0;
-		auto continentIterator = map->terrs.begin();
-		while (continentIterator != map->terrs.end()) {
-			auto cont = continentIterator->second->value;
-			for (Territory<Region>* region : allPlayers.at(i)->getTerritories())
+	auto continentIterator = map->terrs.begin();
+	while (continentIterator != map->terrs.end()) {
+		std::map<Player*, int> regionCounts;
+		auto* cont = continentIterator->second->value;
+		for (Player* p : allPlayers)
+		{
+			for (auto& region : cont->terrs)
 			{
-				regionCount += cont->contains(region) ? 1 : 0;
+				auto playerTerrs = p->getTerritories();
+				if (std::find(playerTerrs.begin(), playerTerrs.end(), region.second) != playerTerrs.end())
+				{
+					regionCounts[p] = regionCounts[p] + 1;
+				}
 			}
-			// Increment the Iterator to point to next entry
-			++continentIterator;
 		}
+
+		int maxCount = 0;
+		vector<Player*> winners;
+		for (auto itr = regionCounts.begin(); itr != regionCounts.end(); ++itr)
+		{
+			if (maxCount < itr->second)
+			{
+				maxCount = itr->second;
+				winners.push_back(itr->first);
+			}
+
+			if (maxCount <= itr->second) {
+				// New max bid
+				if (maxCount < itr->second)
+				{
+					maxCount = itr->second;
+					winners.clear(); // Clearing max bidders vector for new max bid
+				}
+				winners.push_back(itr->first);
+			}
+		}
+
+		if (winners.size() == 1)
+		{
+			winners.at(0)->addVictoryPoints(maxCount);
+		}
+
+		// Increment the Iterator to point to next entry
+		++continentIterator;
 	}
 
 	std::cout << "Determining the winner...";
@@ -128,11 +177,11 @@ void MainGame::chooseWinner() {
 	// 2VP for max elixir
 	Player* mostElixirs{};
 	for (int i = 0; i < allPlayers.size() - 1; i++) {
-		if (allPlayers.at(i)->getResources()->elixir > allPlayers.at(i+1)->getResources()->elixir) {
+		if (allPlayers.at(i)->getResources()->elixir > allPlayers.at(i + 1)->getResources()->elixir) {
 			mostElixirs = allPlayers.at(i);
 		}
 		else {
-			mostElixirs = allPlayers.at(i+1);
+			mostElixirs = allPlayers.at(i + 1);
 		}
 	}
 	mostElixirs->addVictoryPoints(2);

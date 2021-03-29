@@ -4,7 +4,6 @@
 ////Tests for Part 4 in A2 
 //
 //int main() {
-//
 //	MapLoader* mapLoader = new MapLoader();
 //	auto* gameMap = mapLoader->load("valid_map_1.json");
 //

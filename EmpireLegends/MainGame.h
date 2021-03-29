@@ -8,16 +8,15 @@ class PlayerRotation
 
 public:
 	vector<Player*> players;
-	explicit PlayerRotation(const vector<Player*>& players);	
+	explicit PlayerRotation(const vector<Player*>& players);
+	~PlayerRotation();
 	void rotate();
 	Player* getCurrentPlayer();
 	int getNbPlayers();
-
 };
 
 class MainGame
 {
-	BiddingFacility* biddingFacility;
 	GameMap* map;
 	Deck* deck;
 	PlayerRotation* players;
@@ -25,7 +24,8 @@ class MainGame
 
 public:
 
-	explicit MainGame(BiddingFacility* biddingFacility, GameMap* map, Deck* deck, vector<Player*> players);
+	explicit MainGame(GameMap* map, Deck* deck, vector<Player*>& players);
+	~MainGame();
 	void afterAction();
 	Player* getCurrentPlayer();
 	void mainGameloop(int numOfTurns);

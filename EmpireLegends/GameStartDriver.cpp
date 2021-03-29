@@ -7,12 +7,10 @@
 //using namespace std;
 //
 //int main() {
-//
 //	GameStart* startGame = new GameStart();
 //
 //	startGame->loadMap();
 //	startGame->detPlayerCount();
-//	startGame->playerBidding();
 //
 //	// CARD VARIABLES
 //	Card* card1 = new Card("Dire dragon", new Flying, new Action("Place 3 armies", 3), new Action("Destroy one army", 1), AndOr::AND);
@@ -46,4 +44,7 @@
 //	std::cout << "Printing deck:" << std::endl;
 //	Deck* deck = new Deck(cardVector);
 //	std::cout << *deck;
+//
+//	delete deck;
+//	delete startGame;
 //}
