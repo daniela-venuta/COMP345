@@ -131,3 +131,28 @@ Territory<Region>* MapUtility::getStartingLocation(GameMap* map)
 
 	return region;
 }
+
+std::map<int, Territory<Region>*> MapUtility::printTerritoriesWithEnemyArmies(GameMap* map, Player* player, int numArmiesToDestroy)
+{
+	std::map<int, Territory<Region>*> terrsWithEnemyArmies;
+
+	for (auto& continentPair : map->terrs)
+	{
+		Continent* cont = continentPair.second->value;
+		std::cout << cont->getName() << ":" << std::endl;
+
+		for (auto& regionPair : cont->terrs)
+		{
+			const int placedArmies = regionPair.second->getPlacedArmies(player);
+			const int totalArmies = regionPair.second->getTotalArmyCount();
+			if (totalArmies - placedArmies >= numArmiesToDestroy)
+			{
+				int num = terrsWithEnemyArmies.size() + 1;
+				std::cout << num << "-" << regionPair.second->getName() << " (" + std::to_string(totalArmies-placedArmies) + " enemy armies)" << std::endl;
+				terrsWithEnemyArmies[num] = regionPair.second;
+			}
+		}
+	}
+
+	return terrsWithEnemyArmies;
+}

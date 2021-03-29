@@ -167,23 +167,8 @@ void Player::setBalance(int newBalance)
 }
 
 /// <summary>
-/// Calculate the cost of the movement between two Regions
-/// </summary>
-/// <param name="from"></param>
-/// <param name="to"></param>
-/// <param name="map"></param>
-/// <returns></returns>
-int Player::moveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap* map)
-{
-	// check that destination territory is valid (graph traversal + valid travel points)
-	GameMap gameMap = *map;
-	int travelCost = gameMap.getTravelCost(from, to);
-	return travelCost;
-	// check that travel points in cards are sufficient to move to destination
-}
-
-/// <summary>
 /// Takes care of changes that come from moving Armies
+/// *** Since the travel cost is computed by the GameMap, MoveOverLand and MoveOverWater are in this method.
 /// </summary>
 /// <param name="number"></param>
 /// <param name="from"></param>
@@ -191,8 +176,8 @@ int Player::moveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap
 /// <param name="map"></param>
 void Player::moveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map)
 {
-	// check that you can call MoveOverLand with the given territories
-	if (number > 0 && number < pResources->unplacedArmies && moveOverLand(from, to, map) > 0)
+	// check that the action is performable
+	if (number > 0 && number < pResources->unplacedArmies && map->getTravelCost(from, to) > 0)
 	{
 		if (from->removeArmies(number, this) && to->addArmies(number, this))
 		{
@@ -262,7 +247,7 @@ void Player::destroyArmy(int number, Territory<Region>* location, Player* player
 		location->removeArmies(number, player);
 		pResources->unplacedArmies += number;
 
-		std::cout << "Successfully destroyed " << number << " armies owned by" << player->getName() << " at " << location->getName() << " ." << std::endl;
+		std::cout << "Successfully destroyed " << number << " armies owned by " << player->getName() << " at " << location->getName() << " ." << std::endl;
 	}
 	else
 	{
@@ -460,14 +445,62 @@ void Player::executeAction(Action* action, GameMap* map)
 	//Destroy Armies
 	else if (destroy != std::string::npos)
 	{
-		// Destroy enemy army 
+		int numArmies = action->getMultiplier();
+		std::cout << "You many destroy " << numArmies << " enemy armies. Please choose a region: \n";
+		Territory<Region>* location = chooseTerritory(MapUtility::printTerritoriesWithEnemyArmies(map, this, numArmies));
+		Player* enemyPlayer = chooseEnemy(location, numArmies);
+		
+		destroyArmy(numArmies, location, enemyPlayer);
 	}
 	//Place New Armies
 	else if (place != std::string::npos)
 	{
 		// Place new army(ies) on the starting region or on a chosen region that has an owned city
 		int numArmies = action->getMultiplier();
+		std::cout << "You many place " << numArmies << " armies. Please choose a region: \n";
 		Territory<Region>* destination = chooseTerritory(MapUtility::printTerritoriesWithMap(map));
 		placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
 	}
+}
+
+Player* Player::chooseEnemy(Territory<Region>* location, int numArmies)
+{
+	Player* choosePlayer = nullptr;
+	vector<Player*> enemyPlayers;
+	int num = 0;
+	for (auto& armyPair : location->armies)
+	{
+		Player* player = armyPair.first;
+		if (player != this && location->getPlacedArmies(player) >= numArmies)
+		{
+			++num;
+			enemyPlayers.push_back(player);
+			std::cout << num << "-" << player->getName() << std::endl;
+		}
+	}
+	
+	do
+	{
+		int optionChosen;
+		std::cout << "Please enter the number associated to the wanted player " << std::endl;
+
+		std::cin >> optionChosen;
+
+		if (std::cin.fail())
+		{
+			std::cout << "The value you entered isn't a valid option. Please input a valid option. \n(Make sure that it is an integer)" << std::endl;
+			cin.clear();
+		}
+		else if (optionChosen > 0 && optionChosen <= enemyPlayers.size())
+		{
+			choosePlayer = enemyPlayers.at(optionChosen -1);
+		}
+		else
+		{
+			std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
+		}
+
+	} while (choosePlayer == nullptr);
+
+	return choosePlayer;
 }

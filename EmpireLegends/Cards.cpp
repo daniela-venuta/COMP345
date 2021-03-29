@@ -264,7 +264,11 @@ Card::Card(string name, Good* good, Action* firstAction, Action* secondAction, A
 Card::~Card()
 {
 	delete good;
+	delete action;
+	delete secondAction;
 	good = nullptr;
+	action = nullptr;
+	secondAction = nullptr;
 }
 
 Card::Card(const Card& otherCard)
