@@ -73,11 +73,11 @@ void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 	}
 
 	vector<Player*> maxBidders;
-	auto maxBid = 0;
+	int maxBid = 0;
 
 	for (Player* player : biddingPlayers)
 	{
-		const auto currentPlayerBid = this->getPlayerBid(player);
+		const int currentPlayerBid = this->getPlayerBid(player);
 		if (maxBid <= currentPlayerBid) {
 			// New max bid
 			if (maxBid < currentPlayerBid)

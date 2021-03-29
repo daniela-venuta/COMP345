@@ -35,7 +35,7 @@ struct Resources
 	int extraArmies{};
 	int flying{};
 	int elixir{};
-	int coinVPs{};
+	bool coinVPs = false;
 	map<CardSet, bool> setNameVPs;
 	map<CardSet, bool> completeSetVPs;
 	bool immune = false;
@@ -70,19 +70,23 @@ public:
 	int getBalance() const;
 	void setBalance(int newBalance);
 
-	int moveOverLand(Territory<Region>*from, Territory<Region>*to, GameMap * map);
-	void placeNewArmies(int number, Territory<Region>*destination, Territory<Region>* initialRegion);
-	void moveArmies(int number, Territory<Region>*from, Territory<Region>*to, GameMap * map);
-	void destroyArmy(int number, Territory<Region>*location, Player* player);
-	void buildCity(Territory<Region>*territory);
+	void moveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map);
+	void placeNewArmies(int number, Territory<Region>* destination, Territory<Region>* initialRegion);
+	void destroyArmy(int number, Territory<Region>* location, Player* player);
+	void buildCity(Territory<Region>* territory);
 	void addOwnedTerritory(Territory<Region>*territory);
 	void removeOwnedTerritory(Territory<Region>*territory);
 
-	void applyGood(Good* addedGood);
 	Resources* getResources() const;
+
+	void countCardTypes();
+	int computeScore();
+	void addVictoryPoints(int pts);
+	int getVictoryPoints();
+	vector<Territory<Region>*> getTerritories();
+
+	void applyGood(Good* addedGood);
 	void andOrAction(Card* cardTwoAction, GameMap* gm);
-	int MoveOverLand(Territory<Region>* from, Territory<Region>* to, GameMap* map);
-	void setListOfRegion(GameMap* gameMap);
 	Player* chooseEnemy(Territory<Region>* location, int numArmies);
 
 private:
@@ -91,11 +95,34 @@ private:
 	Hand* playerHand;
 	Resources* pResources;
 
+	Territory<Region>* chooseTerritory(map<int, Territory<Region>*> regions);
+	void executeAction(Action* action, GameMap* map);
+
+	int victoryPoints;
+
+	// Resources
 	static const int TOTAL_NUM_ARMIES = 18;
 	static const int TOTAL_NUM_CITIES = 3;
 	static const int TOTAL_NUM_COINS = 9;
-	
-	Territory<Region>* chooseTerritory(map<int, Territory<Region>*> regions);
-	void executeAction(Action* action, GameMap* map);
+
+	// Cardset types
+	int forestCards{};
+	int direCards{};
+	int ancientCards{};
+	int nobleCards{};
+	int mountainCards{};
+	int arcaneCards{};
+	int cursedCards{};
+	int nightCards{};
+
+	// Total cards per set
+	static const int MAX_NUM_FOREST_CARDS = 4;
+	static const int MAX_NUM_DIRE_CARDS = 5;
+	static const int MAX_NUM_ANCIENT_CARDS = 3;
+	static const int MAX_NUM_NOBLE_CARDS = 3;
+	static const int MAX_NUM_MOUNTAIN_CARDS = 2;
+	static const int MAX_NUM_ARCANE_CARDS = 2;
+	static const int MAX_NUM_CURSED_CARDS = 5;
+	static const int MAX_NUM_NIGHT_CARDS = 2;
 };
 	

@@ -4,11 +4,10 @@
 
 class PlayerRotation
 {
-	vector<Player*> players;
 	vector<Player*>::iterator current;
 
 public:
-	
+	vector<Player*> players;
 	explicit PlayerRotation(const vector<Player*>& players);	
 	void rotate();
 	Player* getCurrentPlayer();
@@ -31,4 +30,5 @@ public:
 	Player* getCurrentPlayer();
 	void mainGameloop(int numOfTurns);
 	int pickACard();
+	void chooseWinner();
 };

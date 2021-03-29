@@ -145,6 +145,7 @@
     <ClInclude Include="StartingPhase.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ComputeScoreDriver.cpp" />
     <ClCompile Include="GameStartDriver.cpp" />
     <ClCompile Include="jsoncpp.cpp" />
     <ClCompile Include="MainDriver.cpp" />

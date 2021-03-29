@@ -10,7 +10,6 @@
 
 using namespace std;
 
-
 //default constructor 
 Player::Player() {
 
@@ -305,6 +304,135 @@ void Player::removeOwnedTerritory(Territory<Region>* territory)
 Resources* Player::getResources() const
 {
 	return pResources;
+}
+
+// Tally card types
+void Player::countCardTypes() {
+	for (Card* card : playerHand->getCards()) {
+		if (card->getName().find(CardSetMap::getString(CardSet::forest)) != string::npos) {
+			forestCards++;
+		}
+		if (card->getName().find(CardSetMap::getString(CardSet::dire)) != string::npos) {
+			direCards++;
+		}
+		if (card->getName().find(CardSetMap::getString(CardSet::ancient)) != string::npos) {
+			ancientCards++;
+		}
+		if (card->getName().find(CardSetMap::getString(CardSet::noble)) != string::npos) {
+			nobleCards++;
+		}
+		if (card->getName().find(CardSetMap::getString(CardSet::mountain)) != string::npos) {
+			mountainCards++;
+		}
+		if (card->getName().find(CardSetMap::getString(CardSet::arcane)) != string::npos) {
+			arcaneCards++;
+		}
+		if (card->getName().find(CardSetMap::getString(CardSet::cursed)) != string::npos) {
+			cursedCards++;
+		}
+		if (card->getName().find(CardSetMap::getString(CardSet::night)) != string::npos) {
+			nightCards++;
+		}
+	}
+}
+
+// Compute Victory Points (VPs)
+int Player::computeScore() {
+	// 1VP per owned region
+	victoryPoints += playerTerritories.size();
+
+	// 1VP per 3 coins
+	int totalCoins = getResources()->totalCoins;
+
+	if (getResources()->coinVPs) {
+		victoryPoints += (totalCoins / 3);
+	}
+	
+	// VP for set names
+	for (auto& set : getResources()->setNameVPs) {
+		// if boolean is TRUE
+		if (set.second) {
+			// allocate VP per card type
+			switch (set.first) {
+				case CardSet::forest:
+					victoryPoints += forestCards;
+					break;
+				case CardSet::dire:
+					victoryPoints += direCards;
+					break;
+				case CardSet::ancient:
+					victoryPoints += ancientCards;
+					break;
+				case CardSet::noble:
+					victoryPoints += nobleCards;
+					break;
+				case CardSet::mountain:
+					victoryPoints += mountainCards;
+					break;
+				case CardSet::arcane:
+					victoryPoints += arcaneCards;
+					break;
+				case CardSet::cursed:
+					victoryPoints += cursedCards;
+					break;
+				case CardSet::night:
+					victoryPoints += nightCards;
+					break;
+				default:
+					victoryPoints;
+			}
+		}
+	}
+
+	//VP for complete sets
+	for (auto& set : getResources()->completeSetVPs) {
+		// if boolean is TRUE
+		if (set.second) {
+			// allocate VP per complete set
+			switch (set.first) {
+			case CardSet::forest:
+				victoryPoints += 1;
+				break;
+			case CardSet::dire:
+				victoryPoints += 1;
+				break;
+			case CardSet::ancient:
+				victoryPoints += 1;
+				break;
+			case CardSet::noble:
+				victoryPoints += 4;
+				break;
+			case CardSet::mountain:
+				victoryPoints += 3;
+				break;
+			case CardSet::arcane:
+				victoryPoints += 1;
+				break;
+			case CardSet::cursed:
+				victoryPoints += 1;
+				break;
+			case CardSet::night:
+				victoryPoints += 1;
+				break;
+			default:
+				victoryPoints;
+			}
+		}
+	}
+
+	return victoryPoints;
+}
+
+void Player::addVictoryPoints(int pts) {
+	victoryPoints += pts;
+}
+
+int Player::getVictoryPoints() {
+	return victoryPoints;
+}
+
+vector < Territory<Region>*> Player::getTerritories() {
+	return playerTerritories;
 }
 
 void Player::applyGood(Good* addedGood)
