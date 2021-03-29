@@ -150,10 +150,12 @@
     <ClCompile Include="MainDriver.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="AfterActionDriver.cpp" />
+    <ClCompile Include="MainLoopDriver.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapDriver.cpp" />
     <ClCompile Include="StartingPhase.cpp" />
     <ClCompile Include="StartupPhaseDriver.cpp" />
+    <ClCompile Include="CardActionDriver.cpp" />
     <ClCompile Include="GameStart.cpp" />
   </ItemGroup>
   <ItemGroup>

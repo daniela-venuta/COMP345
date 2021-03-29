@@ -1,6 +1,7 @@
 #include "StartingPhase.h"
 #include <algorithm>
 #include "MapLoader.h"
+#include "MapUtility.h"
 
 // Number of armies of non player colour that need to be placed on the map in a two player game
 static const int NUM_ARMIES_TO_PLACE = 10;
@@ -167,16 +168,6 @@ int StartingPhase::setNumberOfCoins(int numofPlayers)
 
 	return playerCoins;
 }
-
-// Retrieve the starting Region for all players based on the game map
-Territory<Region>* StartingPhase::getStartingLocation()
-{	
-	Continent* continent = map->terrs.begin()->second->value;
-	Territory<Region>* region = continent->terrs.begin()->second;
-	
-	return region;
-}
-
 // Method to initiate shuffling of the current deck of cards (changes their order in the vector)
 void StartingPhase::shuffleCardDeck() const
 {
@@ -237,12 +228,12 @@ void StartingPhase::assignPlayerResources()
 // Adds 4 armies to the starting location for each player
 void StartingPhase::setupStartingTerritories()
 {
-	Territory<Region>* startingRegion = getStartingLocation();
+	Territory<Region>* startingRegion = MapUtility::getStartingLocation(map);
 
 	// place 4 armies to start
 	for (Player* player : players)
 	{
-		player->placeNewArmies(4, startingRegion);
+		player->placeNewArmies(4, startingRegion, startingRegion);
 	}
 }
 
@@ -254,7 +245,7 @@ void StartingPhase::placeArmiesOnMap()
 	Territory<Region>* destination = nullptr;
 	std::cin.ignore();
 
-	printTerritories();
+	MapUtility::printTerritories(map);
 
 	for (int i = 0; i < NUM_ARMIES_TO_PLACE; i++)
 	{
@@ -269,9 +260,6 @@ void StartingPhase::placeArmiesOnMap()
 		{
 			try
 			{
-				std::cout << "Enter continent: ";
-				std::getline(std::cin, continentName);
-				
 				std::cout << "Enter region: ";
 				std::getline(std::cin, territoryName);
 
@@ -289,7 +277,7 @@ void StartingPhase::placeArmiesOnMap()
 		
 		} while (doesLocationNotExist);
 		
-		nonPlayer1->placeNewArmies(1, destination);
+		nonPlayer1->placeNewArmies(1, destination, MapUtility::getStartingLocation(map));
 	}
 }
 
@@ -311,30 +299,4 @@ void StartingPhase::startBidding()
 {
 	// Players place bids
 	biddingFacility->placeBids(players);
-}
-
-// Prints a list of all the Continents and Regions on the map for informative purposes
-void StartingPhase::printTerritories()
-{
-	std::cout << "List of all Continents and Regions: " << std::endl;
-
-	auto continentIterator = map->terrs.begin();
-	while (continentIterator != map->terrs.end())
-	{
-		string name = continentIterator->second->getName();
-		std::cout << name << std::endl;
-
-		auto regionIterator = continentIterator->second->value->terrs.begin();
-		while(regionIterator != continentIterator->second->value->terrs.end())
-		{
-			string regionName = regionIterator->second->getName();
-			std::cout << regionName << std::endl;
-
-			// Increment the Iterator to point to next entry
-			regionIterator++;
-		}
-		
-		// Increment the Iterator to point to next entry
-		continentIterator++;
-	}
 }

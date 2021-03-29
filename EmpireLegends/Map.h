@@ -59,11 +59,12 @@ struct Region : Location
 template <class T>
 class Territory
 {
-	std::map<Player*, int> armies;
+	std::map<Player*, int> cities;
 
 	// Calculating the travel cost recursively
     int getTravelCostWithVisits(Territory<T>* destination, std::vector<Territory<T>*>& visited);
 public:
+    std::map<Player*, int> armies;
     typedef std::pair<int, Territory<T>*> TerritoryEdge;
     std::vector<TerritoryEdge> adjacency;
     T* value;
@@ -121,15 +122,36 @@ public:
     /// </summary>
     /// <param name="number">number of armies to add</param>
     /// <param name="player">armies owner</param>
-    void addArmies(int number, Player* player);
+    bool addArmies(int number, Player* player);
     /// <summary>
     /// Removing armies from the territory
     /// </summary>
     /// <param name="number">number of armies to remove</param>
     /// <param name="player">armies owner</param>
-    void removeArmies(int number, Player* player);
-	
+    bool removeArmies(int number, Player* player);
+    /// <summary>
+    /// Adding a city to the territory
+    /// </summary>
+    /// <param name="number">number of armies to add</param>
+    /// <param name="player">armies owner</param>
+    void addCity(Player* player);
+    /// <summary>
+    /// Retrieves the total number of armies in this territory
+    /// </summary>
+    /// <returns></returns>
     int getTotalArmyCount() const;
+    /// <summary>
+    /// Retrieves the number of armies in this territory owned by a player
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    int getPlacedArmies(Player* player) const;
+    /// <summary>
+    /// Retrieves the number of armies in this territory owned by a player
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    int getPlacedCities(Player* player) const;
 };
 
 /// <summary>

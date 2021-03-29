@@ -15,10 +15,10 @@
 //	std::cout << "P4 balance: " << p4->getBalance() << " coins." << std::endl;
 //
 //	std::cout << std::endl;
-//	p1->PayCoin(2);
-//	p2->PayCoin(0);
-//	p3->PayCoin(9);
-//	p4->PayCoin(-5); // should output error message claiming unsufficient funds
+//	p1->payCoin(2);
+//	p2->payCoin(0);
+//	p3->payCoin(9);
+//	p4->payCoin(-5); // should output error message claiming unsufficient funds
 //
 //	std::cout << std::endl;
 //	std::cout << "P1 balance: " << p1->getBalance() << " coins." << std::endl;

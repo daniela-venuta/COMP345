@@ -163,30 +163,45 @@ int Territory<T>::getTravelCost(Territory<T>* destination)
 }
 
 template <class T>
-void Territory<T>::addArmies(int number, Player* player)
+bool Territory<T>::addArmies(int number, Player* player)
 {
+    bool added = false;
+
     if (number > 0 && number <= 18 && (armies[player] + number) <= 72)
     {
         armies[player] = armies[player] + number;
+        added = true;
 
     	// Adding ownership of the territory if only owned armies are on it
         if (armies[player] == getTotalArmyCount())
         {
             player->addOwnedTerritory(dynamic_cast<Territory<Region>*>(this));
         }
+        for (auto& army : armies)
+        {
+            // Removing ownership of the territory to other players
+            if (army.first != player)
+            {
+                player->removeOwnedTerritory(dynamic_cast<Territory<Region>*>(this));
+            }
+        }
     }
     else
     {
         std::cout << "Cannot add specified number of armies." << std::endl;;
     }
+    return added;
 }
 
 template <class T>
-void Territory<T>::removeArmies(int number, Player* player)
+bool Territory<T>::removeArmies(int number, Player* player)
 {
+    bool removed = false;
+	
     if (number > 0 && number <= 18 && armies[player] - number > 0)
     {
         armies[player] = armies[player] - number;
+        removed = true;
 
         // Removing ownership of the territory if no owned armies are on it
     	if (armies[player] == 0)
@@ -200,6 +215,7 @@ void Territory<T>::removeArmies(int number, Player* player)
             if (army.second == getTotalArmyCount())
             {
                 player->addOwnedTerritory(dynamic_cast<Territory<Region>*>(this));
+                break;
             }
     	}
     }
@@ -207,6 +223,14 @@ void Territory<T>::removeArmies(int number, Player* player)
     {
         std::cout << "Cannot remove specified number of armies." << std::endl;;
     }
+
+    return removed;
+}
+
+template<class T>
+void Territory<T>::addCity(Player* player)
+{
+    cities[player] = armies[player] + 1;
 }
 
 template <class T>
@@ -219,6 +243,28 @@ int Territory<T>::getTotalArmyCount() const
         totalCount += army.second;
     }
     return totalCount;
+}
+
+template <class T>
+int Territory<T>::getPlacedArmies(Player* player) const
+{
+    if (armies.count(player) > 0)
+    {
+        return armies.at(player);
+    }
+	
+    return 0;
+}
+
+template <class T>
+int Territory<T>::getPlacedCities(Player* player) const
+{
+    if(cities.count(player) > 0)
+    {
+        return cities.at(player);
+    }
+
+    return 0;
 }
 
 #pragma endregion territory
@@ -464,6 +510,11 @@ int GameMap::getTravelCost(Territory<Region>* from, Territory<Region>* to)
             continentTo = tempContinent;
         }
 	}
+
+    if (continentFrom == nullptr || continentTo == nullptr)
+    {
+        return 0;
+    }
 
     cost += continentFrom->value->getBestCost(from);
     cost += continentFrom->getTravelCost(continentTo);
