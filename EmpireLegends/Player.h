@@ -82,6 +82,7 @@ public:
 	int computeScore();
 	void addVictoryPoints(int pts);
 	int getVictoryPoints();
+	vector<Territory<Region>*> getTerritories();
 
 private:
 	string playerName;

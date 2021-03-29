@@ -385,3 +385,7 @@ void Player::addVictoryPoints(int pts) {
 int Player::getVictoryPoints() {
 	return victoryPoints;
 }
+
+vector < Territory<Region>*> Player::getTerritories() {
+	return playerTerritories;
+}

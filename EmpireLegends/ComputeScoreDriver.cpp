@@ -8,17 +8,13 @@ int main() {
 	vector<Player*> players{};
 	players.push_back(new Player("p1"));
 	players.push_back(new Player("p2"));
-	
 
 	// Compute individual VPs
 	for (Player* player : players) {
 		player->computeScore();
 	}
 
-	// Compute relative VPs
 	std::cout << "Determining the winner...";
-
-	// 1VP per owned continent
 
 	// 2VP for max elixir
 	Player* mostElixirs{};
@@ -49,13 +45,14 @@ int main() {
 		}
 	}
 
-	// Tie on most VPs
+	// Tie on most VPs (most coins owned wins)
+	vector<Player*> richestPlayers;
+	int highestCoins = 0;
+
 	if (highestVPplayers.size() > 1) {
 		std::cout << "\nThere is a tie for victory points." << std::endl;
 		std::cout << "\nSorting by number of coins..." << std::endl;
 
-		vector<Player*> richestPlayers;
-		int highestCoins = 0;
 		for (Player* player : players) {
 			int playerCoins = player->getCoins();
 			if (playerCoins <= highestCoins) {
@@ -69,13 +66,14 @@ int main() {
 			}
 		}
 
-		// Tie on most coins
+		// Tie on most coins (most armies owned wins)
+		vector<Player*> mostArmiesPlayers;
+		int highestArmyCount = 0;
+
 		if (richestPlayers.size() > 1) {
 			std::cout << "\nThere is a tie for number of coins." << std::endl;
 			std::cout << "\nSorting by number of armies..." << std::endl;
 
-			vector<Player*> mostArmiesPlayers;
-			int highestArmyCount = 0;
 			for (Player* player : players) {
 				int playerArmies = 18 - player->getResources()->unplacedArmies;
 				if (playerArmies <= highestArmyCount) {
@@ -88,6 +86,32 @@ int main() {
 					mostArmiesPlayers.push_back(player);
 				}
 			}
+
+			// Tie on most armies (most regions owned wins)
+			Player* mostRegionsOwnedPlayer;
+			int highestNumberOfRegions = 0;
+
+			if (mostArmiesPlayers.size() > 1) {
+				std::cout << "\nThere is a tie for number of armies." << std::endl;
+				std::cout << "\nSorting by number of region..." << std::endl;
+
+				for (Player* player : players) {
+					int playerRegions = player->getTerritories().size();
+					if (highestNumberOfRegions < playerRegions) {
+						highestNumberOfRegions = playerRegions;
+						mostRegionsOwnedPlayer = player;
+					}
+				}
+			}
+			else {
+				std::cout << "The winner is " << mostRegionsOwnedPlayer->getName() << "!" << std::endl;
+			}
 		}
+		else {
+			std::cout << "The winner is " << mostArmiesPlayers.back() << "!" << std::endl;
+		}
+	}
+	else {
+		std::cout << "The winner is " << richestPlayers.back() << "!" << std::endl;
 	}
 }
