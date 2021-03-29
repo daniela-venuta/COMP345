@@ -248,7 +248,7 @@ void StartingPhase::placeArmiesOnMap()
 	{
 		int index = i % 2;
 
-		string name = players[i]->getName();
+		string name = players[index]->getName();
 		std::cout << "\n" << name << ", place the non player army on the board. \n";
 
 		// Keep prompting to enter a continent and region as long as it can't be found in the map
