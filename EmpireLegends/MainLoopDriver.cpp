@@ -13,33 +13,33 @@
 //	int numOfTurns = 0;
 //	int PlayerCount = 0;
 //
-//	Card* card1 = new Card("Dire Dragon", new Flying, "Place 3 armies and destroy one army");
-//	Card* card2 = new Card("Dire Giant", new Immune, "Place 3 armies and destroy army");
-//	Card* card3 = new Card("Dire Eye", new Flying, "Place 4 armies");
-//	Card* card4 = new Card("Dire Ogre", new CoinVPs, "Move 2 armies");
-//	Card* card5 = new Card("Lake", new SetNameVPs(CardSet::forest), "Place 2 armies and move 3 armies");
-//	Card* card6 = new Card("Noble Hills", new CompleteSetVPs(3, CardSet::noble), "Place 3 armies");
-//	Card* card7 = new Card("Arcane Phoenix", new Flying, "Move 5 armies ");
-//	Card* card8 = new Card("Cursed Gargoyles", new Flying, "Move 5 armies");
-//	Card* card9 = new Card("Arcane Sphinx", new Flying, "Place 2 armies or Move 4 armies");
-//	Card* card10 = new Card("Dire Goblin", new Elixir(1), "Move 5 armies");
-//	Card* card11 = new Card("Forest Elf", new ExtraArmy, "Place 3 armies or Move 2 armies");
-//	Card* card12 = new Card("Forest Tree Town", new ExtraMove, "Build a city");
-//	Card* card13 = new Card("Noble Knight", new ExtraMove, "Place 4 armies and destroy one army");
-//	Card* card14 = new Card("Noble Unicorn", new ExtraMove, "Move 4 armies and place one army");
-//	Card* card15 = new Card("Night Hydra", new ExtraArmy, "Move 5 armies and destroy one army");
-//	Card* card16 = new Card("Night Village", new ExtraArmy, "Build a city");
-//	Card* card17 = new Card("Castle 1", new Elixir(1), "Place 3 armies or Build a city");
-//	Card* card18 = new Card("Forest Pixie", new ExtraArmy, "Move 4 armies");
-//	Card* card19 = new Card("Arcane Manticore", new ExtraMove, "Place 4 armies and destroy one army");
-//	Card* card20 = new Card("Ancient Woods", new ExtraArmy, "Build a city and place one army");
-//	Card* card21 = new Card("Forest Gnome", new Elixir(3), "Move 2 armies");
-//	Card* card22 = new Card("Castle 2", new Elixir(1), "Move 3 armies or Build a city");
-//	Card* card23 = new Card("Ancient Tree Spirit", new Elixir(3), "Place 4 armies or Build a city");
-//	Card* card24 = new Card("Ancent Woods", new ExtraArmy, "Build a city and place and army");
-//	Card* card25 = new Card("Cursed Banshee", new Elixir(2), "Move 5 armies");
-//	Card* card26 = new Card("Cursed King", new Elixir(1), "Move 4 armies or place 3 armies");
-//	Card* card27 = new Card("Cursed Mausoleum", new ExtraMove, "Build a city");
+//	Card* card1 = new Card("Dire Dragon", new Flying, new Action("Place armies", 3) , new Action("Destroy armies", 3), AndOr::AND);
+//	Card* card2 = new Card("Dire Giant", new Immune, new Action("Place armies", 3), new Action("Destroy armies", 3), AndOr::AND);
+//	Card* card3 = new Card("Dire Eye", new Flying, new Action("Place armies", 4));
+//	Card* card4 = new Card("Dire Ogre", new CoinVPs, new Action("Move armies", 2));
+//	Card* card5 = new Card("Lake", new SetNameVPs(CardSet::forest), new Action("Place armies", 2), new Action("Move armies", 3),AndOr::AND);
+//	Card* card6 = new Card("Noble Hills", new CompleteSetVPs(3, CardSet::noble), new Action("Place armies", 3));
+//	Card* card7 = new Card("Arcane Phoenix", new Flying, new Action("Move armies", 5));
+//	Card* card8 = new Card("Cursed Gargoyles", new Flying, new Action("Move armies", 5));
+//	Card* card9 = new Card("Arcane Sphinx", new Flying, new Action("Place armies", 2), new Action("Move armies", 4), AndOr::OR);
+//	Card* card10 = new Card("Dire Goblin", new Elixir(1), new Action("Move armies", 5));
+//	Card* card11 = new Card("Forest Elf", new ExtraArmy, new Action("Place armies", 3), new Action("Move armies", 2), AndOr::OR);
+//	Card* card12 = new Card("Forest Tree Town", new ExtraMove, new Action("Build city", 1));
+//	Card* card13 = new Card("Noble Knight", new ExtraMove, new Action("Place armies", 4), new Action("Destroy armies", 1), AndOr::AND);
+//	Card* card14 = new Card("Noble Unicorn", new ExtraMove, new Action("Move armies", 4), new Action("Place armies", 1), AndOr::AND);
+//	Card* card15 = new Card("Night Hydra", new ExtraArmy, new Action("Move armies", 5), new Action("Destroy armies", 1), AndOr::AND);
+//	Card* card16 = new Card("Night Village", new ExtraArmy, new Action("Build city", 1));
+//	Card* card17 = new Card("Castle 1", new Elixir(1), new Action("Place armies", 3),new Action("Build city", 1), AndOr::OR);
+//	Card* card18 = new Card("Forest Pixie", new ExtraArmy, new Action("Move armies", 4));
+//	Card* card19 = new Card("Arcane Manticore", new ExtraMove, new Action("Place armies", 4), new Action("Destroy armies", 1), AndOr::AND);
+//	Card* card20 = new Card("Ancient Woods", new ExtraArmy, new Action("Build city", 1), new Action("Place armies", 1), AndOr::AND);
+//	Card* card21 = new Card("Forest Gnome", new Elixir(3), new Action("Move armies", 2));
+//	Card* card22 = new Card("Castle 2", new Elixir(1), new Action("Move armies", 3), new Action("Build city", 1), AndOr::OR);
+//	Card* card23 = new Card("Ancient Tree Spirit", new Elixir(3), new Action("Place armies", 4), new Action("Build city", 1), AndOr::OR);
+//	Card* card24 = new Card("Ancient Woods", new ExtraArmy, new Action("Build city", 1), new Action("Place armies", 1), AndOr::AND);
+//	Card* card25 = new Card("Cursed Banshee", new Elixir(2), new Action("Move armies", 5));
+//	Card* card26 = new Card("Cursed King", new Elixir(1), new Action("Move armies", 4), new Action("Place armies", 3), AndOr::OR);
+//	Card* card27 = new Card("Cursed Mausoleum", new ExtraMove, new Action("Build city", 1));
 //
 //	cardVector.push_back(card1);
 //	cardVector.push_back(card2);
@@ -111,7 +111,7 @@
 //
 //	MainGame* mainGame = new MainGame(nullptr, nullptr, deck, players);
 //
-//	mainGame->mainGameloop(numOfTurns, players);
+//	mainGame->mainGameloop(numOfTurns);
 //
 //	for (Card* card : cardVector)
 //	{
