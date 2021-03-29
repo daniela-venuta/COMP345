@@ -101,10 +101,26 @@ int MainGame::pickACard() {
 
 // Calculate winner based off victory points (VPs)
 void MainGame::chooseWinner() {
+
 	vector<Player*> allPlayers = players->players;
 
 	for (Player* player : allPlayers) {
 		player->computeScore();
+	}
+
+	//1VP per owned continent
+	for (int i = 0; i < allPlayers.size() - 1; i++) {
+		int regionCount = 0;
+		auto continentIterator = map->terrs.begin();
+		while (continentIterator != map->terrs.end()) {
+			auto cont = continentIterator->second->value;
+			for (Territory<Region>* region : allPlayers.at(i)->getTerritories())
+			{
+				regionCount += cont->contains(region) ? 1 : 0;
+			}
+			// Increment the Iterator to point to next entry
+			++continentIterator;
+		}
 	}
 
 	std::cout << "Determining the winner...";
@@ -119,7 +135,6 @@ void MainGame::chooseWinner() {
 			mostElixirs = allPlayers.at(i+1);
 		}
 	}
-
 	mostElixirs->addVictoryPoints(2);
 
 	// Determine winner

@@ -336,6 +336,7 @@ void Player::countCardTypes() {
 	}
 }
 
+// Compute Victory Points (VPs)
 int Player::computeScore() {
 	// 1VP per owned region
 	victoryPoints += playerTerritories.size();
