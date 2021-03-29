@@ -257,6 +257,9 @@ void StartingPhase::placeArmiesOnMap()
 		{
 			try
 			{
+				std::cout << "Enter continent: ";
+				std::getline(std::cin, continentName);
+				
 				std::cout << "Enter region: ";
 				std::getline(std::cin, territoryName);
 
@@ -267,14 +270,14 @@ void StartingPhase::placeArmiesOnMap()
 				destination = region;
 				
 			}
-			catch(TerritoryNotFoundException e){
+			catch(TerritoryNotFoundException& e){
 				std::cout << (territoryName.empty() ? territoryName : continentName) << " does not exist. Try again. \n"; // Territory or region string was invalid
 				doesLocationNotExist = true;
 			}
 		
 		} while (doesLocationNotExist);
 		
-		nonPlayer1->placeNewArmies(1, destination, MapUtility::getStartingLocation(map));
+		nonPlayer1->placeNewArmies(1, destination, destination);// Bypassing initial region check
 	}
 }
 

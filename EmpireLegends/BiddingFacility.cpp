@@ -54,7 +54,7 @@ void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 	}
 
 	vector<Player*> maxBidders;
-	auto maxBid = 0;
+	int maxBid = 0;
 
 	for (Player* player : biddingPlayers)
 	{
