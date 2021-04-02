@@ -389,7 +389,6 @@ void driveComputeScore()
 	Card* card25 = new Card("Cursed Banshee", new Elixir(2), new Action("Move armies", 5));
 	Card* card26 = new Card("Cursed King", new Elixir(1), new Action("Move armies", 4), new Action("Place armies", 3), AndOr::OR);
 	Card* card27 = new Card("Cursed Mausoleum", new ExtraMove, new Action("Build city", 1));
-	Card* card28 = new Card("Night Hydra", new ExtraArmy, new Action("Move 5 armies ", 5), new Action("Destroy armies", 1), AndOr::AND);
 
 	cardVector.push_back(card1);
 	cardVector.push_back(card2);
@@ -420,48 +419,50 @@ void driveComputeScore()
 	cardVector.push_back(card27);
 
 	Deck* deck = new Deck(cardVector);
-
+	deck->draw(5);
 	GameMap* map = MapUtility::createValidMap();
 	MainGame* mainGame = new MainGame(map, deck, players);
 
-	p1->addCard(card3);
-	p1->addCard(card10);
-	p2->addCard(card4);
-	p2->addCard(card7);
-	p2->addCard(card9);
+	p1->addCard(deck->getHand()->exchange(1, p1));
+	p1->addCard(deck->getHand()->exchange(1, p1));
+	p2->addCard(deck->getHand()->exchange(1, p1));
+	p2->addCard(deck->getHand()->exchange(1, p1));
+	p2->addCard(deck->getHand()->exchange(1, p1));
 
 	mainGame->chooseWinner();
 	std::cout << "P1 VP: " << p1->getVictoryPoints() << std::endl;
 	std::cout << "P2 VP: " << p2->getVictoryPoints() << std::endl;
 
-	delete mainGame;
 	delete mapLoader;
+	delete mainGame;
 }
 
 int main()
 {
-	std::cout << std::endl << "------------------------------------" << std::endl;
-	std::cout << "============ Game Start DRIVER ============";
-	std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
-	driveGameStart();
+	//std::cout << std::endl << "------------------------------------" << std::endl;
+	//std::cout << "============ Game Start DRIVER ============";
+	//std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
+	//driveGameStart();
 	std::cout << std::endl << "------------------------------------" << std::endl;
 	std::cout << "============ Startup Phase DRIVER ============";
 	std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
 	driveStartUp();
-	std::cout << std::endl << "------------------------------------" << std::endl;
-	std::cout << "============ Main Loop DRIVER ============";
-	std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
-	driveMainLoop();
-	std::cout << std::endl << "------------------------------------" << std::endl;
-	std::cout << "============ Card Action DRIVER ============";
-	std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
-	driveCardAction();
-	std::cout << std::endl << "------------------------------------" << std::endl;
-	std::cout << "============ After Action DRIVER ============";
-	std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
-	driveAfterAction();
-	std::cout << std::endl << "------------------------------------" << std::endl;
-	std::cout << "============ Compute Score DRIVER ============";
-	std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
-	driveComputeScore();
+	//std::cout << std::endl << "------------------------------------" << std::endl;
+	//std::cout << "============ Main Loop DRIVER ============";
+	//std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
+	//driveMainLoop();
+	//std::cout << std::endl << "------------------------------------" << std::endl;
+	//std::cout << "============ Card Action DRIVER ============";
+	//std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
+	//driveCardAction();
+	//std::cout << std::endl << "------------------------------------" << std::endl;
+	//std::cout << "============ After Action DRIVER ============";
+	//std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
+	//driveAfterAction();
+	//std::cout << std::endl << "------------------------------------" << std::endl;
+	//std::cout << "============ Compute Score DRIVER ============";
+	//std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
+	//driveComputeScore();
+
+	return 0;
 }

@@ -11,9 +11,6 @@ using namespace std;
 
 //default constructor 
 Player::Player() {
-
-	pResources = new Resources();
-
 	playerName = "";
 	pResources = new Resources;
 	pResources->totalCoins = 0;
