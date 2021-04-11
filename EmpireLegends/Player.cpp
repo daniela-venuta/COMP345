@@ -2,6 +2,7 @@
 #include "Map.h"
 #include "Cards.h"
 #include <algorithm>
+#include <utility>
 #include <vector>
 #include <iostream>
 
@@ -13,15 +14,21 @@ using namespace std;
 Player::Player() {
 	playerName = "";
 	pResources = new Resources;
+	pResources->unplacedArmies = TOTAL_NUM_ARMIES;
+	pResources->unplacedCities = TOTAL_NUM_CITIES;
 	pResources->totalCoins = 0;
+	strategy = nullptr;
 }
 
 // parametrized constructor
-Player::Player(string name, int coins) {
-	playerName = name;
+Player::Player(string name, int coins, PlayerStrategy* strategy) {
+	playerName = std::move(name);
 	pResources = new Resources;
 	pResources->totalCoins = coins;
+	pResources->unplacedArmies = TOTAL_NUM_ARMIES;
+	pResources->unplacedCities = TOTAL_NUM_CITIES;
 	playerHand = new Hand();
+	this->strategy = strategy;
 }
 
 string Player::getName() const {
@@ -39,16 +46,22 @@ void Player::setCoins(int coins) {
 	pResources->totalCoins = coins;
 }
 
+void Player::setStrategy(PlayerStrategy* strategy)
+{
+	this->strategy = strategy;
+}
 
-Player::Player(const string username)
+Player::Player(const string username, PlayerStrategy* strategy)
 {
 	// verify that this is not a duplicate username for the current players in game
 	setName(username);
 	pResources = new Resources;
 	// set player resources to default values
-	pResources->totalCoins = TOTAL_NUM_COINS;
+	pResources->totalCoins = DEFAULT_NUM_COINS;
 	pResources->unplacedCities = TOTAL_NUM_CITIES;
 	pResources->unplacedArmies = TOTAL_NUM_ARMIES;
+	
+	this->strategy = strategy;
 
 	// define a bidingFacility
 	std::cout << "Created new player: " << getName() << std::endl;
@@ -170,13 +183,16 @@ void Player::setBalance(int newBalance)
 /// <param name="from"></param>
 /// <param name="to"></param>
 /// <param name="map"></param>
-void Player::moveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map)
+bool Player::moveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map)
 {
+	bool moveDone = false;
+
 	// check that the action is performable
 	if (number > 0 && number < pResources->unplacedArmies && map->getTravelCost(from, to) > 0)
 	{
 		if (from->removeArmies(number, this) && to->addArmies(number, this))
 		{
+			moveDone = true;
 			std::cout << "Moved " << number << " armies." << std::endl;
 		} else
 		{
@@ -187,6 +203,8 @@ void Player::moveArmies(int number, Territory<Region>* from, Territory<Region>* 
 	{
 		std::cout << "Could not perform action (MoveArmies)" << std::endl;
 	}
+
+	return moveDone;
 }
 
 /// <summary>
@@ -194,8 +212,10 @@ void Player::moveArmies(int number, Territory<Region>* from, Territory<Region>* 
 /// </summary>
 /// <param name="number"></param>
 /// <param name="location"></param>
-void Player::placeNewArmies(int number, Territory<Region>* location, Territory<Region>* initialRegion)
+bool Player::placeNewArmies(int number, Territory<Region>* location, Territory<Region>* initialRegion)
 {
+	bool placeDone = false;
+
 	const bool ownsCity = std::find(playerTerritories.begin(), playerTerritories.end(), location) != playerTerritories.end();
 
 	// check ownership of territory (can place ONLY if your own)
@@ -205,6 +225,7 @@ void Player::placeNewArmies(int number, Territory<Region>* location, Territory<R
 		{
 			pResources->unplacedArmies -= number;
 			location->addArmies(number, this);
+			placeDone = true;
 			std::cout << "You added " << number << " armies at " << location->getName() << std::endl;
 		}
 		else
@@ -221,6 +242,8 @@ void Player::placeNewArmies(int number, Territory<Region>* location, Territory<R
 	{
 		std::cout << "An error made it impossible to perform this action. (PlaceNewArmies)" << std::endl;
 	}
+
+	return placeDone;
 }
 
 
@@ -230,8 +253,10 @@ void Player::placeNewArmies(int number, Territory<Region>* location, Territory<R
 /// <param name="number"></param>
 /// <param name="location"></param>
 /// <param name="player"></param>
-void Player::destroyArmy(int number, Territory<Region>* location, Player* player)
+bool Player::destroyArmy(int number, Territory<Region>* location, Player* player)
 {
+	bool destroyDone = false;
+
 	const bool ownsCity = std::find(playerTerritories.begin(), playerTerritories.end(), location) != playerTerritories.end();
 
 	if (ownsCity || location->getTotalArmyCount() == 0)
@@ -242,13 +267,15 @@ void Player::destroyArmy(int number, Territory<Region>* location, Player* player
 	{
 		location->removeArmies(number, player);
 		pResources->unplacedArmies += number;
-
+		destroyDone = true;
 		std::cout << "Successfully destroyed " << number << " armies owned by " << player->getName() << " at " << location->getName() << " ." << std::endl;
 	}
 	else
 	{
 		std::cout << "Action not permissible (Destroy Armies at " << location->getName() << "). There are not " << number << " armies to destroy " << std::endl;
 	}
+
+	return destroyDone;
 }
 
 
@@ -256,8 +283,9 @@ void Player::destroyArmy(int number, Territory<Region>* location, Player* player
 /// Builds a city at the specified location
 /// </summary>
 /// <param name="location"></param>
-void Player::buildCity(Territory<Region>* location)
-{	
+bool Player::buildCity(Territory<Region>* location)
+{
+	bool buildDone = false;
 	if (location->getPlacedArmies(this) == 0)
 	{
 		std::cout << "Action not permissible (Build City at " << location->getName() << ")." << " You need at least 1 army in this region." << std::endl;
@@ -266,12 +294,15 @@ void Player::buildCity(Territory<Region>* location)
 	{
 		pResources->unplacedCities--;
 		location->addCity(this);
+		buildDone = true;
 		std::cout << "City built at " + location->getName() << std::endl;
 	}
 	else
 	{
 		std::cout << "Action not permissible (Build City at " << location->getName() << ")." << ". You don't have any city left to place or there is no more space for more cities in this region." << std::endl;
 	}
+
+	return buildDone;
 }
 
 void Player::addOwnedTerritory(Territory<Region>* territory)
@@ -446,64 +477,35 @@ void Player::applyGood(Good* addedGood)
 /// <summary>
 /// Ask for Player for which action they will call
 /// </summary>
-/// <param name="cardTwoAction"></param>
-/// <param name="gm"></param>
+/// <param name="card"></param>
+/// <param name="map"></param>
 void Player::andOrAction(Card* card, GameMap* map) {
+
+	if (strategy == nullptr)
+	{
+		std::cout << "Cannot execute action(s). Player has no strategy." << std::endl;
+		return;
+	}
 
 	Action* action1 = card->getAction();
 	Action* action2 = card->getSecondAction();
-	int option = 0;
-
 
 	if (card->getAndOr() == AndOr::OR)
 	{
 		std::cout << "This card has two actions, " << *action1 << " and " << *action2 << std::endl;
 
-		Action* chosenAction = nullptr;
-
-		while (chosenAction == nullptr)
-		{
-			std::cout << "You must chose which action to use." << std::endl;
-			std::cout << "Please enter the number next to the desired action:" << std::endl;
-			std::cout << "1 : " << *action1 << std::endl;
-			std::cout << "2 : " << *action2 << std::endl;
-			std::cin >> option;
-
-			if (std::cin.fail())
-			{
-				std::cout << "The value you entered isn't a valid option. Please input a valid option. \n(Make sure that it is an integer)" << std::endl;
-				cin.clear();
-				cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-			}
-			else
-			{
-
-				switch (option) {
-				case 1:
-					chosenAction = action1;
-					std::cout << "You have chosen " << *action1 << "." << std::endl;
-					break;
-				case 2:
-					chosenAction = action2;
-					std::cout << "You have chosen " << *action2 << "." << std::endl;
-					break;
-				default:
-					std::cout << "The value you entered isn't a valid option. Please input a valid option." << std::endl;
-				}
-			}
-		}
-
-		executeAction(chosenAction, map);
+		Action* chosenAction = strategy->chooseAction(action1, action2);
+		strategy->executeAction(chosenAction, this, map);
 	}
 	else if (card->getAndOr() == AndOr::AND)
 	{
 		std::cout << "This card has two actions, " << *action1 << " and " << *action2 << std::endl;
 
-		executeAction(action1, map);
-		executeAction(action2, map);
+		strategy->executeAction(action1, this, map);
+		strategy->executeAction(action2, this, map);
 	} else
 	{
-		executeAction(action1, map);
+		strategy->executeAction(action1, this, map);
 	}
 }
 
@@ -543,54 +545,58 @@ Territory<Region>* Player::chooseTerritory(map<int, Territory<Region>*> regions)
 
 void Player::executeAction(Action* action, GameMap* map)
 {
-	std::size_t build = action->getName().find("Build");
-	std::size_t destroy = action->getName().find("Destroy");
-	std::size_t place = action->getName().find("Place");
-	std::size_t move = action->getName().find("Move");
+	const std::size_t build = action->getName().find("Build");
+	const std::size_t destroy = action->getName().find("Destroy");
+	const std::size_t place = action->getName().find("Place");
+	const std::size_t move = action->getName().find("Move");
+	bool actionDone = false;
 
-	//Build City
-	if (build != std::string::npos)
+	while (!actionDone)
 	{
-		std::cout << "You may build a city in one of the regions with at least 1 army: " << std::endl;
-		Territory<Region>* destination = chooseTerritory(MapUtility::printTerritoriesWithArmies(map, this));
-		buildCity(destination);
-	}
-	//Move Armies
-	else if (move != std::string::npos)
-	{
-		std::cout << "You may move" << action->getMultiplier() << " armies." << std::endl;
-		std::cout << "Please choose the initial region: " << std::endl;
-
-		Territory<Region>* from = chooseTerritory(MapUtility::printTerritoriesWithArmies(map, this));
-		std::cout << "Please choose the destination region: " << std::endl;
-		Territory<Region>* to = chooseTerritory(MapUtility::printTerritoriesWithMap(map));
-
-		while (to == from)
+		//Build City
+		if (build != std::string::npos)
 		{
-			std::cout << "Invalid. Please choose a destination other than the initial region: " << std::endl;
-			to = chooseTerritory(MapUtility::printTerritoriesWithMap(map));
+			std::cout << "You may build a city in one of the regions with at least 1 army: " << std::endl;
+			Territory<Region>* destination = chooseTerritory(MapUtility::printTerritoriesWithArmies(map, this));
+			actionDone = buildCity(destination);
 		}
+		//Move Armies
+		else if (move != std::string::npos)
+		{
+			std::cout << "You may move" << action->getMultiplier() << " armies." << std::endl;
+			std::cout << "Please choose the initial region: " << std::endl;
 
-		moveArmies(action->getMultiplier(), from, to, map);
-	}
-	//Destroy Armies
-	else if (destroy != std::string::npos)
-	{
-		int numArmies = action->getMultiplier();
-		std::cout << "You many destroy " << numArmies << " enemy armies. Please choose a region: \n";
-		Territory<Region>* location = chooseTerritory(MapUtility::printTerritoriesWithEnemyArmies(map, this, numArmies));
-		Player* enemyPlayer = chooseEnemy(location, numArmies);
-		
-		destroyArmy(numArmies, location, enemyPlayer);
-	}
-	//Place New Armies
-	else if (place != std::string::npos)
-	{
-		// Place new army(ies) on the starting region or on a chosen region that has an owned city
-		int numArmies = action->getMultiplier();
-		std::cout << "You many place " << numArmies << " armies. Please choose a region: \n";
-		Territory<Region>* destination = chooseTerritory(MapUtility::printTerritoriesWithMap(map));
-		placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
+			Territory<Region>* from = chooseTerritory(MapUtility::printTerritoriesWithArmies(map, this));
+			std::cout << "Please choose the destination region: " << std::endl;
+			Territory<Region>* to = chooseTerritory(MapUtility::printTerritoriesWithMap(map));
+
+			while (to == from)
+			{
+				std::cout << "Invalid. Please choose a destination other than the initial region: " << std::endl;
+				to = chooseTerritory(MapUtility::printTerritoriesWithMap(map));
+			}
+
+			moveArmies(action->getMultiplier(), from, to, map);
+		}
+		//Destroy Armies
+		else if (destroy != std::string::npos)
+		{
+			int numArmies = action->getMultiplier();
+			std::cout << "You may destroy " << numArmies << " enemy armies. Please choose a region: \n";
+			Territory<Region>* location = chooseTerritory(MapUtility::printTerritoriesWithEnemyArmies(map, this, numArmies));
+			Player* enemyPlayer = chooseEnemy(location, numArmies);
+
+			destroyArmy(numArmies, location, enemyPlayer);
+		}
+		//Place New Armies
+		else if (place != std::string::npos)
+		{
+			// Place new army(ies) on the starting region or on a chosen region that has an owned city
+			int numArmies = action->getMultiplier();
+			std::cout << "You may place " << numArmies << " armies. Please choose a region: \n";
+			Territory<Region>* destination = chooseTerritory(MapUtility::printTerritoriesWithMap(map));
+			placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
+		}
 	}
 }
 
@@ -612,7 +618,7 @@ Player* Player::chooseEnemy(Territory<Region>* location, int numArmies)
 	
 	do
 	{
-		int optionChosen;
+		std::vector<Player*, std::allocator<Player*>>::size_type optionChosen = 0;
 		std::cout << "Please enter the number associated to the wanted player " << std::endl;
 
 		std::cin >> optionChosen;
