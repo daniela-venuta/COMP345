@@ -75,7 +75,7 @@ void HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 				to = player->chooseTerritory(MapUtility::printTerritoriesWithMap(map));
 			}
 
-			player->moveArmies(action->getMultiplier(), from, to, map);
+			actionDone = player->moveArmies(action->getMultiplier(), from, to, map);
 		}
 		//Destroy Armies
 		else if (destroy != std::string::npos)
@@ -85,26 +85,68 @@ void HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 			Territory<Region>* location = player->chooseTerritory(MapUtility::printTerritoriesWithEnemyArmies(map, player, numArmies));
 			Player* enemyPlayer = player->chooseEnemy(location, numArmies);
 
-			player->destroyArmy(numArmies, location, enemyPlayer);
+			actionDone = player->destroyArmy(numArmies, location, enemyPlayer);
 		}
 		//Place New Armies
 		else if (place != std::string::npos)
 		{
 			// Place new army(ies) on the starting region or on a chosen region that has an owned city
-			int numArmies = action->getMultiplier();
+			const int numArmies = action->getMultiplier();
 			std::cout << "You may place " << numArmies << " armies. Please choose a region: \n";
 			Territory<Region>* destination = player->chooseTerritory(MapUtility::printTerritoriesWithMap(map));
-			player->placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
+			actionDone = player->placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
 		}
 	}
 }
 
 Action* GreedyStrategy::chooseAction(Action* action1, Action* action2)
 {
-	return nullptr;
+	const std::size_t build1 = action1->getName().find("Build");
+	const std::size_t destroy1 = action1->getName().find("Destroy");
+	const std::size_t build2 = action2->getName().find("Build");
+	const std::size_t destroy2 = action2->getName().find("Destroy");
+
+	// Choosing the destroy army action that destroys the most armies
+	if (destroy1 != std::string::npos && destroy2 != std::string::npos)
+	{
+		return action1->getMultiplier() >= action2->getMultiplier() ? action1 : action2;
+	}
+	
+	if (build1 != std::string::npos || destroy1 != std::string::npos)
+	{
+		return action1;
+	}
+	
+	if (build2 != std::string::npos || destroy2 != std::string::npos)
+	{
+		return action2;
+	}
+
+	// Choosing the first action if neither of them is for building a city or destroying armies
+	return action1;
 }
 
 Action* ModerateStrategy::chooseAction(Action* action1, Action* action2)
 {
-	return nullptr;
+	const std::size_t place1 = action1->getName().find("Place");
+	const std::size_t place2 = action2->getName().find("Place");
+
+	// Choosing the place army action that places the most armies
+	if (place1 != std::string::npos && place2 != std::string::npos)
+	{
+		return action1->getMultiplier() >= action2->getMultiplier() ? action1 : action2;
+	}
+
+	if (place1 != std::string::npos)
+	{
+		return action1;
+	}
+
+	if (place2 != std::string::npos)
+	{
+		return action2;
+	}
+
+	// Choosing the first action if neither of them is for placing armies
+	return action1;
 }
