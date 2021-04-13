@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameStart.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Map.h" />
@@ -146,6 +147,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ComputeScoreDriver.cpp" />
+    <ClCompile Include="GameEngine.cpp" />
+    <ClCompile Include="GameEngineDriver.cpp" />
     <ClCompile Include="GameStartDriver.cpp" />
     <ClCompile Include="jsoncpp.cpp" />
     <ClCompile Include="MainDriver.cpp" />
