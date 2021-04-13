@@ -8,6 +8,10 @@ GameEngine::GameEngine()
 	 gameMap = nullptr;
 }
 
+GameEngine::~GameEngine()
+{
+
+}
 void GameEngine::singleMode()
 {
 	std::cout << "\n-------------------" << std::endl;

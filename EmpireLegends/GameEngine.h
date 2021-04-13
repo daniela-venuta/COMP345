@@ -8,6 +8,7 @@ private:
 
 public:
 	GameEngine();
+	~GameEngine(); 
 	void singleMode();
 	void tournamentMode(); 
 };
