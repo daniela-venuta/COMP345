@@ -99,7 +99,9 @@ void GameEngine::tournamentMode()
 
 	//Starting Phase
 	startPhase = new StartingPhase();
-	startPhase->startGame(gameMap,players, setDeck(), num);
+	players = startPhase->startGame(gameMap,players, setDeck(), num);
+	for (auto temp : players)
+		std::cout << temp->getName();
 
 	// Maingameloop	
 	mainGame = new MainGame(nullptr, deck, players);	

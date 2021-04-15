@@ -25,7 +25,7 @@ int BiddingFacility::getPlayerBid(Player* player)
 	return bids[player];
 }
 
-void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
+string BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 
 	auto playerBid = 0;
 	string temp;
@@ -100,4 +100,5 @@ void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 	setCurrentBid(maxBid);
 
 	std::cout << "\nThe player to start is " << maxBidder->getName() << "! They now have " << maxBidder->getCoins() << " coins.\n";
+	return maxBidder->getName();
 }

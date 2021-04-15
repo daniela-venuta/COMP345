@@ -124,7 +124,7 @@ StartingPhase::~StartingPhase()
 }
 
 // Method to start the sequence of actions that are needed in the starting phase
-void StartingPhase::startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers)
+vector<Player*> StartingPhase::startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers)
 {
 	this->players = playerVector;
 	this->cardDeck = deck;
@@ -137,6 +137,8 @@ void StartingPhase::startGame(GameMap* gameMap, const vector<Player*> playerVect
 	//setupNonPlayers();
 	//placeArmiesOnMap();
 	startBidding();
+
+	return players;
 }
 
 // Retrieve number of starting coins per player
@@ -298,5 +300,15 @@ void StartingPhase::setupNonPlayers()
 void StartingPhase::startBidding()
 {
 	// Players place bids
-	BiddingFacility::placeBids(players);
+	string maxBidder = BiddingFacility::placeBids(players);
+	for ( int i = 0; i< players.size(); i ++) 
+	{
+		auto temp = players[i];
+		if (temp->getName() == maxBidder)
+		{
+			players.erase(players.begin() + i);
+			players.push_back(temp);
+			return;
+		}
+	}
 }

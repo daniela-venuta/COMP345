@@ -26,7 +26,7 @@ public:
 	StartingPhase();
 	~StartingPhase();
 
-	void startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
+	vector<Player*> startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
 
 private:
 	void shuffleCardDeck() const;
