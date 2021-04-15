@@ -25,7 +25,7 @@ int BiddingFacility::getPlayerBid(Player* player)
 	return bids[player];
 }
 
-string BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
+ string BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 
 	auto playerBid = 0;
 	string temp;
@@ -95,6 +95,7 @@ string BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 	}
 
 	Player* maxBidder = maxBidders.back();
+	
 	const int supply = maxBidder->getCoins() - maxBid;
 	maxBidder->setCoins(supply);
 	setCurrentBid(maxBid);

@@ -307,8 +307,14 @@ void StartingPhase::startBidding()
 		if (temp->getName() == maxBidder)
 		{
 			players.erase(players.begin() + i);
-			players.push_back(temp);
+			players.insert(players.begin(), temp);
 			return;
 		}
+		else
+		{
+			continue;
+		}
 	}
+
+	
 }
