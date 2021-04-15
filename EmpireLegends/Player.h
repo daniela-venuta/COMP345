@@ -103,8 +103,8 @@ private:
 	int victoryPoints;
 
 	// Resources
-	static const int MAX_NUM_ARMIES = 18;
-	static const int MAX_NUM_CITIES = 3;
+	static const int TOTAL_NUM_ARMIES = 18;
+	static const int TOTAL_NUM_CITIES = 3;
 	static const int DEFAULT_NUM_COINS = 9;
 
 	// Cardset types
