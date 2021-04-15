@@ -1,4 +1,5 @@
 #include "MapUtility.h"
+#include "Player.h"
 
 GameMap* MapUtility::createValidMap()
 {
@@ -66,11 +67,15 @@ void MapUtility::printTerritories(GameMap* map)
 		// Increment the Iterator to point to next entry
 		++continentIterator;
 	}
+
+	std::cout << std::endl;
 }
 
 std::map<int, Territory<Region>*> MapUtility::printTerritoriesWithArmies(GameMap* map, Player* player)
 {
 	std::map<int, Territory<Region>*> terrsWithArmies;
+	
+	std::cout << std::endl;
 
 	for (auto& continentPair: map->terrs)
 	{
@@ -88,6 +93,8 @@ std::map<int, Territory<Region>*> MapUtility::printTerritoriesWithArmies(GameMap
 			}
 		}
 	}
+
+	std::cout << std::endl;
 	
 	return terrsWithArmies;
 }
@@ -96,6 +103,8 @@ map<int, Territory<Region>*> MapUtility::printTerritoriesWithMap(GameMap* map)
 {
 	std::cout << "List of all Continents and Regions: " << std::endl;
 	std::map<int, Territory<Region>*> terrs;
+
+	std::cout << std::endl;
 	
 	auto continentIterator = map->terrs.begin();
 	while (continentIterator != map->terrs.end())
@@ -120,7 +129,37 @@ map<int, Territory<Region>*> MapUtility::printTerritoriesWithMap(GameMap* map)
 		++continentIterator;
 	}
 
+	std::cout << std::endl;
+	
 	return terrs;
+}
+
+std::map<int, Territory<Region>*> MapUtility::printTerritoriesForPlacingArmies(GameMap* map, Player* player)
+{
+	std::map<int, Territory<Region>*> terrsForPlacingArmies;
+	
+	std::cout << std::endl;
+
+	for (auto& continentPair : map->terrs)
+	{
+		Continent* cont = continentPair.second->value;
+		std::cout << cont->getName() << ":" << std::endl;
+
+		for (auto& regionPair : cont->terrs)
+		{
+			const int placedCities = regionPair.second->getPlacedCities(player);
+			if (placedCities > 0 || regionPair.second == getStartingLocation(map))
+			{
+				int num = terrsForPlacingArmies.size() + 1;
+				std::cout << num << "-" << regionPair.second->getName() << " (" + std::to_string(placedCities) + " cities)" << std::endl;
+				terrsForPlacingArmies[num] = regionPair.second;
+			}
+		}
+	}
+
+	std::cout << std::endl;
+
+	return terrsForPlacingArmies;
 }
 
 // Retrieve the starting Region for all players based on the game map
@@ -135,6 +174,8 @@ Territory<Region>* MapUtility::getStartingLocation(GameMap* map)
 std::map<int, Territory<Region>*> MapUtility::printTerritoriesWithEnemyArmies(GameMap* map, Player* player, int numArmiesToDestroy)
 {
 	std::map<int, Territory<Region>*> terrsWithEnemyArmies;
+
+	std::cout << std::endl;
 
 	for (auto& continentPair : map->terrs)
 	{
@@ -154,5 +195,7 @@ std::map<int, Territory<Region>*> MapUtility::printTerritoriesWithEnemyArmies(Ga
 		}
 	}
 
+	std::cout << std::endl;
+	
 	return terrsWithEnemyArmies;
 }

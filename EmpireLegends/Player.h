@@ -9,9 +9,9 @@ using std::vector;
 using std::map;
 using std::ostream;
 
+class PlayerStrategy;
+
 enum Color { none, red, green, blue, yellow };
-static vector<Player*> currentPlayers;
-static vector<Territory<Region>*> listRegion;
 
 struct Resources
 {
@@ -29,7 +29,6 @@ struct Resources
 	int unplacedArmies{};
 	int totalCoins{};
 	
-	
 	// Abilities
 	int extraMoves{};
 	int extraArmies{};
@@ -43,10 +42,11 @@ struct Resources
 
 class Player
 {
+	PlayerStrategy* strategy;
 public:
 	Player();
-	Player(string name, int coins);
-	Player(string username);
+	Player(string name, int coins, PlayerStrategy* strategy = nullptr);
+	Player(string username, PlayerStrategy* strategy = nullptr);
 	
 	~Player();
 
@@ -66,14 +66,16 @@ public:
 	int getCoins() const;
 	void setCoins(int coins);
 
+	void setStrategy(PlayerStrategy* strategy);
+
 	void payCoin(int price);
 	int getBalance() const;
 	void setBalance(int newBalance);
 
-	void moveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map);
-	void placeNewArmies(int number, Territory<Region>* destination, Territory<Region>* initialRegion);
-	void destroyArmy(int number, Territory<Region>* location, Player* player);
-	void buildCity(Territory<Region>* territory);
+	bool moveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map);
+	bool placeNewArmies(int number, Territory<Region>* destination, Territory<Region>* initialRegion);
+	bool destroyArmy(int number, Territory<Region>* location, Player* player);
+	bool buildCity(Territory<Region>* territory);
 	void addOwnedTerritory(Territory<Region>*territory);
 	void removeOwnedTerritory(Territory<Region>*territory);
 
@@ -89,22 +91,21 @@ public:
 	void applyGood(Good* addedGood);
 	void andOrAction(Card* cardTwoAction, GameMap* gm);
 	Player* chooseEnemy(Territory<Region>* location, int numArmies);
-
+	Territory<Region>* chooseTerritory(map<int, Territory<Region>*> regions);
 private:
 	string playerName;
 	vector<Territory<Region>*> playerTerritories;
 	Hand* playerHand;
 	Resources* pResources;
 
-	Territory<Region>* chooseTerritory(map<int, Territory<Region>*> regions);
 	void executeAction(Action* action, GameMap* map);
 
 	int victoryPoints;
 
 	// Resources
-	static const int TOTAL_NUM_ARMIES = 18;
-	static const int TOTAL_NUM_CITIES = 3;
-	static const int TOTAL_NUM_COINS = 9;
+	static const int MAX_NUM_ARMIES = 18;
+	static const int MAX_NUM_CITIES = 3;
+	static const int DEFAULT_NUM_COINS = 9;
 
 	// Cardset types
 	int forestCards{};

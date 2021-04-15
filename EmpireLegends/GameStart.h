@@ -1,7 +1,6 @@
 #pragma once
 #include "Player.h"
 #include "BiddingFacility.h"
-#include <string>
 
 class GameStart
 {
