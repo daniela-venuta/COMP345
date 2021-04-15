@@ -33,6 +33,9 @@
     <ClInclude Include="StartingPhase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerStrategies.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map.cpp">
@@ -90,6 +93,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StartupPhaseDriver.cpp">
+      <Filter>Driver Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeScoreDriver.cpp">
+      <Filter>Driver Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerStrategies.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerStrategiesDriver.cpp">
       <Filter>Driver Files</Filter>
     </ClCompile>
   </ItemGroup>

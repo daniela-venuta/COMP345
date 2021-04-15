@@ -1,7 +1,7 @@
-#include "Map.h"
-#include "Player.h"
 #include <iostream>
 #include <queue>
+#include "Map.h"
+#include "Player.h"
 
 #pragma region exceptions
 
@@ -198,7 +198,7 @@ bool Territory<T>::removeArmies(int number, Player* player)
 {
     bool removed = false;
 	
-    if (number > 0 && number <= 18 && armies[player] - number > 0)
+    if (number > 0 && number <= 18 && armies[player] - number >= 0)
     {
         armies[player] = armies[player] - number;
         removed = true;
@@ -230,7 +230,7 @@ bool Territory<T>::removeArmies(int number, Player* player)
 template<class T>
 void Territory<T>::addCity(Player* player)
 {
-    cities[player] = armies[player] + 1;
+    cities[player] = cities[player] + 1;
 }
 
 template <class T>

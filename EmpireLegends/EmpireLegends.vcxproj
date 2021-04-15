@@ -142,6 +142,7 @@
     <ClInclude Include="GameStart.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="PlayerStrategies.h" />
     <ClInclude Include="StartingPhase.h" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +155,8 @@
     <ClCompile Include="MainLoopDriver.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapDriver.cpp" />
+    <ClCompile Include="PlayerStrategies.cpp" />
+    <ClCompile Include="PlayerStrategiesDriver.cpp" />
     <ClCompile Include="StartingPhase.cpp" />
     <ClCompile Include="StartupPhaseDriver.cpp" />
     <ClCompile Include="CardActionDriver.cpp" />
