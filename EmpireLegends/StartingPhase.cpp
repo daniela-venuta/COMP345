@@ -1,7 +1,7 @@
 #include "StartingPhase.h"
-#include <algorithm>
 #include "MapLoader.h"
 #include "MapUtility.h"
+#include "BiddingFacility.h"
 
 // Number of armies of non player colour that need to be placed on the map in a two player game
 static const int NUM_ARMIES_TO_PLACE = 10;
@@ -248,34 +248,20 @@ void StartingPhase::placeArmiesOnMap()
 	{
 		int index = i % 2;
 
-		string name = players[index]->getName();
-		std::cout << "\n" << name << ", place the non player army on the board. \n";
+		Player* player = players[index];
+		std::cout << "\n" << player->getName() << ", place the non player army on the board. \n";
 
-		// Keep prompting to enter a continent and region as long as it can't be found in the map
-		bool doesLocationNotExist;
 		do
 		{
 			try
 			{
-				std::cout << "Enter continent: ";
-				std::getline(std::cin, continentName);
-				
-				std::cout << "Enter region: ";
-				std::getline(std::cin, territoryName);
-
-				doesLocationNotExist = false;
-
-				auto continent = map->findTerritory(continentName); // Throws territory not found exception
-				auto region = continent->value->findTerritory(territoryName); // Throws territory not found exception
-				destination = region;
-				
+				destination = player->chooseTerritory(MapUtility::printTerritoriesWithMap(map));
 			}
-			catch(TerritoryNotFoundException& e){
+			catch(TerritoryNotFoundException&){
 				std::cout << (territoryName.empty() ? territoryName : continentName) << " does not exist. Try again. \n"; // Territory or region string was invalid
-				doesLocationNotExist = true;
 			}
 		
-		} while (doesLocationNotExist);
+		} while (destination == nullptr);
 		
 		nonPlayer1->placeNewArmies(1, destination, destination);// Bypassing initial region check
 	}

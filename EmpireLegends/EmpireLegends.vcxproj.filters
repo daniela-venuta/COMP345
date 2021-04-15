@@ -34,6 +34,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameObserver.h">
+    <ClInclude Include="PlayerStrategies.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -100,6 +101,14 @@
     </ClCompile>
     <ClCompile Include="GameObserver.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+      <Filter>Driver Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerStrategies.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerStrategiesDriver.cpp">
+      <Filter>Driver Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

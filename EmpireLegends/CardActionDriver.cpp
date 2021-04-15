@@ -12,9 +12,10 @@
 //	auto* r3 = gameMap->findTerritory("Continent 1")->value->findTerritory("Region 3");
 //	auto* r4 = gameMap->findTerritory("Continent 2")->value->findTerritory("Region 4");
 //
-//	auto* p1 = new Player("PlayerA");
+//	vector<Player*> currentPlayers;
+//	auto* p1 = new Player("PlayerA", 60, new HumanStrategy());
 //	currentPlayers.push_back(p1);
-//	auto* p2 = new Player("PlayerB");
+//	auto* p2 = new Player("PlayerB", 60, new HumanStrategy());
 //	currentPlayers.push_back(p2);
 //	
 //	std::cout << "===== Tests of Main Loop Game - Card Actions =====" << std::endl;
@@ -26,10 +27,10 @@
 //	std::cout << p2->getName() + "'s turn: " << std::endl;
 //	std::cout << "\n";
 //
-//	p2->payCoin(15);//fail sine funds are insufficient
+//	p2->payCoin(15);//fail since funds are insufficient
 //	std::cout << "\n\n";
 //
-//	p1->placeNewArmies(8, r1, r1);//succeed since it's the starting region
+//	p1->placeNewArmies(8, r1, r1);//success since it's the starting region
 //
 //	//MoveArmies (Over land)
 //	std::cout << "-- MoverArmies Tests (Over Land) --" << std::endl;

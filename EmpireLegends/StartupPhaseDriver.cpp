@@ -37,7 +37,6 @@
 //	startingPhase->startGame(map, players, cardDeck, 2);
 //
 //	delete startingPhase;
-//	startingPhase = nullptr;
 //	
 //	return 0;
 //}
