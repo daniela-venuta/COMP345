@@ -10,7 +10,7 @@ public:
 
 	GameMap* loadMap();
 	vector<Player*> detPlayerCount();
-	
+	vector<Player*> detBotCount();
 	//vector<Player*> getPlayers();
 	
 //private:

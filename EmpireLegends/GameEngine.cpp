@@ -94,18 +94,17 @@ void GameEngine::tournamentMode()
 
 	//Game Start Part
 	gameMap  = gameStart->loadMap();
-	players = gameStart->detPlayerCount();
-	int num = players.size();
+	vector<Player*> bots = gameStart->detBotCount();
+
+	int num = bots.size();
 
 	//Starting Phase
 	startPhase = new StartingPhase();
-	players = startPhase->startGame(gameMap,players, setDeck(), num);
-	for (auto temp : players)
-		std::cout << temp->getName();
+	startPhase->startGameBot(gameMap, bots, setDeck(), num);
 
 	// Maingameloop	
-	mainGame = new MainGame(nullptr, deck, players);	
-	mainGame->mainGameloop(numOfTurns(players.size()));
+	mainGame = new MainGame(nullptr, setDeck(), bots);
+	mainGame->mainGameloop(10);
 }
 
 int GameEngine::numOfTurns(int playerCount) {

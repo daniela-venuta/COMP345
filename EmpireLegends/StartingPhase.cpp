@@ -108,7 +108,7 @@ Color ColorUtilities::getColor(int index)
 // Default constructor for the Starting Phase to initialize all pointers
 StartingPhase::StartingPhase()
 {
-	nonPlayer1 = new Player("CPU1", 0);
+	//nonPlayer1 = new Player("CPU1", 0);
 	
 	colorUtilities = new ColorUtilities();
 	cardDeck = nullptr;
@@ -139,6 +139,19 @@ vector<Player*> StartingPhase::startGame(GameMap* gameMap, const vector<Player*>
 	startBidding();
 
 	return players;
+}
+
+vector<Player*> StartingPhase::startGameBot(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers) {
+	this->players = playerVector;
+	this->cardDeck = deck;
+	this->numOfPlayers = numPlayers;
+	this->map = gameMap;
+	shuffleCardDeck();
+	assignBotResources();
+	setupStartingTerritories();
+
+	return players;
+
 }
 
 // Retrieve number of starting coins per player
@@ -221,6 +234,45 @@ void StartingPhase::assignPlayerResources()
 
 		// assign coins
 		resources->totalCoins = playerCoins;
+	}
+}
+
+void StartingPhase::assignBotResources() {
+	for (int i = 0; i < numOfPlayers; i++)
+	{
+		bool isColorUnavailable = true;
+		
+		const Player* player = players[i];
+		Resources* resources = players[i]->getResources();
+		Color col = Color::none;
+
+		while (isColorUnavailable)
+		{
+			int colorNum = rand() % 4 + 1;
+			col = colorUtilities->getColor(colorNum);
+			isColorUnavailable = !colorUtilities->getColorAvailability(col);
+
+			if (isColorUnavailable)
+			{
+				std::cout << "\nColor unavailable, try again \n";
+			}
+			else 
+			{
+				std::cout << player->getName() + "'s color is " << col << std::endl;
+			}
+		}
+
+		resources->playerColor = col;
+
+		// mark color as unavailable
+		colorUtilities->setColorAvailability(col, false);
+
+		// assign cities and armies
+		resources->unplacedCities = 3;
+		resources->unplacedArmies = 18;
+
+		// assign coins
+		resources->totalCoins = 14;
 	}
 }
 

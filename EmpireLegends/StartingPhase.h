@@ -26,10 +26,12 @@ public:
 	~StartingPhase();
 
 	vector<Player*> startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
+	vector<Player*> startGameBot(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
 
 private:
 	void shuffleCardDeck() const;
 	void assignPlayerResources();
+	void assignBotResources();
 	void setupStartingTerritories();
 	void placeArmiesOnMap();
 	void setupNonPlayers();
