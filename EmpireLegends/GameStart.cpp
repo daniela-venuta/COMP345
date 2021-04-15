@@ -21,10 +21,6 @@ void GameStart::loadMap() {
 
 	MapLoader* mapLoader = new MapLoader();
 
-	std::cout << "------------------------------" << std::endl;
-	std::cout << "Eight-Minute-Empire: Legends" << std::endl;
-	std::cout << "-----------------------------" << std::endl;
-
 	std::cout << "Please enter the type of map you wish to play with." << std::endl;
 	std::cout << "	- Enter 1 for a rectangular map (4 continents)." << std::endl;
 	std::cout << "	- Enter 2 for an L-shaped map (3 continents)." << std::endl;
@@ -51,7 +47,7 @@ void GameStart::loadMap() {
 			std::cout << "	- Enter 3 for an T-shaped map (4 continents)." << std::endl;
 			std::cin >> mapType;
 		}
-	}
+	}	
 }
 
 void GameStart::detPlayerCount() {
@@ -84,7 +80,7 @@ void GameStart::detPlayerCount() {
 
 	for (auto i = 0; i < numOfPlayers; i++)
 	{
-		std::cout << "Enter player name " << i + 1 << ": ";
+		std::cout << "\nEnter player name " << i + 1 << ": ";
 		getline(std::cin, playerName);
 		players.push_back(new Player(playerName, playerCoins));
 		std::cout << "Welcome " << playerName << " !" << std::endl;

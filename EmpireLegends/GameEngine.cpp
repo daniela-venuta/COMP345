@@ -5,21 +5,20 @@
 GameEngine::GameEngine()
 {
 	 gameStart = nullptr;
-	 gameMap = nullptr;
+	// gameMap = nullptr;
 }
 
 GameEngine::~GameEngine()
 {
 
 }
+
 void GameEngine::singleMode()
 {
 	std::cout << "\n-------------------" << std::endl;
 	std::cout << "Single Game Mode" << std::endl; 
 	std::cout << "------------------" << std::endl;
-	
-	gameStart->loadMap(); // throws an error
-	gameStart->detPlayerCount(); // throws an error
+	//gameStart->loadMap(); 
 }
 
 void GameEngine::tournamentMode()
@@ -27,7 +26,6 @@ void GameEngine::tournamentMode()
 	std::cout << "\n----------------------" << std::endl;
 	std::cout << "Tournament Game Mode" << std::endl;
 	std::cout << "----------------------" << std::endl;
-	
-	gameStart->loadMap(); // throws an  error
-	gameStart->detPlayerCount(); // throws an error
+	gameStart->loadMap();
 }
+	
