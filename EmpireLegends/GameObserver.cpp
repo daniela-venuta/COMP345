@@ -13,17 +13,17 @@ Observer::Observer()
 #pragma endregion
 
 #pragma region Subject
-void Subject::Attach(Observer* o)
+void Observable::Attach(Observer* o)
 {
 	_observers->push_back(o);
 }
 
-void Subject::Detach(Observer* o)
+void Observable::Detach(Observer* o)
 {
 	_observers->remove(o);
 }
 
-void Subject::Notify()
+void Observable::Notify()
 {
 	list<Observer*>::iterator i = _observers->begin();
 	for (; i != _observers->end(); i++)
@@ -32,12 +32,12 @@ void Subject::Notify()
 	}
 }
 
-Subject::Subject()
+Observable::Observable()
 {
 	_observers = new list<Observer*>;
 }
 
-Subject::~Subject()
+Observable::~Observable()
 {
 	delete _observers;
 }

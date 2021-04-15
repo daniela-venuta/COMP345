@@ -11,14 +11,14 @@ protected:
 	Observer();
 };
 
-class Subject
+class Observable
 {
 public:
 	virtual void Attach(Observer* o); // push_back(o)
 	virtual void Detach(Observer* o); // remove(o)
 	virtual void Notify(); // calls update on list of all observer in a for loop
-	Subject();
-	~Subject();
+	Observable();
+	~Observable();
 private:
 	list<Observer*>* _observers;
 };
