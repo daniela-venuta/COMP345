@@ -149,6 +149,7 @@ vector<Player*> StartingPhase::startGameBot(GameMap* gameMap, const vector<Playe
 	shuffleCardDeck();
 	assignBotResources();
 	setupStartingTerritories();
+	startBiddingBot();
 
 	return players;
 
@@ -338,8 +339,19 @@ void StartingPhase::setupNonPlayers()
 void StartingPhase::startBidding()
 {
 	// Players place bids
-	string maxBidder = BiddingFacility::placeBids(players);
-	for ( int i = 0; i< players.size(); i ++) 
+	string maxBidder = BiddingFacility::placeBids(players,false,true);
+	maxBidderFirst(maxBidder);
+}
+
+void StartingPhase::startBiddingBot()
+{
+	string maxBidder = BiddingFacility::placeBids(players,true,false);
+	maxBidderFirst(maxBidder);
+}
+
+void StartingPhase::maxBidderFirst(string maxBidder)
+{
+	for (int i = 0; i < players.size(); i++)
 	{
 		auto temp = players[i];
 		if (temp->getName() == maxBidder)
@@ -353,6 +365,4 @@ void StartingPhase::startBidding()
 			continue;
 		}
 	}
-
-	
 }

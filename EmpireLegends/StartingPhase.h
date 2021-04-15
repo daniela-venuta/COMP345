@@ -36,6 +36,8 @@ private:
 	void placeArmiesOnMap();
 	void setupNonPlayers();
 	void startBidding();
+	void startBiddingBot();
+	void maxBidderFirst(string maxBidder);
 
 	int setNumberOfCoins(int numofPlayers);
 

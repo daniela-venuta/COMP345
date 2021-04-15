@@ -25,24 +25,42 @@ int BiddingFacility::getPlayerBid(Player* player)
 	return bids[player];
 }
 
- string BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
+ string BiddingFacility::placeBids(vector<Player*> biddingPlayers, bool botThere, bool humanThere) {
 
 	auto playerBid = 0;
 	string temp;
 
 	// each players places their bid
-	for (auto& player : biddingPlayers)
+	if(botThere == false && humanThere == true)
 	{
-		do {
-			std::cout << "\n" << player->getName() << " place your bid: ";
-			std::cin >> playerBid;
-		} while (playerBid > player->getCoins() || playerBid < 0);
+		for (auto& player : biddingPlayers)
+		{
+			do {
+				std::cout << "\n" << player->getName() << " place your bid: ";
+				std::cin >> playerBid;
+			} while (playerBid > player->getCoins() || playerBid < 0);
 
-		system("cls");
+			system("cls");
 
-		addPlayerBid(player, playerBid);
+			addPlayerBid(player, playerBid);
+		}
 	}
+	else if(botThere == true && humanThere == false)
+	{
+		for (auto& player : biddingPlayers)
+		{
+			do {
+				std::cout << "\n" << player->getName() << " place your bid: ";
+				playerBid = rand() % player->getCoins() + 1;
+			} while (playerBid > player->getCoins() || playerBid < 0);
 
+			system("cls");
+
+			addPlayerBid(player, playerBid);
+		}
+	}
+	else {}
+	
 	std::cout << "--------------------------" << std::endl;
 	std::cout << "WHO WILL GO FIRST??:" << std::endl;
 	std::cout << "--------------------------\n" << std::endl;
@@ -103,3 +121,5 @@ int BiddingFacility::getPlayerBid(Player* player)
 	std::cout << "\nThe player to start is " << maxBidder->getName() << "! They now have " << maxBidder->getCoins() << " coins.\n";
 	return maxBidder->getName();
 }
+
+
