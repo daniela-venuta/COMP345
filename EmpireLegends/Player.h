@@ -3,12 +3,13 @@
 #include <vector>
 #include "Map.h"
 #include "Cards.h"
-#include "PlayerStrategies.h"
 
 using std::string;
 using std::vector;
 using std::map;
 using std::ostream;
+
+class PlayerStrategy;
 
 enum Color { none, red, green, blue, yellow };
 

@@ -1,7 +1,7 @@
 #include "StartingPhase.h"
-#include <algorithm>
 #include "MapLoader.h"
 #include "MapUtility.h"
+#include "BiddingFacility.h"
 
 // Number of armies of non player colour that need to be placed on the map in a two player game
 static const int NUM_ARMIES_TO_PLACE = 10;
@@ -257,7 +257,7 @@ void StartingPhase::placeArmiesOnMap()
 			{
 				destination = player->chooseTerritory(MapUtility::printTerritoriesWithMap(map));
 			}
-			catch(TerritoryNotFoundException& e){
+			catch(TerritoryNotFoundException&){
 				std::cout << (territoryName.empty() ? territoryName : continentName) << " does not exist. Try again. \n"; // Territory or region string was invalid
 			}
 		

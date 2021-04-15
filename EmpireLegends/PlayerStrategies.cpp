@@ -1,7 +1,12 @@
-#include <stdlib.h>
-#include <time.h>
+#include <cstdlib>
+#include <ctime>
 #include "PlayerStrategies.h"
 #include "MapUtility.h"
+
+ostream& operator<<(ostream& os, const PlayerStrategy& strategy)
+{
+	return os << strategy.name << std::endl;
+}
 
 Action* HumanStrategy::chooseAction(Action* action1, Action* action2)
 {
@@ -94,10 +99,17 @@ void HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 			// Place new army(ies) on the starting region or on a chosen region that has an owned city
 			const int numArmies = action->getMultiplier();
 			std::cout << "You may place " << numArmies << " armies. Please choose a region: \n";
-			Territory<Region>* destination = player->chooseTerritory(MapUtility::printTerritoriesWithMap(map));
+			Territory<Region>* destination = player->chooseTerritory(MapUtility::printTerritoriesForPlacingArmies(map, player));
 			actionDone = player->placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
 		}
 	}
+}
+
+Territory<Region>* NonHumanStrategy::getRandomTerritory(std::map<int, Territory<Region>*> territories)
+{
+	auto destinationItr = territories.begin();
+	std::advance(destinationItr, rand() % territories.size());
+	return destinationItr->second;
 }
 
 void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
@@ -114,6 +126,8 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 		//Build City
 		if (build != std::string::npos)
 		{
+			std::cout << player->getName() << " may build a city in one of the regions with at least 1 army. " << std::endl;
+
 			std::map<int, Territory<Region>*> destinations = MapUtility::printTerritoriesWithArmies(map, player);
 
 			if (destinations.empty())
@@ -122,8 +136,7 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 				return;
 			}
 
-			std::cout << player->getName() << " may build a city in one of the regions with at least 1 army. " << std::endl;
-			actionDone = player->buildCity(destinations.at(rand() % destinations.size())); // Selecting random destination
+			actionDone = player->buildCity(getRandomTerritory(destinations)); // Selecting random destination
 		}
 		//Move Armies
 		else if (move != std::string::npos)
@@ -131,10 +144,10 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 			std::cout << player->getName() << " may move" << action->getMultiplier() << " armies." << std::endl;
 
 			std::map<int, Territory<Region>*> froms = MapUtility::printTerritoriesWithArmies(map, player);
-			Territory<Region>* from = froms.at(rand() % froms.size()); // Selecting random initial region
+			Territory<Region>* from = getRandomTerritory(froms); // Selecting random initial region
 
 			std::map<int, Territory<Region>*> tos = MapUtility::printTerritoriesWithArmies(map, player);
-			Territory<Region>* to = tos.at(rand() % tos.size()); // Selecting random destination;
+			Territory<Region>* to = getRandomTerritory(tos); // Selecting random destination
 
 			if (froms.empty() || tos.empty())
 			{
@@ -144,7 +157,7 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 
 			while (to == from)
 			{
-				to = tos.at(rand() % tos.size());
+				to = getRandomTerritory(tos);
 			}
 
 			actionDone = player->moveArmies(action->getMultiplier(), from, to, map);
@@ -153,6 +166,8 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 		else if (destroy != std::string::npos)
 		{
 			const int numArmies = action->getMultiplier();
+			std::cout << player->getName() << " may destroy " << numArmies << " enemy armies. Choosing a region. \n";
+			
 			std::map<int, Territory<Region>*> locations = MapUtility::printTerritoriesWithEnemyArmies(map, player, numArmies);
 
 			if (locations.empty())
@@ -161,27 +176,39 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 				return;
 			}
 
-			std::cout << player->getName() << " may destroy " << numArmies << " enemy armies. Choosing a region. \n";
+			Territory<Region>* location = getRandomTerritory(locations);
+			Player* chosenEnemy = nullptr;
 
-			Territory<Region>* location = locations.at(rand() % locations.size());
-			Player* enemyPlayer = player->chooseEnemy(location, numArmies);
+			bool invalid = true;
+			do
+			{
+				auto newEnemyItr = location->armies.begin();
+				std::advance(newEnemyItr, rand() % location->armies.size());
 
-			actionDone = player->destroyArmy(numArmies, location, enemyPlayer);
+				if (player != newEnemyItr->first && chosenEnemy != newEnemyItr->first)
+				{
+					invalid = false;
+					chosenEnemy = newEnemyItr->first;
+				}
+				
+			} while (invalid);
+
+			actionDone = player->destroyArmy(numArmies, location, chosenEnemy);
 		}
 		//Place New Armies
 		else if (place != std::string::npos)
 		{
-			std::map<int, Territory<Region>*> destinations = MapUtility::printTerritoriesWithMap(map);
-
 			const int numArmies = action->getMultiplier();
 			std::cout << player->getName() << " may place " << numArmies << " armies. Choosing a region.\n";
+
+			const std::map<int, Territory<Region>*> destinations = MapUtility::printTerritoriesForPlacingArmies(map, player);
 			Territory<Region>* destination;
 
 			// Selecting a destination until it's valid
 			do
 			{
-				destination = destinations.at(rand() % destinations.size());
-			} 			while (destination != MapUtility::getStartingLocation(map) && destination->getPlacedCities(player) == 0);
+				destination = getRandomTerritory(destinations);
+			} while (destination != MapUtility::getStartingLocation(map) && destination->getPlacedCities(player) == 0);
 
 			actionDone = player->placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
 		}
