@@ -436,17 +436,17 @@ void driveComputeScore()
 	delete mapLoader;
 	delete mainGame;
 }
-
-int main()
-{
-	std::cout << std::endl << "------------------------------------" << std::endl;
-	std::cout << "============ Game Start DRIVER ============";
-	std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
-	driveGameStart();
+//
+//int main()
+//{
 //	//std::cout << std::endl << "------------------------------------" << std::endl;
-//	//std::cout << "============ Startup Phase DRIVER ============";
+//	//std::cout << "============ Game Start DRIVER ============";
 //	//std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
-//	//driveStartUp();
+//	//driveGameStart();
+//	std::cout << std::endl << "------------------------------------" << std::endl;
+//	std::cout << "============ Startup Phase DRIVER ============";
+//	std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
+//	driveStartUp();
 //	//std::cout << std::endl << "------------------------------------" << std::endl;
 //	//std::cout << "============ Main Loop DRIVER ============";
 //	//std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
@@ -464,5 +464,5 @@ int main()
 //	//std::cout << std::endl << "------------------------------------" << std::endl << std::endl;
 //	//driveComputeScore();
 //
-	return 0;
-}
+//	return 0;
+//}

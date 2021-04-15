@@ -94,9 +94,8 @@ void GameEngine::tournamentMode()
 
 	//Game Start Part
 	gameMap  = gameStart->loadMap();
-	int num = gameStart->detPlayerCount();
-	players = gameStart->getPlayers();
-
+	players = gameStart->detPlayerCount();
+	int num = players.size();
 
 	//Starting Phase
 	startPhase = new StartingPhase();

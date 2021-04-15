@@ -7,16 +7,16 @@
 GameStart::GameStart() {
 	//  typeMap = 0;
 	  //numOfPlayers = 0;
-	players = {};
+	//players = {};
 	//biddingPlayers = {};
 }
 
 GameStart::~GameStart() {
 	//typeMap = 0;
 	//numOfPlayers = 0;
-	for (Player* player : players) {
+	/*for (Player* player : players) {
 		delete player;
-	}
+	}*/
 }
 
 GameMap* GameStart::loadMap() {
@@ -63,11 +63,12 @@ GameMap* GameStart::loadMap() {
 	return gameMap;
 }
 
-int GameStart::detPlayerCount() {
+vector<Player*> GameStart::detPlayerCount() {
 
 	int playerCoins = 0;
 	string playerName = "";
 	int numOfPlayers = 0;
+	vector<Player*> players = {};
 	
 	while (numOfPlayers < 2 || numOfPlayers > 4)
 	{
@@ -96,15 +97,16 @@ int GameStart::detPlayerCount() {
 	{
 		std::cout << "\nEnter player name " << i + 1 << ": ";
 		getline(std::cin, playerName);
-		players.push_back(new Player(playerName, playerCoins));
+		Player* temp = new Player(playerName, playerCoins);
+		players.push_back(temp);
 		std::cout << "Welcome " << playerName << " !" << std::endl;
 	}
 
 	std::cout << "\nEach player gets " << playerCoins << " coins." << std::endl;
-	return numOfPlayers;
-}
-
-vector<Player*> GameStart::getPlayers()
-{
 	return players;
 }
+
+//vector<Player*> GameStart::getPlayers()
+//{
+//	return players;
+//}

@@ -1,3 +1,4 @@
+#pragma once
 #include "Player.h"
 #include "BiddingFacility.h"
 #include <string>
@@ -9,13 +10,13 @@ public:
 	~GameStart();
 
 	GameMap* loadMap();
-	int detPlayerCount();
+	vector<Player*> detPlayerCount();
 	
-	vector<Player*> getPlayers();
+	//vector<Player*> getPlayers();
 	
-private:
+//private:
 	//int typeMap;
 	//int numOfPlayers;
-	vector<Player*> players;
+	//vector<Player*> players;
 	//vector<Player*> biddingPlayers;
 };
