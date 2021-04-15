@@ -8,12 +8,14 @@ public:
 	GameStart();
 	~GameStart();
 
-	void loadMap();
-	void detPlayerCount();
-
+	GameMap* loadMap();
+	int detPlayerCount();
+	
+	vector<Player*> getPlayers();
+	
 private:
-	int mapType;
-	int numOfPlayers;
+	//int typeMap;
+	//int numOfPlayers;
 	vector<Player*> players;
-	vector<Player*> biddingPlayers;
+	//vector<Player*> biddingPlayers;
 };

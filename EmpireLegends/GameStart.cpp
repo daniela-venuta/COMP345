@@ -5,56 +5,70 @@
 #include <iostream>
 
 GameStart::GameStart() {
-	mapType = 0;
-	numOfPlayers = 0;
+	//  typeMap = 0;
+	  //numOfPlayers = 0;
+	players = {};
+	//biddingPlayers = {};
 }
 
 GameStart::~GameStart() {
-	mapType = 0;
-	numOfPlayers = 0;
+	//typeMap = 0;
+	//numOfPlayers = 0;
 	for (Player* player : players) {
 		delete player;
 	}
 }
 
-void GameStart::loadMap() {
+GameMap* GameStart::loadMap() {
 
 	MapLoader* mapLoader = new MapLoader();
-
+	int x = 0;
 	std::cout << "Please enter the type of map you wish to play with." << std::endl;
 	std::cout << "	- Enter 1 for a rectangular map (4 continents)." << std::endl;
 	std::cout << "	- Enter 2 for an L-shaped map (3 continents)." << std::endl;
 	std::cout << "	- Enter 3 for a T-shaped map (4 continents)." << std::endl;
-	std::cin >> mapType;
+	std::cin >>x;
 
+	while (std::cin.fail()) {
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cout << "Bad entry.  Enter a NUMBER: ";
+		std::cin >> x;
+	}
+
+	//typeMap = x;
 	// Choose which map type is being used
-	switch (mapType) {
+	GameMap* gameMap = nullptr;
+	switch (x) {
 	case 1:
-		mapLoader->load("map_rectangle.json");
+		gameMap = mapLoader->load("map_rectangle.json");
 		break;
 	case 2:
-		mapLoader->load("map_L.json");
+		gameMap = mapLoader->load("map_L.json");
 		break;
 	case 3:
-		mapLoader->load("map_T.json");
+		gameMap = mapLoader->load("map_T.json");
 		break;
 	default:
-		while (mapType < 1 || mapType > 3) {
+		while (x < 1 || x > 3) {
 			std::cout << "INVALID selection." << std::endl;
 			std::cout << "Please enter the type of map you wish to play with." << std::endl;
 			std::cout << "	- Enter 1 for a rectangular map (4 continents)." << std::endl;
 			std::cout << "	- Enter 2 for an L-shaped map (3 continents)." << std::endl;
 			std::cout << "	- Enter 3 for an T-shaped map (4 continents)." << std::endl;
-			std::cin >> mapType;
+			std::cin >> x;
 		}
-	}	
+	}
+	 
+	return gameMap;
 }
 
-void GameStart::detPlayerCount() {
+int GameStart::detPlayerCount() {
 
-	int playerCoins;
-	string playerName;
-
+	int playerCoins = 0;
+	string playerName = "";
+	int numOfPlayers = 0;
+	
 	while (numOfPlayers < 2 || numOfPlayers > 4)
 	{
 		std::cout << "How many players will be playing? Please select a number between 2 and 4: ";
@@ -75,7 +89,7 @@ void GameStart::detPlayerCount() {
 			break;
 	}
 
-	players.clear();
+	//players.clear();
 	std::cin.ignore();
 
 	for (auto i = 0; i < numOfPlayers; i++)
@@ -87,4 +101,10 @@ void GameStart::detPlayerCount() {
 	}
 
 	std::cout << "\nEach player gets " << playerCoins << " coins." << std::endl;
+	return numOfPlayers;
+}
+
+vector<Player*> GameStart::getPlayers()
+{
+	return players;
 }
