@@ -436,7 +436,7 @@ void driveComputeScore()
 	delete mapLoader;
 	delete mainGame;
 }
-//
+
 //int main()
 //{
 //	//std::cout << std::endl << "------------------------------------" << std::endl;

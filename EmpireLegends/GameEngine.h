@@ -1,12 +1,14 @@
 #pragma once
 #include "GameStart.h"
 #include "StartingPhase.h"
+#include "MainGame.h"
 
 class GameEngine {
 
 private:
 	GameStart* gameStart; 
 	GameMap* gameMap;
+	MainGame* mainGame; 
 	vector<Player*> players;
 	StartingPhase* startPhase;
 	Deck* deck;
@@ -17,4 +19,5 @@ public:
 	Deck* setDeck();
 	void singleMode();
 	void tournamentMode(); 
+	int numOfTurns(int size); 
 };

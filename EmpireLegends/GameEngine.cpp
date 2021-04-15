@@ -1,6 +1,6 @@
 #include "GameEngine.h"
-
 #include <iostream>
+
 
 GameEngine::GameEngine()
 {
@@ -99,9 +99,35 @@ void GameEngine::tournamentMode()
 
 	//Starting Phase
 	startPhase = new StartingPhase();
-	startPhase->startGame(gameMap,players,deck,num);
+	startPhase->startGame(gameMap,players, setDeck(), num);
 
+	// Maingameloop	
+	mainGame = new MainGame(nullptr, deck, players);	
+	mainGame->mainGameloop(numOfTurns(players.size()));
 }
 
+int GameEngine::numOfTurns(int playerCount) {
 
+	switch (playerCount) {
+	case 2:
+		players.push_back(new Player("John", 14));
+		players.push_back(new Player("Bob", 14));
+		return  10;
+		
+	case 3:
+		players.push_back(new Player("John", 11));
+		players.push_back(new Player("Bob", 11));
+		players.push_back(new Player("Anna", 11));
+		return 5;
+		
+	case 4:
+		players.push_back(new Player("John", 9));
+		players.push_back(new Player("Bob", 9));
+		players.push_back(new Player("Jack", 9));
+		players.push_back(new Player("Anna", 9));
+		return 3;
+		
+	}
+	
+}
 	

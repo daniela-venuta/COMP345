@@ -134,8 +134,8 @@ void StartingPhase::startGame(GameMap* gameMap, const vector<Player*> playerVect
 	shuffleCardDeck();
 	assignPlayerResources();
 	setupStartingTerritories();
-	setupNonPlayers();
-	placeArmiesOnMap();
+	//setupNonPlayers();
+	//placeArmiesOnMap();
 	startBidding();
 }
 
