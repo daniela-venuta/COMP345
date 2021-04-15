@@ -51,6 +51,7 @@ public:
 // Non human strategy. Execution is the same for Greedy and Moderate, but the choice method changes.
 class NonHumanStrategy : public PlayerStrategy
 {
+private:
 	static Territory<Region>* getRandomTerritory(std::map<int, Territory<Region>*> territories);
 protected:
 	NonHumanStrategy(const string& stratName) : PlayerStrategy("non human: " + stratName) {}
@@ -58,6 +59,7 @@ public:
 	void executeAction(Action* action, Player* player, GameMap* map) override;
 };
 
+// Prioritizes building cities and destroying armies
 class GreedyStrategy : public NonHumanStrategy
 {
 public:
@@ -65,6 +67,7 @@ public:
 	Action* chooseAction(Action* action1, Action* action2) override;
 };
 
+// Prioritizes placing new armies on the board
 class ModerateStrategy : public NonHumanStrategy
 {
 public:
