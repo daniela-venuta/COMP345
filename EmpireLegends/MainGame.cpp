@@ -73,25 +73,35 @@ void MainGame::mainGameloop(int numOfTurns) {
 		std::cout << "The number of turns " << numOfTurns << std::endl;
 
 		for (int i = 0; i < players->getNbPlayers(); i++) {
-
+			
 			Player* player = getCurrentPlayer();
 			std::cout << "\n\nPlayer " << player->getName() << std::endl;
 
 			Card* faceCard = nullptr;
 
-			while (faceCard == nullptr) {
-				const int cardPosition = pickACard();
-				std::cout << "\n";
-
-				Hand* deckHand = deck->getHand();
-
-				faceCard = deckHand->exchange(cardPosition, player);
-
-				if (faceCard == nullptr) {
-					std::cout << "Card not added to player" << std::endl;
-				}
+			if (player->getName().find("Bot"))
+			{
 			}
-			std::cout << "Picked card: " << std::endl << *faceCard << std::endl;
+			else 
+			{
+				while (faceCard == nullptr) {
+					const int cardPosition = pickACard();
+					std::cout << "\n";
+
+					Hand* deckHand = deck->getHand();
+
+					faceCard = deckHand->exchange(cardPosition, player);
+
+					if (faceCard == nullptr) {
+						std::cout << "Card not added to player" << std::endl;
+					}
+				}
+				std::cout << "Picked card: " << std::endl << *faceCard << std::endl;
+			}
+
+			
+
+			
 
 			player->addCard(faceCard);
 

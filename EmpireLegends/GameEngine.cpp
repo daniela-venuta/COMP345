@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 #include <iostream>
+#include <fstream>
 
 
 GameEngine::GameEngine()
@@ -100,10 +101,11 @@ void GameEngine::tournamentMode()
 
 	//Starting Phase
 	startPhase = new StartingPhase();
-	startPhase->startGameBot(gameMap, bots, setDeck(), num);
+
+	bots = startPhase->startGameBot(gameMap, bots, setDeck(), num);
 
 	// Maingameloop	
-	mainGame = new MainGame(nullptr, setDeck(), bots);
+	mainGame = new MainGame(gameMap, setDeck(), bots);
 	mainGame->mainGameloop(10);
 }
 

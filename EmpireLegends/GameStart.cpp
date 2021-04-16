@@ -136,10 +136,10 @@ vector<Player*> GameStart::detBotCount() {
 	}
 
 	// Assign Bots to their strategies
-	Player* greedy1 = new Player("Greedy 1", playerCoins, new GreedyStrategy());
-	Player* greedy2 = new Player("Greedy 2", playerCoins, new GreedyStrategy());
-	Player* moderate1 = new Player("Moderate 1", playerCoins, new ModerateStrategy());
-	Player* moderate2 = new Player("Moderate 2", playerCoins, new ModerateStrategy());
+	Player* greedy1 = new Player("Greedy Bot 1", playerCoins, new GreedyStrategy());
+	Player* greedy2 = new Player("Greedy Bot 2", playerCoins, new GreedyStrategy());
+	Player* moderate1 = new Player("Moderate Bot 1", playerCoins, new ModerateStrategy());
+	Player* moderate2 = new Player("Moderate Bot 2", playerCoins, new ModerateStrategy());
 
 	switch (strategyOfBots) {
 	case 1:

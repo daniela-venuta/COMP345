@@ -1,8 +1,10 @@
 #include "GameEngine.h"
 #include <iostream>
+#include <fstream>
 
 int main() {
 
+	
 	std::cout << "-----------------------------------------" << std::endl;
 	std::cout << "Welcome to the Eight-Minute Empire Game " << std::endl;
 	std::cout << "-----------------------------------------" << std::endl;
@@ -33,6 +35,7 @@ int main() {
 	}
 
 	delete gameEngine;
+	
 	return 0;
 
 }
