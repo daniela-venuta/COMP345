@@ -48,7 +48,7 @@ Action* HumanStrategy::chooseAction(Action* action1, Action* action2)
 	return chosenAction;
 }
 
-void HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
+bool HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 {
 	const std::size_t build = action->getName().find("Build");
 	const std::size_t destroy = action->getName().find("Destroy");
@@ -103,6 +103,7 @@ void HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 			actionDone = player->placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
 		}
 	}
+	return actionDone;
 }
 
 Territory<Region>* NonHumanStrategy::getRandomTerritory(std::map<int, Territory<Region>*> territories)
@@ -112,7 +113,7 @@ Territory<Region>* NonHumanStrategy::getRandomTerritory(std::map<int, Territory<
 	return destinationItr->second;
 }
 
-void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
+bool NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 {
 	const std::size_t build = action->getName().find("Build");
 	const std::size_t destroy = action->getName().find("Destroy");
@@ -133,7 +134,7 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 			if (destinations.empty())
 			{
 				std::cout << "There is no region where to build a city." << std::endl;
-				return;
+				return false;
 			}
 
 			actionDone = player->buildCity(getRandomTerritory(destinations)); // Selecting random destination
@@ -141,7 +142,7 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 		//Move Armies
 		else if (move != std::string::npos)
 		{
-			std::cout << player->getName() << " may move" << action->getMultiplier() << " armies." << std::endl;
+			std::cout << player->getName() << " may move " << action->getMultiplier() << " armies." << std::endl;
 
 			std::map<int, Territory<Region>*> froms = MapUtility::printTerritoriesWithArmies(map, player);
 			Territory<Region>* from = getRandomTerritory(froms); // Selecting random initial region
@@ -152,7 +153,7 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 			if (froms.empty() || tos.empty())
 			{
 				std::cout << "Moving armies is currently impossible." << std::endl;
-				return;
+				return false;
 			}
 
 			while (to == from)
@@ -173,7 +174,7 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 			if (locations.empty())
 			{
 				std::cout << "There is no region where " << numArmies << " armies can be destroyed." << std::endl;
-				return;
+				return false;
 			}
 
 			Territory<Region>* location = getRandomTerritory(locations);
@@ -213,6 +214,8 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 			actionDone = player->placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
 		}
 	}
+
+	return actionDone;
 }
 
 Action* GreedyStrategy::chooseAction(Action* action1, Action* action2)

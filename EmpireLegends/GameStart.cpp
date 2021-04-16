@@ -115,6 +115,45 @@ vector<Player*> GameStart::detPlayerCount() {
 	return players;
 }
 
+vector<Player*> GameStart::detPlayerBotCount()
+{
+	int playerCoins = 0;
+	string playerName = "";
+	int numOfPlayers = 2;
+	vector<Player*> players = {};
+	int strategyOfBots = 0;
+
+	std::cout << "You'll be playing against 1 bot."<<std::endl;
+	std::cout << "What type of bot do you want to play against:" << std::endl;
+	while (strategyOfBots < 1 || strategyOfBots > 3)
+	{
+		std::cout << "What type of bot do you want to play against:" << std::endl;
+		std::cout << "1 - Greedy" << std::endl;
+		std::cout << "2 - Moderate" << std::endl;
+		std::cin >> strategyOfBots;
+	};
+
+	
+	Player* bot = new Player();
+	
+	switch (strategyOfBots) {
+	case 1:
+		bot= new Player("GreedyBot", playerCoins, new GreedyStrategy());
+		players.push_back(bot);
+		break;
+
+	case 2:
+		bot = new Player("ModerateBot", playerCoins, new ModerateStrategy());
+		players.push_back(bot);
+		break;
+	}
+
+	std::cout << "Human is playing against " + bot->getName() << std::endl;
+	std::cin.ignore();
+
+	return players;
+}
+
 //vector<Player*> GameStart::getPlayers()
 //{
 //	return players;
@@ -136,10 +175,10 @@ vector<Player*> GameStart::detBotCount() {
 	}
 
 	// Assign Bots to their strategies
-	Player* greedy1 = new Player("Greedy Bot 1", playerCoins, new GreedyStrategy());
-	Player* greedy2 = new Player("Greedy Bot 2", playerCoins, new GreedyStrategy());
-	Player* moderate1 = new Player("Moderate Bot 1", playerCoins, new ModerateStrategy());
-	Player* moderate2 = new Player("Moderate Bot 2", playerCoins, new ModerateStrategy());
+	Player* greedy1 = new Player("GreedyBot1", playerCoins, new GreedyStrategy());
+	Player* greedy2 = new Player("GreedyBot2", playerCoins, new GreedyStrategy());
+	Player* moderate1 = new Player("ModerateBot1", playerCoins, new ModerateStrategy());
+	Player* moderate2 = new Player("ModerateBot2", playerCoins, new ModerateStrategy());
 
 	switch (strategyOfBots) {
 	case 1:
@@ -149,7 +188,7 @@ vector<Player*> GameStart::detBotCount() {
 
 	case 2:
 		bots.push_back(moderate1);
-		bots.push_back(greedy1);
+		bots.push_back(greedy2);
 		break;
 
 	case 3:

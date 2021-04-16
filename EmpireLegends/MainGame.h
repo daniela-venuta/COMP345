@@ -32,4 +32,5 @@ public:
 	int pickACard();
 	int botPickACard();
 	void chooseWinner();
+	bool doAction(Card* card, Player* player);
 };

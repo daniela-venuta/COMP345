@@ -67,6 +67,7 @@ public:
 	void setCoins(int coins);
 
 	void setStrategy(PlayerStrategy* strategy);
+	PlayerStrategy* getStrategy();
 
 	void payCoin(int price);
 	int getBalance() const;
@@ -89,7 +90,7 @@ public:
 
 	void addCard(Card* card);
 	void applyGood(Good* addedGood);
-	void andOrAction(Card* cardTwoAction, GameMap* gm);
+	bool andOrAction(Card* cardTwoAction, GameMap* gm);
 	Player* chooseEnemy(Territory<Region>* location, int numArmies);
 	Territory<Region>* chooseTerritory(map<int, Territory<Region>*> regions);
 private:
@@ -98,7 +99,7 @@ private:
 	Hand* playerHand;
 	Resources* pResources;
 
-	void executeAction(Action* action, GameMap* map);
+
 
 	int victoryPoints;
 

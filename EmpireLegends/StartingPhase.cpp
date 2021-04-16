@@ -184,14 +184,18 @@ int StartingPhase::setNumberOfCoins(int numofPlayers)
 // Method to initiate shuffling of the current deck of cards (changes their order in the vector)
 void StartingPhase::shuffleCardDeck() const
 {
-	std::cout << *cardDeck;
-
 	cardDeck->shuffle();
+	std::cout << "Here is the current deck: " << std::endl;
 	std::cout << *cardDeck;
+	std::cout << std::endl;
+
+	//std::cout << "The deck was shuffled." << std::endl;
+	//std::cout << *cardDeck;
+	//std::cout << std::endl;
 
 	// Draw cards from deck and add them to the hand
 	cardDeck->draw(6);
-	std::cout << *cardDeck;
+	//std::cout << *cardDeck;
 }
 
 // Assigns colours to the players and provides coins, armies and cities
