@@ -179,7 +179,7 @@ Card* Hand::exchange(int rowPosition, Player* player)
 			player->payCoin(cardCost);
 		}
 	}
-	else
+	else if(!player->getName().find("Bot"))
 	{
 		std::cout << "Incorrect amount of coins entered. Operation failed" << std::endl;
 	}

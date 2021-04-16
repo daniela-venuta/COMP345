@@ -30,5 +30,6 @@ public:
 	Player* getCurrentPlayer();
 	void mainGameloop(int numOfTurns);
 	int pickACard();
+	int botPickACard();
 	void chooseWinner();
 };

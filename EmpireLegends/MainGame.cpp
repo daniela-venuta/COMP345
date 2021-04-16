@@ -81,6 +81,15 @@ void MainGame::mainGameloop(int numOfTurns) {
 
 			if (player->getName().find("Bot"))
 			{
+				std::cout << "The bot is picking a card. ";
+				while (faceCard == nullptr) {
+					const int cardPosition = botPickACard();
+
+					Hand* deckHand = deck->getHand();
+
+					faceCard = deckHand->exchange(cardPosition, player);
+
+				}
 			}
 			else 
 			{
@@ -96,12 +105,9 @@ void MainGame::mainGameloop(int numOfTurns) {
 						std::cout << "Card not added to player" << std::endl;
 					}
 				}
-				std::cout << "Picked card: " << std::endl << *faceCard << std::endl;
 			}
 
-			
-
-			
+			std::cout << "Picked card: " << std::endl << *faceCard << std::endl;
 
 			player->addCard(faceCard);
 
@@ -125,6 +131,18 @@ int MainGame::pickACard() {
 
 	return cardposition;
 }
+
+// Bot picks the position of the card
+int MainGame::botPickACard() {
+
+	int cardposition;
+	do {
+		cardposition = rand() % 6 + 1;
+	} while (cardposition > 6 || cardposition < 1);
+
+	return cardposition;
+}
+
 
 // Calculate winner based off victory points (VPs)
 void MainGame::chooseWinner() {

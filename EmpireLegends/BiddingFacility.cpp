@@ -51,8 +51,7 @@ int BiddingFacility::getPlayerBid(Player* player)
 		{
 			do {
 				std::cout << "\n" << player->getName() << " place your bid: ";
-				playerBid = 4;
-				//playerBid = rand() % player->getCoins() + 1;
+				playerBid = rand() % player->getCoins() + 1;
 			} while (playerBid > player->getCoins() || playerBid < 0);
 
 			//system("cls");
