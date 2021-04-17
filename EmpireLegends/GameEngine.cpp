@@ -14,9 +14,9 @@ GameEngine::GameEngine()
 
 GameEngine::~GameEngine()
 {
-	/*delete gameStart;
+	delete gameStart;
 	delete startPhase;
-	delete mainGame;*/
+	delete mainGame;
 }
 
 Deck* GameEngine::setDeck()

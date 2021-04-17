@@ -5,6 +5,7 @@
 #include "PlayerStrategies.h"
 #include <iostream>
 
+//Game Engine Commented
 GameStart::GameStart() {
 	//  typeMap = 0;
 	  //numOfPlayers = 0;

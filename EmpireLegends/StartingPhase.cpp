@@ -121,7 +121,7 @@ StartingPhase::~StartingPhase()
 {
 	delete nonPlayer1;
 	delete colorUtilities;
-	//delete map; - Deleted by Main Game 
+	delete map;
 }
 
 // Method to start the sequence of actions that are needed in the starting phase
