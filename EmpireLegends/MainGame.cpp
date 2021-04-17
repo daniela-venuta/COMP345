@@ -63,6 +63,7 @@ void MainGame::afterAction()
 {
 	this->deck->draw(1);
 	this->players->rotate();
+	std::cout << std::endl;
 	std::cout << getCurrentPlayer()->getName() << " plays next." << std::endl;
 }
 
@@ -97,7 +98,7 @@ void MainGame::mainGameloop(int numOfTurns) {
 					faceCard = deckHand->exchange(cardPosition, player);
 					p = cardPosition;
 				}
-				std::cout << "The bot is picked the card at position " + p <<"." << std::endl;
+				std::cout << "The bot picked the card at position " << p <<"." << std::endl;
 			}
 
 			//For Human Players
@@ -123,7 +124,7 @@ void MainGame::mainGameloop(int numOfTurns) {
 			if (getCard == true)
 			{
 				
-				std::cout << "The card " + faceCard->getName() + "has been added to your hand." << std::endl;
+				std::cout << "The card " + faceCard->getName() + " has been added to your hand." << std::endl;
 				player->addCard(faceCard);
 				player->applyGood(faceCard->getGood());
 			}
@@ -255,7 +256,7 @@ void MainGame::chooseWinner() {
 
 	if (highestVPplayers.size() > 1) {
 		std::cout << "\nThere is a tie for victory points." << std::endl;
-		std::cout << "\nSorting by number of coins..." << std::endl;
+		std::cout << "Sorting by number of coins..." << std::endl;
 
 		for (Player* player : allPlayers) {
 			int playerCoins = player->getCoins();
@@ -276,7 +277,7 @@ void MainGame::chooseWinner() {
 
 		if (richestPlayers.size() > 1) {
 			std::cout << "\nThere is a tie for number of coins." << std::endl;
-			std::cout << "\nSorting by number of armies..." << std::endl;
+			std::cout << "Sorting by number of armies..." << std::endl;
 
 			for (Player* player : allPlayers) {
 				int playerArmies = 18 - player->getResources()->unplacedArmies;
@@ -297,7 +298,7 @@ void MainGame::chooseWinner() {
 
 			if (mostArmiesPlayers.size() > 1) {
 				std::cout << "\nThere is a tie for number of armies." << std::endl;
-				std::cout << "\nSorting by number of region..." << std::endl;
+				std::cout << "Sorting by number of region..." << std::endl;
 
 				for (Player* player : allPlayers) {
 					int playerRegions = player->getTerritories().size();
@@ -325,20 +326,22 @@ void MainGame::chooseWinner() {
 	const int numWidth = 10; 
 	
 	
-	std::cout << "-----------------------------------------------------------" << std::endl;
+	std::cout << "------------------------------------------------------------------" << std::endl;
 	std::cout << "Player #"
 		<< std::setw(nameWidth + 3) << "Cards"
 		<< std::setw(numWidth + 10) << "Victory Points" 
-		<< std::setw(numWidth) << "Coins" << std::endl;
-	std::cout << "-----------------------------------------------------------" << std::endl;
+		<< std::setw(numWidth) << "Coins"
+		<< std::setw(numWidth) << "Armies" << std::endl;
+	std::cout << "------------------------------------------------------------------" << std::endl;
 
 	for (int i = 0; i < allPlayers.size(); i++) {
 		
 		std::cout  << std::left<<  std::setw(nameWidth) << allPlayers[i]->getName()
 			<< std::right << std::setw(numWidth) << allPlayers[i]->geNumOfOwnedCard()
 			<< std::setw(numWidth + 10) << allPlayers[i]->getVictoryPoints() 
-			<< std::setw(numWidth) << allPlayers[i]->getResources()->totalCoins << std::endl;
-		std::cout << "-----------------------------------------------------------" << std::endl;
+			<< std::setw(numWidth) << allPlayers[i]->getResources()->totalCoins
+			<< std::setw(numWidth) << allPlayers[i]->getNumArmy() << std::endl;
+		std::cout << "------------------------------------------------------------------" << std::endl;
 
 	}
 }

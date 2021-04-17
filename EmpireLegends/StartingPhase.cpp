@@ -182,7 +182,7 @@ void StartingPhase::shuffleCardDeck() const
 	//std::cout << std::endl;
 
 	// Draw cards from deck and add them to the hand
-	cardDeck->draw(6);
+	//cardDeck->draw(6);
 	//std::cout << *cardDeck;
 }
 
