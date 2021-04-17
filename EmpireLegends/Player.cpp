@@ -12,8 +12,8 @@ using namespace std;
 Player::Player() {
 	playerName = "";
 	pResources = new Resources;
-	pResources->unplacedArmies = TOTAL_NUM_ARMIES;
-	pResources->unplacedCities = TOTAL_NUM_CITIES;
+	pResources->unplacedArmies = MAX_NUM_ARMIES;
+	pResources->unplacedCities = MAX_NUM_CITIES;
 	pResources->totalCoins = 0;
 	strategy = nullptr;
 }
@@ -23,8 +23,8 @@ Player::Player(string name, int coins, PlayerStrategy* strategy) {
 	playerName = std::move(name);
 	pResources = new Resources;
 	pResources->totalCoins = coins;
-	pResources->unplacedArmies = TOTAL_NUM_ARMIES;
-	pResources->unplacedCities = TOTAL_NUM_CITIES;
+	pResources->unplacedArmies = MAX_NUM_ARMIES;
+	pResources->unplacedCities = MAX_NUM_CITIES;
 	playerHand = new Hand();
 	this->strategy = strategy;
 }
@@ -57,8 +57,8 @@ Player::Player(const string username, PlayerStrategy* strategy)
 	pResources = new Resources;
 	// set player resources to default values
 	pResources->totalCoins = DEFAULT_NUM_COINS;
-	pResources->unplacedCities = TOTAL_NUM_CITIES;
-	pResources->unplacedArmies = TOTAL_NUM_ARMIES;
+	pResources->unplacedCities = MAX_NUM_CITIES;
+	pResources->unplacedArmies = MAX_NUM_ARMIES;
 	
 	this->strategy = strategy;
 
@@ -290,7 +290,7 @@ bool Player::buildCity(Territory<Region>* location)
 	{
 		std::cout << "Action not permissible (Build City at " << location->getName() << ")." << " You need at least 1 army in this region." << std::endl;
 	}
-	else if (pResources->unplacedCities - 1 >= 0 && TOTAL_NUM_CITIES - pResources->unplacedCities + 1 <= TOTAL_NUM_CITIES)
+	else if (pResources->unplacedCities - 1 >= 0 && MAX_NUM_CITIES - pResources->unplacedCities + 1 <= MAX_NUM_CITIES)
 	{
 		pResources->unplacedCities--;
 		location->addCity(this);

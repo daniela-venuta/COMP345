@@ -22,11 +22,11 @@ private:
 	vector<Player*> biddingPlayers;
 };
 
-class GameStartView : public Observer
+class GameStartObserver : public Observer
 {
 public:
-	GameStartView(GameStart* s);
-	~GameStartView();
+	GameStartObserver(GameStart* s);
+	~GameStartObserver();
 	void Update() override;
 	void display();
 private:

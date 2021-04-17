@@ -292,23 +292,23 @@ void StartingPhase::startBidding()
 	BiddingFacility::placeBids(players);
 }
 
-StartingPhaseView::StartingPhaseView(StartingPhase* s)
+StartingPhaseObserver::StartingPhaseObserver(StartingPhase* s)
 {
 	subject = s;
 	subject->Attach(this);
 }
 
-StartingPhaseView::~StartingPhaseView()
+StartingPhaseObserver::~StartingPhaseObserver()
 {
 	subject->Detach(this);
 }
 
-void StartingPhaseView::Update()
+void StartingPhaseObserver::Update()
 {
 	display();
 }
 
-void StartingPhaseView::display()
+void StartingPhaseObserver::display()
 {
 	std::cout << "-----------------------------------" << std::endl;
 	string name = subject->currentPlayer->getName();

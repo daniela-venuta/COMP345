@@ -23,7 +23,7 @@ class MainGame : public Observable
 	PlayerRotation* players;
 	vector<Card*> cardDeck;
 	string state;
-	Player* startPlayerTurn(const Player* player);
+	void startPlayerTurn(const Player* player);
 	void SetupEndGame();
 
 public:

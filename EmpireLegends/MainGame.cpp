@@ -44,7 +44,7 @@ Player* MainGame::getCurrentPlayer()
 	return players->getCurrentPlayer();
 }
 
-Player* MainGame::startPlayerTurn(const Player* player)
+void MainGame::startPlayerTurn(const Player* player)
 {
 	state = player->getName() + "'s turn. They are buying a card";
 	Notify();
