@@ -20,6 +20,13 @@ int main() {
 	std::cout << "\nEnter choice here: ";
 	std::cin >> choice;
 
+	while (std::cin.fail()) {
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cout << "Bad entry.  Enter a NUMBER: ";
+		std::cin >> choice;
+	}
+
 	switch (choice) {
 
 	case 1:
@@ -37,5 +44,4 @@ int main() {
 	delete gameEngine;
 	
 	return 0;
-
 }

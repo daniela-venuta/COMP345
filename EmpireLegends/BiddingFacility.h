@@ -14,7 +14,7 @@ class BiddingFacility {
 
 public:
 	
-	static string placeBids(vector <Player*> biddingPlayers, bool botThere, bool humanThere);
+	static string placeBids(vector <Player*> biddingPlayers);
 
 	static int getCurrentBid();
 	static void setCurrentBid(int bid);

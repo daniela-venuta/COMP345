@@ -9,7 +9,6 @@ private:
 	GameStart* gameStart; 
 	GameMap* gameMap;
 	MainGame* mainGame; 
-	vector<Player*> players;
 	StartingPhase* startPhase;
 	Deck* deck;
 
@@ -19,5 +18,5 @@ public:
 	Deck* setDeck();
 	void singleMode();
 	void tournamentMode(); 
-	int numOfTurns(int size); 
+	//int numOfTurns(int size); 
 };

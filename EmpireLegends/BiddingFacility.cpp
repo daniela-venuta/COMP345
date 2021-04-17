@@ -25,41 +25,39 @@ int BiddingFacility::getPlayerBid(Player* player)
 	return bids[player];
 }
 
- string BiddingFacility::placeBids(vector<Player*> biddingPlayers, bool botThere, bool humanThere) {
+ string BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 
 	auto playerBid = 0;
 	string temp;
 
 	// each players places their bid
-	if(botThere == false && humanThere == true)
-	{
+	
 		for (auto& player : biddingPlayers)
 		{
-			do {
-				std::cout << "\n" << player->getName() << " place your bid: ";
-				std::cin >> playerBid;
-			} while (playerBid > player->getCoins() || playerBid < 0);
+			//For Bot Players
+			int bot = player->getName().find("Bot");
+			if (bot != std::string::npos)
+			{
+				do {
+					std::cout << "\n" << player->getName() << " places its bid. "<<std::endl;
+					playerBid = rand() % player->getCoins() + 1;
+				} while (playerBid > player->getCoins() || playerBid < 0);
+			}
 
+			//For Human Players
+			else 
+			{
+				do {
+					std::cout << "\n" << player->getName() << " place your bid: ";
+					std::cin >> playerBid;
+				} while (playerBid > player->getCoins() || playerBid < 0);
+			}
+			
 			//system("cls");
 
 			addPlayerBid(player, playerBid);
 		}
-	}
-	else if(botThere == true && humanThere == false)
-	{
-		for (auto& player : biddingPlayers)
-		{
-			do {
-				std::cout << "\n" << player->getName() << " place your bid: ";
-				playerBid = rand() % player->getCoins() + 1;
-			} while (playerBid > player->getCoins() || playerBid < 0);
-
-			//system("cls");
-
-			addPlayerBid(player, playerBid);
-		}
-	}
-	else {}
+	
 	
 	std::cout << "--------------------------" << std::endl;
 	std::cout << "WHO WILL GO FIRST??:" << std::endl;
@@ -68,7 +66,7 @@ int BiddingFacility::getPlayerBid(Player* player)
 	std::cout << "Bids placed by players: " << std::endl;
 	for (Player* myPlayer : biddingPlayers)
 	{
-		std::cout << "Player " << myPlayer->getName() << "\t" << "bids " << getPlayerBid(myPlayer) << " coins." << std::endl;
+		std::cout << "Player " << myPlayer->getName() << " " << "bids " << getPlayerBid(myPlayer) << " coins." << std::endl;
 	}
 
 	vector<Player*> maxBidders;

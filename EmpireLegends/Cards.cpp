@@ -161,6 +161,7 @@ Card* Hand::exchange(int rowPosition, Player* player)
 {
 	const int cardCost = getCardCost(rowPosition);
 	Card* exchangeCard = nullptr;
+	int nonBot = player->getName().find("Bot");
 		
 	if (handCards.empty()) {
 		std::cout << "The hand is empty" << std::endl; 
@@ -179,7 +180,8 @@ Card* Hand::exchange(int rowPosition, Player* player)
 			player->payCoin(cardCost);
 		}
 	}
-	else if(!player->getName().find("Bot"))
+	//Only printing for human players
+	else if(nonBot== std::string::npos)
 	{
 		std::cout << "Incorrect amount of coins entered. Operation failed" << std::endl;
 	}

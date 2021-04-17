@@ -124,6 +124,15 @@ vector<Player*> GameStart::detPlayerBotCount()
 	int strategyOfBots = 0;
 
 	std::cout << "You'll be playing against 1 bot."<<std::endl;
+
+	while (playerName == "") {
+		std::cout << "\nEnter your player name : ";
+		std::cin >> playerName;
+		Player* temp = new Player(playerName, playerCoins, new HumanStrategy());
+		players.push_back(temp);
+		std::cout << "Welcome " << playerName << " !" << std::endl;
+	};
+	
 	std::cout << "What type of bot do you want to play against:" << std::endl;
 	while (strategyOfBots < 1 || strategyOfBots > 3)
 	{
@@ -133,7 +142,8 @@ vector<Player*> GameStart::detPlayerBotCount()
 		std::cin >> strategyOfBots;
 	};
 
-	
+	std::cin.ignore();
+
 	Player* bot = new Player();
 	
 	switch (strategyOfBots) {
@@ -149,7 +159,7 @@ vector<Player*> GameStart::detPlayerBotCount()
 	}
 
 	std::cout << "Human is playing against " + bot->getName() << std::endl;
-	std::cin.ignore();
+
 
 	return players;
 }

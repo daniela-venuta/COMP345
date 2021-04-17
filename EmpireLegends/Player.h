@@ -73,6 +73,8 @@ public:
 	int getBalance() const;
 	void setBalance(int newBalance);
 
+	int geNumOfOwnedCard();
+
 	bool moveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map);
 	bool placeNewArmies(int number, Territory<Region>* destination, Territory<Region>* initialRegion);
 	bool destroyArmy(int number, Territory<Region>* location, Player* player);
@@ -88,6 +90,9 @@ public:
 	int getVictoryPoints();
 	vector<Territory<Region>*> getTerritories();
 
+	int getNumArmy();
+	void setNumArmy(int num);
+
 	void addCard(Card* card);
 	void applyGood(Good* addedGood);
 	bool andOrAction(Card* cardTwoAction, GameMap* gm);
@@ -100,7 +105,8 @@ private:
 	Resources* pResources;
 
 
-
+	int numOwnedCard;
+	int numArmy;
 	int victoryPoints;
 
 	// Resources

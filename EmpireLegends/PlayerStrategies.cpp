@@ -54,10 +54,12 @@ bool HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 	const std::size_t destroy = action->getName().find("Destroy");
 	const std::size_t place = action->getName().find("Place");
 	const std::size_t move = action->getName().find("Move");
+	int numOfTry = 0;
 	bool actionDone = false;
 
-	while (!actionDone)
+	while (!actionDone && numOfTry < 10)
 	{
+
 		//Build City
 		if (build != std::string::npos)
 		{
@@ -68,7 +70,13 @@ bool HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 		//Move Armies
 		else if (move != std::string::npos)
 		{
-			std::cout << "You may move" << action->getMultiplier() << " armies." << std::endl;
+			if (action->getMultiplier() > player->getNumArmy())
+			{
+				std::cout << "You don't have enough armies to move." << std::endl;
+				return actionDone;
+			}
+
+			std::cout << "You may move " << action->getMultiplier() << " armies." << std::endl;
 			std::cout << "Please choose the initial region: " << std::endl;
 
 			Territory<Region>* from = player->chooseTerritory(MapUtility::printTerritoriesWithArmies(map, player));
@@ -102,6 +110,11 @@ bool HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 			Territory<Region>* destination = player->chooseTerritory(MapUtility::printTerritoriesForPlacingArmies(map, player));
 			actionDone = player->placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
 		}
+		numOfTry++;
+	}
+	if (numOfTry == 10)
+	{
+		std::cout << "You ran out of trials for your turn.";
 	}
 	return actionDone;
 }
@@ -143,6 +156,12 @@ bool NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 		//Move Armies
 		else if (move != std::string::npos)
 		{
+			if (action->getMultiplier() > player->getNumArmy())
+			{
+				std::cout << "You don't have enough armies to move." << std::endl;
+				return actionDone;
+			}
+
 			std::cout << player->getName() << " may move " << action->getMultiplier() << " armies." << std::endl;
 
 			std::map<int, Territory<Region>*> froms = MapUtility::printTerritoriesWithArmies(map, player);

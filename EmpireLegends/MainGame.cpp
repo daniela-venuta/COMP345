@@ -54,7 +54,7 @@ MainGame::MainGame(GameMap* map, Deck* deck, vector<Player*>& players)
 
 MainGame::~MainGame()
 {
-	delete map;
+	delete map;  
 	delete deck;
 	delete players;
 }
@@ -69,18 +69,23 @@ void MainGame::afterAction()
 void MainGame::mainGameloop(int numOfTurns) {
 	deck->draw(6);
 	std::cout << *deck->getHand() << std::endl;
+	int turnNum = 1;
 
 	while (numOfTurns > 0) {
-		std::cout << "The number of turns " << numOfTurns << std::endl;
+		std::cout << "-----------------------------------------------------------------------------"<< std::endl;
+		std::cout << "Turn #" << turnNum << std::endl;
 
 		for (int i = 0; i < players->getNbPlayers(); i++) {
+			
 			
 			Player* player = getCurrentPlayer();
 			std::cout << "\n\nPlayer " << player->getName() << std::endl;
 
 			Card* faceCard = nullptr;
 
-			if (player->getName().find("Bot"))
+			//For Bot players
+			int bot = player->getName().find("Bot");
+			if (bot != std::string::npos)
 			{
 				int p;
 				std::cout << "The bot is picking a card. "<<std::endl;
@@ -94,6 +99,8 @@ void MainGame::mainGameloop(int numOfTurns) {
 				}
 				std::cout << "The bot is picked the card at position " + p <<"." << std::endl;
 			}
+
+			//For Human Players
 			else 
 			{
 				while (faceCard == nullptr) {
@@ -115,6 +122,8 @@ void MainGame::mainGameloop(int numOfTurns) {
 			
 			if (getCard == true)
 			{
+				
+				std::cout << "The card " + faceCard->getName() + "has been added to your hand." << std::endl;
 				player->addCard(faceCard);
 				player->applyGood(faceCard->getGood());
 			}
@@ -122,6 +131,7 @@ void MainGame::mainGameloop(int numOfTurns) {
 			afterAction();
 			std::cout << *deck->getHand() << std::endl;
 		}
+		turnNum++;
 		numOfTurns--;
 	}
 	std::cout << "The Game is Over!!" << std::endl;
@@ -310,15 +320,26 @@ void MainGame::chooseWinner() {
 	}
 
 	// function to display results 
-	const char separator = ' ';
-	const int nameWidth = 10;
-	const int numWidth = 8; 
+	const char separator = '|';
+	const int nameWidth = 15;
+	const int numWidth = 10; 
 	
-	std::cout << "Player #" << std::setw(20) << "Cards" << std::setw(20) << "Victory Points" << std::setw(nameWidth) << "Coins" << std::endl;
+	
+	std::cout << "-----------------------------------------------------------" << std::endl;
+	std::cout << "Player #"
+		<< std::setw(nameWidth + 3) << "Cards"
+		<< std::setw(numWidth + 10) << "Victory Points" 
+		<< std::setw(numWidth) << "Coins" << std::endl;
+	std::cout << "-----------------------------------------------------------" << std::endl;
+
 	for (int i = 0; i < allPlayers.size(); i++) {
-		std:: cout << allPlayers[i]->getName() << std::setw(15) << 2 <<  std::setw(20) << allPlayers[i]->getVictoryPoints() << std::setw(nameWidth) << allPlayers[i]->getResources()->totalCoins << std::endl;
 		
-	
+		std::cout  << std::left<<  std::setw(nameWidth) << allPlayers[i]->getName()
+			<< std::right << std::setw(numWidth) << allPlayers[i]->geNumOfOwnedCard()
+			<< std::setw(numWidth + 10) << allPlayers[i]->getVictoryPoints() 
+			<< std::setw(numWidth) << allPlayers[i]->getResources()->totalCoins << std::endl;
+		std::cout << "-----------------------------------------------------------" << std::endl;
+
 	}
 }
 

@@ -2,6 +2,7 @@
 #include "MapLoader.h"
 #include "MapUtility.h"
 #include "BiddingFacility.h"
+#include <ctime>
 
 // Number of armies of non player colour that need to be placed on the map in a two player game
 static const int NUM_ARMIES_TO_PLACE = 10;
@@ -84,22 +85,22 @@ Color ColorUtilities::getColor(int index)
 	if (index == Color::red)
 	{
 		col = Color::red;
-		std::cout << "Selected Red\n";
+		std::cout << " selected Red\n";
 	}
 	else if (index == Color::green)
 	{
 		col = Color::green;
-		std::cout << "Selected Green\n";
+		std::cout << " selected Green\n";
 	}
 	else if (index == Color::blue)
 	{
 		col = Color::green;
-		std::cout << "Selected Blue\n";
+		std::cout << " selected Blue\n";
 	}
 	else if (index == Color::yellow)
 	{
 		col = Color::yellow;
-		std::cout << "Selected Yellow\n";
+		std::cout << " selected Yellow\n";
 	}
 
 	return col;
@@ -120,7 +121,7 @@ StartingPhase::~StartingPhase()
 {
 	delete nonPlayer1;
 	delete colorUtilities;
-	delete map;
+	//delete map; - Deleted by Main Game 
 }
 
 // Method to start the sequence of actions that are needed in the starting phase
@@ -136,23 +137,10 @@ vector<Player*> StartingPhase::startGame(GameMap* gameMap, const vector<Player*>
 	setupStartingTerritories();
 	//setupNonPlayers();
 	//placeArmiesOnMap();
+
 	startBidding();
 
 	return players;
-}
-
-vector<Player*> StartingPhase::startGameBot(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers) {
-	this->players = playerVector;
-	this->cardDeck = deck;
-	this->numOfPlayers = numPlayers;
-	this->map = gameMap;
-	shuffleCardDeck();
-	assignBotResources();
-	setupStartingTerritories();
-	startBiddingBot();
-
-	return players;
-
 }
 
 // Retrieve number of starting coins per player
@@ -210,15 +198,29 @@ void StartingPhase::assignPlayerResources()
 	for (int i = 0; i < numOfPlayers; i++)
 	{
 		bool isColorUnavailable = true;
-		int colorNum;
+		int colorNum = 0;
 		const Player* player = players[i];
 		Resources* resources = players[i]->getResources();
 		Color col = Color::none;
 
+		
 		while(isColorUnavailable)
 		{
-			std::cout << player->getName() << ", choose your color: ";
-			std::cin >> colorNum;
+			//For Bots Players
+			int bot = player->getName().find("Bot");
+			if (bot != std::string::npos)
+			{
+				colorNum = rand() % 4 + 1;
+			}
+
+			//For Human Players
+			else 
+			{
+				std::cout << player->getName() << ", choose your color: ";
+				std::cin >> colorNum;
+			}
+
+			std::cout << player->getName();
 			col = colorUtilities->getColor(colorNum);
 			isColorUnavailable = !colorUtilities->getColorAvailability(col);
 
@@ -227,11 +229,6 @@ void StartingPhase::assignPlayerResources()
 				std::cout << "\nColor unavailable, try again \n";
 			}
 		}
-		
-		resources->playerColor = col;
-		
-		// mark color as unavailable
-		colorUtilities->setColorAvailability(col, false);
 
 		// assign cities and armies
 		resources->unplacedCities = 3;
@@ -239,45 +236,14 @@ void StartingPhase::assignPlayerResources()
 
 		// assign coins
 		resources->totalCoins = playerCoins;
-	}
-}
 
-void StartingPhase::assignBotResources() {
-	for (int i = 0; i < numOfPlayers; i++)
-	{
-		bool isColorUnavailable = true;
 		
-		const Player* player = players[i];
-		Resources* resources = players[i]->getResources();
-		Color col = Color::none;
-
-		while (isColorUnavailable)
-		{
-			int colorNum = rand() % 4 + 1;
-			col = colorUtilities->getColor(colorNum);
-			isColorUnavailable = !colorUtilities->getColorAvailability(col);
-
-			if (isColorUnavailable)
-			{
-				std::cout << "\nColor unavailable, try again \n";
-			}
-			else 
-			{
-				std::cout << player->getName() + "'s color is " << col << std::endl;
-			}
-		}
-
 		resources->playerColor = col;
-
+		
 		// mark color as unavailable
 		colorUtilities->setColorAvailability(col, false);
 
-		// assign cities and armies
-		resources->unplacedCities = 3;
-		resources->unplacedArmies = 18;
-
-		// assign coins
-		resources->totalCoins = 14;
+		
 	}
 }
 
@@ -343,13 +309,7 @@ void StartingPhase::setupNonPlayers()
 void StartingPhase::startBidding()
 {
 	// Players place bids
-	string maxBidder = BiddingFacility::placeBids(players,false,true);
-	maxBidderFirst(maxBidder);
-}
-
-void StartingPhase::startBiddingBot()
-{
-	string maxBidder = BiddingFacility::placeBids(players,true,false);
+	string maxBidder = BiddingFacility::placeBids(players);
 	maxBidderFirst(maxBidder);
 }
 

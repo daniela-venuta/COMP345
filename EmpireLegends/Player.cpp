@@ -181,6 +181,11 @@ void Player::setBalance(int newBalance)
 	pResources->totalCoins = newBalance;
 }
 
+int Player::geNumOfOwnedCard()
+{
+	return numOwnedCard;
+}
+
 /// <summary>
 /// Takes care of changes that come from moving Armies
 /// *** Since the travel cost is computed by the GameMap, MoveOverLand and MoveOverWater are in this method.
@@ -232,6 +237,8 @@ bool Player::placeNewArmies(int number, Territory<Region>* location, Territory<R
 			pResources->unplacedArmies -= number;
 			location->addArmies(number, this);
 			placeDone = true;
+			int newArmyCount = this->geNumOfOwnedCard() + number;
+			this->setNumArmy(newArmyCount);
 			std::cout << playerName << " added " << number << " armies at " << location->getName() << std::endl;
 		}
 		else
@@ -273,13 +280,15 @@ bool Player::destroyArmy(int number, Territory<Region>* location, Player* player
 		location->removeArmies(number, player);
 		pResources->unplacedArmies += number;
 		destroyDone = true;
+		int newArmyCount = player->geNumOfOwnedCard() - number;
+		player->setNumArmy(newArmyCount);
 		std::cout << "Successfully destroyed " << number << " armies owned by " << player->getName() << " at " << location->getName() << " ." << std::endl;
 	}
 	else
 	{
 		std::cout << "Action not permissible (Destroy Armies at " << location->getName() << "). There are not " << number << " armies to destroy " << std::endl;
 	}
-
+	
 	return destroyDone;
 }
 
@@ -341,6 +350,7 @@ Resources* Player::getResources() const
 
 void Player::addCard(Card* card)
 {
+	numOwnedCard += 1;
 	playerHand->addCard(card);
 	applyGood(card->getGood());
 }
@@ -472,6 +482,16 @@ int Player::getVictoryPoints() {
 
 vector < Territory<Region>*> Player::getTerritories() {
 	return playerTerritories;
+}
+
+int Player::getNumArmy()
+{
+	return numArmy;
+}
+
+void Player::setNumArmy(int num)
+{
+	numArmy = num;
 }
 
 void Player::applyGood(Good* addedGood)

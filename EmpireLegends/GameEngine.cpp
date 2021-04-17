@@ -5,12 +5,18 @@
 
 GameEngine::GameEngine()
 {
-
+	gameStart = nullptr;
+	startPhase = nullptr;
+	gameMap = nullptr;
+	mainGame = nullptr;
+	deck = nullptr;
 }
 
 GameEngine::~GameEngine()
 {
-
+	/*delete gameStart;
+	delete startPhase;
+	delete mainGame;*/
 }
 
 Deck* GameEngine::setDeck()
@@ -85,8 +91,18 @@ void GameEngine::singleMode()
 	std::cout << "Single Game Mode" << std::endl; 
 	std::cout << "------------------" << std::endl;
 	
+	//Game Start Part
 	gameMap = gameStart->loadMap();
-	vector<Player*> bots = gameStart->detPlayerBotCount();
+	vector<Player*> players = gameStart->detPlayerBotCount();
+
+	int num = players.size();
+	startPhase = new StartingPhase();
+	deck = setDeck();
+	players= startPhase->startGame(gameMap, players, deck, num);
+
+	mainGame = new MainGame(gameMap, deck, players);
+	mainGame->mainGameloop(10);
+
 }
 
 void GameEngine::tournamentMode()
@@ -103,13 +119,13 @@ void GameEngine::tournamentMode()
 
 	//Starting Phase
 	startPhase = new StartingPhase();
-
-	bots = startPhase->startGameBot(gameMap, bots, setDeck(), num);
+	deck = setDeck();
+	bots = startPhase->startGame(gameMap, bots, deck, num);
 
 	// Maingameloop	
-	mainGame = new MainGame(gameMap, setDeck(), bots);
+	mainGame = new MainGame(gameMap, deck, bots);
 	mainGame->mainGameloop(10);
-
+	
 }
 
 
