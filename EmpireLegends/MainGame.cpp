@@ -44,6 +44,18 @@ Player* MainGame::getCurrentPlayer()
 	return players->getCurrentPlayer();
 }
 
+Player* MainGame::startPlayerTurn(const Player* player)
+{
+	state = player->getName() + "'s turn. They are buying a card";
+	Notify();
+}
+
+void MainGame::SetupEndGame()
+{
+	state = "Initiating End Game and Calculating Winner....";
+	Notify();
+}
+
 MainGame::MainGame(GameMap* map, Deck* deck, vector<Player*>& players)
 {
 	this->map = map;
@@ -60,9 +72,11 @@ MainGame::~MainGame()
 
 void MainGame::afterAction()
 {
+	state = "";
 	this->deck->draw(1);
 	this->players->rotate();
 	std::cout << getCurrentPlayer()->getName() << " plays next." << std::endl;
+	Notify();
 }
 
 void MainGame::mainGameloop(int numOfTurns) {
@@ -75,6 +89,8 @@ void MainGame::mainGameloop(int numOfTurns) {
 		for (int i = 0; i < players->getNbPlayers(); i++) {
 
 			Player* player = getCurrentPlayer();
+			startPlayerTurn(player);
+			
 			std::cout << "\n\nPlayer " << player->getName() << std::endl;
 
 			Card* faceCard = nullptr;
@@ -83,6 +99,7 @@ void MainGame::mainGameloop(int numOfTurns) {
 				const int cardPosition = pickACard();
 				std::cout << "\n";
 
+				state = player->getName() = " has picked the card at position " + std::to_string(cardPosition);
 				Hand* deckHand = deck->getHand();
 
 				faceCard = deckHand->exchange(cardPosition, player);
@@ -94,6 +111,7 @@ void MainGame::mainGameloop(int numOfTurns) {
 			std::cout << "Picked card: " << std::endl << *faceCard << std::endl;
 
 			player->addCard(faceCard);
+			state += "\n " + faceCard->getAction()->getName();;
 
 			afterAction();
 			std::cout << *deck->getHand() << std::endl;
@@ -119,6 +137,7 @@ int MainGame::pickACard() {
 // Calculate winner based off victory points (VPs)
 void MainGame::chooseWinner() {
 
+	SetupEndGame();
 	vector<Player*> allPlayers = players->players;
 
 	for (Player* player : allPlayers) {
@@ -271,4 +290,27 @@ void MainGame::chooseWinner() {
 	else {
 		std::cout << "The winner is " << highestVPplayers.back()->getName() << " with " << highestVPplayers.back()->getVictoryPoints() << " VPs!" << std::endl;
 	}
+}
+
+MainGameObserver::MainGameObserver(MainGame* s)
+{
+	subject = s;
+	subject->Attach(this);
+}
+
+MainGameObserver::~MainGameObserver()
+{
+	subject->Detach(this);
+}
+
+void MainGameObserver::Update()
+{
+	display();
+}
+
+void MainGameObserver::display()
+{
+	std::cout << "--------------------------------------------------------------------- \n ---------------------------------------------------------------------  " << std::endl;
+	std::cout << subject->getState() << std::endl;
+	std::cout << "--------------------------------------------------------------------- \n ---------------------------------------------------------------------  " << std::endl;
 }

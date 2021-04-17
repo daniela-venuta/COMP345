@@ -113,6 +113,8 @@ StartingPhase::StartingPhase()
 	colorUtilities = new ColorUtilities();
 	cardDeck = nullptr;
 	numOfPlayers = 0;
+
+	// observer pattern
 }
 
 // Destructor for the StartingPhase class for cleanup
@@ -165,6 +167,7 @@ int StartingPhase::setNumberOfCoins(int numofPlayers)
 
 	return playerCoins;
 }
+
 // Method to initiate shuffling of the current deck of cards (changes their order in the vector)
 void StartingPhase::shuffleCardDeck() const
 {
@@ -181,7 +184,6 @@ void StartingPhase::shuffleCardDeck() const
 // Assigns colours to the players and provides coins, armies and cities
 void StartingPhase::assignPlayerResources()
 {
-	
 	std::cout << "\nColor options \n 1.Red \n 2.Green  \n 3.Blue \n 4. Yellow \n";
 	
 	// Assign number of coins based on players
@@ -191,10 +193,14 @@ void StartingPhase::assignPlayerResources()
 	{
 		bool isColorUnavailable = true;
 		int colorNum;
-		const Player* player = players[i];
+		Player* player = players[i];
 		Resources* resources = players[i]->getResources();
 		Color col = Color::none;
 
+		currentPlayer = player;
+		currentAction = "Choosing color";
+		Notify();
+		
 		while(isColorUnavailable)
 		{
 			std::cout << player->getName() << ", choose your color: ";
@@ -209,7 +215,6 @@ void StartingPhase::assignPlayerResources()
 		}
 		
 		resources->playerColor = col;
-		
 		// mark color as unavailable
 		colorUtilities->setColorAvailability(col, false);
 
@@ -285,4 +290,27 @@ void StartingPhase::startBidding()
 {
 	// Players place bids
 	BiddingFacility::placeBids(players);
+}
+
+StartingPhaseView::StartingPhaseView(StartingPhase* s)
+{
+	subject = s;
+	subject->Attach(this);
+}
+
+StartingPhaseView::~StartingPhaseView()
+{
+	subject->Detach(this);
+}
+
+void StartingPhaseView::Update()
+{
+	display();
+}
+
+void StartingPhaseView::display()
+{
+	std::cout << "-----------------------------------" << std::endl;
+	string name = subject->currentPlayer->getName();
+	std::cout << name << ": " << subject->currentAction << std::endl;
 }

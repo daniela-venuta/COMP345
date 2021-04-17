@@ -92,3 +92,30 @@ void GameStart::detPlayerCount() {
 
 	std::cout << "\nEach player gets " << playerCoins << " coins." << std::endl;
 }
+
+void GameStart::startGame()
+{
+	state = "WELCOME TO EMPIRE LEGENDS. THE GAME IS ABOUT TO START.";
+	Notify();
+}
+
+GameStartObserver::GameStartObserver(GameStart* s)
+{
+	subject = s;
+	subject->Attach(this);
+}
+
+GameStartObserver::~GameStartObserver()
+{
+	subject->Detach(this);
+}
+
+void GameStartObserver::Update()
+{
+	display();
+}
+
+void GameStartObserver::display()
+{
+	std::cout << subject->state;
+}

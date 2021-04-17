@@ -63,6 +63,7 @@ void HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 		{
 			std::cout << "You may build a city in one of the regions with at least 1 army: " << std::endl;
 			Territory<Region>* destination = player->chooseTerritory(MapUtility::printTerritoriesWithArmies(map, player));
+			state = "Building city at " + destination->getName();
 			actionDone = player->buildCity(destination);
 		}
 		//Move Armies
@@ -80,7 +81,7 @@ void HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 				std::cout << "Invalid. Please choose a destination other than the initial region: " << std::endl;
 				to = player->chooseTerritory(MapUtility::printTerritoriesWithMap(map));
 			}
-
+			state = "Moving " + std::to_string(action->getMultiplier()) + "armies to " + to->getName();
 			actionDone = player->moveArmies(action->getMultiplier(), from, to, map);
 		}
 		//Destroy Armies
@@ -90,7 +91,8 @@ void HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 			std::cout << "You may destroy " << numArmies << " enemy armies. Please choose a region: \n";
 			Territory<Region>* location = player->chooseTerritory(MapUtility::printTerritoriesWithEnemyArmies(map, player, numArmies));
 			Player* enemyPlayer = player->chooseEnemy(location, numArmies);
-
+			
+			state = "Destroying" + std::to_string(numArmies) + " of " + enemyPlayer->getName() + " at " + location->getName();
 			actionDone = player->destroyArmy(numArmies, location, enemyPlayer);
 		}
 		//Place New Armies
@@ -100,8 +102,12 @@ void HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 			const int numArmies = action->getMultiplier();
 			std::cout << "You may place " << numArmies << " armies. Please choose a region: \n";
 			Territory<Region>* destination = player->chooseTerritory(MapUtility::printTerritoriesForPlacingArmies(map, player));
+
+			state = "Placing " + std::to_string(numArmies) + " at " + destination->getName();
 			actionDone = player->placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
 		}
+
+		Notify();
 	}
 }
 
@@ -135,8 +141,9 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 				std::cout << "There is no region where to build a city." << std::endl;
 				return;
 			}
-
-			actionDone = player->buildCity(getRandomTerritory(destinations)); // Selecting random destination
+			auto destination = getRandomTerritory(destinations);
+			state = "Building city at " + destination->getName();
+			actionDone = player->buildCity(destination); // Selecting random destination
 		}
 		//Move Armies
 		else if (move != std::string::npos)
@@ -159,7 +166,7 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 			{
 				to = getRandomTerritory(tos);
 			}
-
+			state = "Moving " + std::to_string(action->getMultiplier()) + "armies to " + to->getName();
 			actionDone = player->moveArmies(action->getMultiplier(), from, to, map);
 		}
 		//Destroy Armies
@@ -192,7 +199,7 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 				}
 				
 			} while (invalid);
-
+			state = "Destroying" + std::to_string(numArmies) + " of " + chosenEnemy->getName() + " at " + location->getName();
 			actionDone = player->destroyArmy(numArmies, location, chosenEnemy);
 		}
 		//Place New Armies
@@ -209,9 +216,12 @@ void NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 			{
 				destination = getRandomTerritory(destinations);
 			} while (destination != MapUtility::getStartingLocation(map) && destination->getPlacedCities(player) == 0);
-
+			
+			state = "Placing " + std::to_string(numArmies) + " at " + destination->getName();
 			actionDone = player->placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
 		}
+
+		Notify();
 	}
 }
 
@@ -265,4 +275,24 @@ Action* ModerateStrategy::chooseAction(Action* action1, Action* action2)
 
 	// Choosing the first action if neither of them is for placing armies
 	return action1;
+}
+
+void ActionObserver::Update()
+{
+	display();
+}
+
+void ActionObserver::display()
+{
+	std::cout << subject->state;
+}
+
+ActionObserver::ActionObserver(PlayerStrategy* s)
+{
+	subject = s;
+	subject->Attach(this);
+}
+ActionObserver::~ActionObserver()
+{
+	subject->Detach(this);
 }
