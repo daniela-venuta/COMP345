@@ -18,5 +18,5 @@ public:
 	Deck* setDeck();
 	void singleMode();
 	void tournamentMode(); 
-	//int numOfTurns(int size); 
+	int numOfTurns(int size); 
 };
