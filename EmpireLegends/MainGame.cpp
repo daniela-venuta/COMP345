@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Cards.h"
 #include <algorithm>
+#include <iomanip>
 
 PlayerRotation::PlayerRotation(const vector<Player*>& players)
 {
@@ -297,15 +298,27 @@ void MainGame::chooseWinner() {
 				}
 			}
 			else {
-				std::cout << "The winner is " << mostRegionsOwnedPlayer->getName() << " with " << mostRegionsOwnedPlayer->getVictoryPoints() << " VPs!" << std::endl;
+				std::cout << "The winner is " << mostRegionsOwnedPlayer->getName() << " with " << mostRegionsOwnedPlayer->getVictoryPoints() << " VPs!\n" << std::endl;
 			}
 		}
 		else {
-			std::cout << "The winner is " << richestPlayers.back()->getName() << " with " << richestPlayers.back()->getVictoryPoints() << " VPs!" << std::endl;
+			std::cout << "The winner is " << richestPlayers.back()->getName() << " with " << richestPlayers.back()->getVictoryPoints() << " VPs!\n" << std::endl;
 		}
 	}
 	else {
-		std::cout << "The winner is " << highestVPplayers.back()->getName() << " with " << highestVPplayers.back()->getVictoryPoints() << " VPs!" << std::endl;
+		std::cout << "The winner is " << highestVPplayers.back()->getName() << " with " << highestVPplayers.back()->getVictoryPoints() << " VPs!\n" << std::endl;
+	}
+
+	// function to display results 
+	const char separator = ' ';
+	const int nameWidth = 10;
+	const int numWidth = 8; 
+	
+	std::cout << "Player #" << std::setw(20) << "Cards" << std::setw(20) << "Victory Points" << std::setw(nameWidth) << "Coins" << std::endl;
+	for (int i = 0; i < allPlayers.size(); i++) {
+		std:: cout << allPlayers[i]->getName() << std::setw(15) << 2 <<  std::setw(20) << allPlayers[i]->getVictoryPoints() << std::setw(nameWidth) << allPlayers[i]->getResources()->totalCoins << std::endl;
+		
+	
 	}
 }
 
