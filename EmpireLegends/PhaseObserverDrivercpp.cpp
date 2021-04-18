@@ -203,7 +203,7 @@ int main()
 	
 	//Game Start Part
 	GameMap* gameMap = gameStart->loadMap();
-	vector<Player*> players = gameStart->detPlayerBotCount();
+	vector<Player*> players = gameStart->detPlayerCount();
 
 	int num = players.size();
 	StartingPhase* startPhase = new StartingPhase();
