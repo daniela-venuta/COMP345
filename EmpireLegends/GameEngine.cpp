@@ -15,8 +15,9 @@ GameEngine::GameEngine()
 GameEngine::~GameEngine()
 {
 	delete gameStart;
+	//Conflict between startPhase & mainGame when closing  bc they both delete a map
 	delete startPhase;
-	delete mainGame;
+	//delete mainGame;
 }
 
 Deck* GameEngine::setDeck()

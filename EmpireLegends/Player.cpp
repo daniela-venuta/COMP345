@@ -237,7 +237,7 @@ bool Player::placeNewArmies(int number, Territory<Region>* location, Territory<R
 			pResources->unplacedArmies -= number;
 			location->addArmies(number, this);
 			placeDone = true;
-			int newArmyCount = this->geNumOfOwnedCard() + number;
+			int newArmyCount = this->getNumArmy() + number;
 			this->setNumArmy(newArmyCount);
 			std::cout << playerName << " added " << number << " armies at " << location->getName() << std::endl;
 		}
@@ -280,7 +280,7 @@ bool Player::destroyArmy(int number, Territory<Region>* location, Player* player
 		location->removeArmies(number, player);
 		pResources->unplacedArmies += number;
 		destroyDone = true;
-		int newArmyCount = player->geNumOfOwnedCard() - number;
+		int newArmyCount = player->getNumArmy() - number;
 		player->setNumArmy(newArmyCount);
 		std::cout << "Successfully destroyed " << number << " armies owned by " << player->getName() << " at " << location->getName() << " ." << std::endl;
 	}
