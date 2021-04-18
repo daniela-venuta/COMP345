@@ -28,6 +28,8 @@
     <ClCompile Include="CardsDriver.cpp" />
     <ClCompile Include="BiddingFacility.cpp" />
     <ClCompile Include="BiddingFacilityDriver.cpp" />
+    <ClCompile Include="GameObserver.cpp" />
+    <ClCompile Include="GameStatObserverDriver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h" />
@@ -40,6 +42,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Cards.h" />
     <ClInclude Include="BiddingFacility.h" />
+    <ClInclude Include="GameObserver.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="invalid_map_disconnected.json" />
