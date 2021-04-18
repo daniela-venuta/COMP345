@@ -183,6 +183,7 @@ void Player::setBalance(int newBalance)
 
 int Player::geNumOfOwnedCard()
 {
+	state = playerName + " owns " + to_string(numOwnedCard) + " cards.";
 	return numOwnedCard;
 }
 
@@ -271,7 +272,6 @@ bool Player::destroyArmy(int number, Territory<Region>* location, Player* player
 {
 	bool destroyDone = false;
 
-
 	if (location->getTotalArmyCount() == 0)
 	{
 		state = "Action not permissible (Destroy Armies at " + location->getName() + "). There are no armies to destroy.";
@@ -303,7 +303,7 @@ bool Player::buildCity(Territory<Region>* location)
 	bool buildDone = false;
 	if (location->getPlacedArmies(this) == 0)
 	{
-		std::cout << "Action not permissible (Build City at " << location->getName() << ")." << " You need at least 1 army in this region." << std::endl;
+		state = "Action not permissible (Build City at " + location->getName() + "). You need at least 1 army in this region.";
 	}
 	else if (pResources->unplacedCities - 1 >= 0 && MAX_NUM_CITIES - pResources->unplacedCities + 1 <= MAX_NUM_CITIES)
 	{
@@ -314,7 +314,7 @@ bool Player::buildCity(Territory<Region>* location)
 	}
 	else
 	{
-		std::cout << "Action not permissible (Build City at " << location->getName() << ")." << ". You either do not have any cities left to place or you cannot place a city in this region." << std::endl;
+		state = "Action not permissible (Build City at " + location->getName() + "). You either do not have any cities left to place or you cannot place a city in this region.";
 	}
 
 	Notify();
@@ -579,7 +579,6 @@ Territory<Region>* Player::chooseTerritory(map<int, Territory<Region>*> regions)
 
 	return chosenRegion;
 }
-
 
 Player* Player::chooseEnemy(Territory<Region>* location, int numArmies)
 {

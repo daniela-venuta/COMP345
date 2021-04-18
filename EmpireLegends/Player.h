@@ -106,8 +106,8 @@ private:
 	vector<Territory<Region>*> playerTerritories;
 	Hand* playerHand;
 	Resources* pResources;
-
-
+	int numOwnedCard;
+	int numArmy;
 	int victoryPoints;
 
 	// Resources
