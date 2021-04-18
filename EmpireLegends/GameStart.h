@@ -16,15 +16,9 @@ public:
 	vector<Player*> detPlayerCount();
 	vector<Player*> detPlayerBotCount();
 	vector<Player*> detBotCount();
-	//vector<Player*> getPlayers();
+
 private:
 	string state;
-	
-//private:
-	//int typeMap;
-	//int numOfPlayers;
-	//vector<Player*> players;
-	//vector<Player*> biddingPlayers;
 };
 
 class GameStartObserver : public Observer
