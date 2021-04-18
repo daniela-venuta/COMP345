@@ -42,7 +42,7 @@ public:
 };
 
 // Human strategy. Choice and execution are dictated by user input.
-class HumanStrategy: public PlayerStrategy
+class HumanStrategy : public PlayerStrategy
 {
 public:
 	HumanStrategy() : PlayerStrategy("human") {}
@@ -81,7 +81,7 @@ class ActionObserver : public Observer {
 public:
 	ActionObserver(PlayerStrategy* s);
 	~ActionObserver();
-	
+
 	void Update() override;
 	void display();
 private:

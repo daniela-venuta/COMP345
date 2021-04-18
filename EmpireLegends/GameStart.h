@@ -10,15 +10,15 @@ public:
 	~GameStart();
 	void startGame();
 	void startSetup();
-	string getState() const { return state; };
+	string getState() { return state; };
 
 	GameMap* loadMap();
 	vector<Player*> detPlayerCount();
 	vector<Player*> detPlayerBotCount();
 	vector<Player*> detBotCount();
-
-private:
 	string state;
+private:
+	
 };
 
 class GameStartObserver : public Observer

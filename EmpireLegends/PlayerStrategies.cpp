@@ -14,7 +14,7 @@ Action* HumanStrategy::chooseAction(Action* action1, Action* action2)
 	int option = 0;
 
 	std::cout << "You must chose which action to use." << std::endl;
-	
+
 	while (chosenAction == nullptr)
 	{
 		std::cout << "Please enter the number next to the desired action:" << std::endl;
@@ -99,7 +99,7 @@ bool HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 			std::cout << "You may destroy " << numArmies << " enemy armies. Please choose a region: \n";
 			Territory<Region>* location = player->chooseTerritory(MapUtility::printTerritoriesWithEnemyArmies(map, player, numArmies));
 			Player* enemyPlayer = player->chooseEnemy(location, numArmies);
-			
+
 			state = "Destroying" + std::to_string(numArmies) + " of " + enemyPlayer->getName() + " at " + location->getName();
 			actionDone = player->destroyArmy(numArmies, location, enemyPlayer);
 		}
@@ -115,7 +115,7 @@ bool HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 			actionDone = player->placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
 		}
 
-		
+
 		numOfTry++;
 	}
 	if (numOfTry == 10)
@@ -144,7 +144,7 @@ bool NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 	int numOfTry = 0;
 	srand(time(nullptr));
 
-	while (!actionDone && numOfTry < 10 )
+	while (!actionDone && numOfTry < 10)
 	{
 		//Build City
 		if (build != std::string::npos)
@@ -197,7 +197,7 @@ bool NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 		{
 			const int numArmies = action->getMultiplier();
 			std::cout << player->getName() << " may destroy " << numArmies << " enemy armies. Choosing a region. \n";
-			
+
 			std::map<int, Territory<Region>*> locations = MapUtility::printTerritoriesWithEnemyArmies(map, player, numArmies);
 
 			if (locations.empty())
@@ -220,7 +220,7 @@ bool NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 					invalid = false;
 					chosenEnemy = newEnemyItr->first;
 				}
-				
+
 			} while (invalid);
 			state = "Destroying " + std::to_string(numArmies) + " of " + chosenEnemy->getName() + " at " + location->getName();
 			actionDone = player->destroyArmy(numArmies, location, chosenEnemy);
@@ -239,17 +239,17 @@ bool NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 			{
 				destination = getRandomTerritory(destinations);
 			} while (destination != MapUtility::getStartingLocation(map) && destination->getPlacedCities(player) == 0);
-			
+
 			state = "Placing " + std::to_string(numArmies) + " at " + destination->getName();
 			actionDone = player->placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
 		}
 		numOfTry++;
 	}
 
-	if(numOfTry >= 10){
+	if (numOfTry >= 10) {
 		state = "No more tries available";
 	}
-	
+
 	Notify();
 	return actionDone;
 }
@@ -266,12 +266,12 @@ Action* GreedyStrategy::chooseAction(Action* action1, Action* action2)
 	{
 		return action1->getMultiplier() >= action2->getMultiplier() ? action1 : action2;
 	}
-	
+
 	if (build1 != std::string::npos || destroy1 != std::string::npos)
 	{
 		return action1;
 	}
-	
+
 	if (build2 != std::string::npos || destroy2 != std::string::npos)
 	{
 		return action2;
@@ -313,7 +313,7 @@ void ActionObserver::Update()
 
 void ActionObserver::display()
 {
-	std::cout << "Turn events: "<< subject->state << std::endl;
+	std::cout << "Turn events: " << subject->state << std::endl;
 }
 
 ActionObserver::ActionObserver(PlayerStrategy* s)

@@ -38,8 +38,8 @@ void Deck::draw(const int count)
 	for (int i = 0; i < count; i++)
 	{
 		if (cardDeck.empty()) {
-			std::cout << "The deck is empty so no draw can be made" << std::endl; 	
-			return; 
+			std::cout << "The deck is empty so no draw can be made" << std::endl;
+			return;
 		}
 		// get card to add to the hand
 		Card* drawCard = cardDeck.at(cardDeck.size() - 1);
@@ -55,7 +55,7 @@ void Deck::draw(const int count)
 bool Deck::shuffle()
 {
 	bool success = false;
-	if(!this->isEmpty())
+	if (!this->isEmpty())
 	{
 		std::srand(time(0));
 
@@ -68,7 +68,7 @@ bool Deck::shuffle()
 
 		success = true;
 	}
-	
+
 	return success;
 }
 
@@ -162,11 +162,12 @@ Card* Hand::exchange(int rowPosition, Player* player)
 	const int cardCost = getCardCost(rowPosition);
 	Card* exchangeCard = nullptr;
 	int nonBot = player->getName().find("Bot");
-		
+
 	if (handCards.empty()) {
-		std::cout << "The hand is empty" << std::endl; 
-	} else if(rowPosition > handCards.size()){
-		std::cout << "Invalid card position" << std::endl; 
+		std::cout << "The hand is empty" << std::endl;
+	}
+	else if (rowPosition > handCards.size()) {
+		std::cout << "Invalid card position" << std::endl;
 	}
 	else if (player->getBalance() >= cardCost)
 	{
@@ -181,7 +182,7 @@ Card* Hand::exchange(int rowPosition, Player* player)
 		}
 	}
 	//Only printing for human players
-	else if(nonBot== std::string::npos)
+	else if (nonBot == std::string::npos)
 	{
 		std::cout << "Incorrect amount of coins entered. Operation failed" << std::endl;
 	}
@@ -294,7 +295,8 @@ ostream& operator<<(ostream& os, const Card& card)
 		if (card.getAndOr() == AndOr::OR)
 		{
 			os << "or" << std::endl;
-		} else if (card.getAndOr() == AndOr::AND)
+		}
+		else if (card.getAndOr() == AndOr::AND)
 		{
 			os << "and" << std::endl;
 		}

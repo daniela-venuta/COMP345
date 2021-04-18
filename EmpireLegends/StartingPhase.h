@@ -27,11 +27,9 @@ public:
 	~StartingPhase();
 
 	vector<Player*> startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
-	vector<Player*> startGamePlayerBot(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
-	vector<Player*> startGameBot(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
 	string getState() const { return state; };
 	Player* currentPlayer;
-	
+
 
 private:
 	void shuffleCardDeck() const;
@@ -40,7 +38,6 @@ private:
 	void placeArmiesOnMap();
 	void setupNonPlayers();
 	void startBidding();
-	void maxBidderFirst(string maxBidder);
 
 	int setNumberOfCoins(int numofPlayers);
 
@@ -58,7 +55,7 @@ class StartingPhaseObserver : public Observer
 public:
 	StartingPhaseObserver(StartingPhase* s);
 	~StartingPhaseObserver();
-	
+
 	void Update() override;
 	void display();
 

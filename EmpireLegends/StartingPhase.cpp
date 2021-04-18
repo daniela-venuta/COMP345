@@ -109,8 +109,8 @@ Color ColorUtilities::getColor(int index)
 // Default constructor for the Starting Phase to initialize all pointers
 StartingPhase::StartingPhase()
 {
-	nonPlayer1 = new Player("CPU1", 0);
-	map = nullptr;
+	//nonPlayer1 = new Player("CPU1", 0);
+
 	colorUtilities = new ColorUtilities();
 	cardDeck = nullptr;
 	numOfPlayers = 0;
@@ -121,9 +121,7 @@ StartingPhase::~StartingPhase()
 {
 	delete nonPlayer1;
 	delete colorUtilities;
-	nonPlayer1 = nullptr;
-	colorUtilities = nullptr;
-	map = nullptr;
+	delete map;
 }
 
 // Method to start the sequence of actions that are needed in the starting phase
@@ -133,10 +131,13 @@ vector<Player*> StartingPhase::startGame(GameMap* gameMap, const vector<Player*>
 	this->cardDeck = deck;
 	this->numOfPlayers = numPlayers;
 	this->map = gameMap;
-	
+
 	shuffleCardDeck();
 	assignPlayerResources();
 	setupStartingTerritories();
+	//setupNonPlayers();
+	//placeArmiesOnMap();
+
 	startBidding();
 
 	return players;
@@ -176,13 +177,21 @@ void StartingPhase::shuffleCardDeck() const
 	std::cout << "Here is the current deck: " << std::endl;
 	std::cout << *cardDeck;
 	std::cout << std::endl;
+
+	//std::cout << "The deck was shuffled." << std::endl;
+	//std::cout << *cardDeck;
+	//std::cout << std::endl;
+
+	// Draw cards from deck and add them to the hand
+	//cardDeck->draw(6);
+	//std::cout << *cardDeck;
 }
 
 // Assigns colours to the players and provides coins, armies and cities
 void StartingPhase::assignPlayerResources()
 {
 	std::cout << "\nColor options \n 1.Red \n 2.Green  \n 3.Blue \n 4. Yellow \n";
-	
+
 	// Assign number of coins based on players
 	int playerCoins = setNumberOfCoins(numOfPlayers);
 
@@ -194,8 +203,8 @@ void StartingPhase::assignPlayerResources()
 		Resources* resources = players[i]->getResources();
 		Color col = Color::none;
 
-		
-		while(isColorUnavailable)
+
+		while (isColorUnavailable)
 		{
 			//For Bots Players
 			int bot = player->getName().find("Bot");
@@ -207,13 +216,21 @@ void StartingPhase::assignPlayerResources()
 			{
 				std::cout << player->getName() << ", choose your color: ";
 				std::cin >> colorNum;
+
+				while (std::cin.fail()) {
+					std::cin.clear();
+					std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+					std::cout << "Bad entry.  Enter a NUMBER: ";
+					std::cin >> colorNum;
+				}
+
 			}
 
 			std::cout << player->getName();
 			col = colorUtilities->getColor(colorNum);
 			isColorUnavailable = !colorUtilities->getColorAvailability(col);
 
-			if(isColorUnavailable)
+			if (isColorUnavailable)
 			{
 				std::cout << "\nColor unavailable, try again \n";
 			}
@@ -226,9 +243,9 @@ void StartingPhase::assignPlayerResources()
 		// assign coins
 		resources->totalCoins = playerCoins;
 
-		
+
 		resources->playerColor = col;
-		
+
 		// mark color as unavailable
 		colorUtilities->setColorAvailability(col, false);
 	}
@@ -264,7 +281,7 @@ void StartingPhase::placeArmiesOnMap()
 		currentPlayer = player;
 		state = player->getName() + " is placing non-color players on the board";
 		Notify();
-		
+
 		std::cout << "\n" << player->getName() << ", place the non player army on the board. \n";
 
 		do
@@ -273,12 +290,12 @@ void StartingPhase::placeArmiesOnMap()
 			{
 				destination = player->chooseTerritory(MapUtility::printTerritoriesWithMap(map));
 			}
-			catch(TerritoryNotFoundException&){
+			catch (TerritoryNotFoundException&) {
 				std::cout << (territoryName.empty() ? territoryName : continentName) << " does not exist. Try again. \n"; // Territory or region string was invalid
 			}
-		
+
 		} while (destination == nullptr);
-		
+
 		nonPlayer1->placeNewArmies(1, destination, destination);// Bypassing initial region check
 	}
 }
@@ -290,7 +307,7 @@ void StartingPhase::setupNonPlayers()
 	colorUtilities->setColorAvailability(color1, false);
 
 	Resources* resources1 = nonPlayer1->getResources();
-	
+
 	resources1->playerColor = color1;
 	resources1->unplacedCities = 3;
 	resources1->unplacedArmies = 18;
@@ -303,11 +320,7 @@ void StartingPhase::startBidding()
 	Notify();
 	// Players place bids
 	string maxBidder = BiddingFacility::placeBids(players);
-	maxBidderFirst(maxBidder);
-}
 
-void StartingPhase::maxBidderFirst(string maxBidder)
-{
 	for (int i = 0; i < players.size(); i++)
 	{
 		auto temp = players[i];
@@ -317,12 +330,9 @@ void StartingPhase::maxBidderFirst(string maxBidder)
 			players.insert(players.begin(), temp);
 			return;
 		}
-		else
-		{
-			continue;
-		}
 	}
 }
+
 
 StartingPhaseObserver::StartingPhaseObserver(StartingPhase* s)
 {
