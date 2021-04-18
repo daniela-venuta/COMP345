@@ -58,7 +58,7 @@ void GameEngine::setDeck()
 void GameEngine::singleMode()
 {
 	std::cout << "\n-------------------" << std::endl;
-	std::cout << "Single Game Mode" << std::endl; 
+	std::cout << "Single Game Mode" << std::endl;
 	std::cout << "------------------" << std::endl;
 
 	//Game Start Part

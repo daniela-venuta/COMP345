@@ -25,38 +25,44 @@ int BiddingFacility::getPlayerBid(Player* player)
 	return bids[player];
 }
 
- string BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
+string BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 
 	auto playerBid = 0;
 	string temp;
 
 	// each players places their bid
-	
-		for (auto& player : biddingPlayers)
+
+	for (auto& player : biddingPlayers)
+	{
+		//For Bot Players
+		int bot = player->getName().find("Bot");
+		if (bot != std::string::npos)
 		{
-			//For Bot Players
-			int bot = player->getName().find("Bot");
-			if (bot != std::string::npos)
-			{
-				do {
-					std::cout << "\n" << player->getName() << " places its bid. "<<std::endl;
-					playerBid = rand() % player->getCoins() + 1;
-				} while (playerBid > player->getCoins() || playerBid < 0);
-			}
-
-			//For Human Players
-			else 
-			{
-				do {
-					std::cout << "\n" << player->getName() << " place your bid: ";
-					std::cin >> playerBid;
-				} while (playerBid > player->getCoins() || playerBid < 0);
-			}
-
-			addPlayerBid(player, playerBid);
+			do {
+				std::cout << "\n" << player->getName() << " places its bid. " << std::endl;
+				playerBid = rand() % player->getCoins() + 1;
+			} while (playerBid > player->getCoins() || playerBid < 0);
 		}
-	
-	
+		else  //For Human Players
+		{
+			do {
+				std::cout << "\n" << player->getName() << " place your bid: ";
+				std::cin >> playerBid;
+
+				while (std::cin.fail()) {
+					std::cin.clear();
+					std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+					std::cout << "Bad entry.  Enter a NUMBER: ";
+					std::cin >> playerBid;
+				}
+
+			} while (playerBid > player->getCoins() || playerBid < 0);
+		}
+
+		addPlayerBid(player, playerBid);
+	}
+
+
 	std::cout << "--------------------------" << std::endl;
 	std::cout << "WHO WILL GO FIRST??:" << std::endl;
 	std::cout << "--------------------------\n" << std::endl;
@@ -89,7 +95,8 @@ int BiddingFacility::getPlayerBid(Player* player)
 		if (maxBid == 0)
 		{
 			std::cout << "\nAll players bid 0." << std::endl;
-		} else
+		}
+		else
 		{
 			std::cout << "\nThere is a tie for highest bidder at " << maxBid << "." << std::endl;
 		}
@@ -97,19 +104,19 @@ int BiddingFacility::getPlayerBid(Player* player)
 		std::cout << "\nThe winner will be chosen by alphabetical last name order." << std::endl;
 
 		std::sort(maxBidders.begin(), maxBidders.end(), [](const Player* player1, const Player* player2)
-		{
-			auto playerName1 = player1->getName();
-			std::transform(playerName1.begin(), playerName1.end(), playerName1.begin(), ::tolower);
+			{
+				auto playerName1 = player1->getName();
+				std::transform(playerName1.begin(), playerName1.end(), playerName1.begin(), ::tolower);
 
-			auto playerName2 = player2->getName();
-			std::transform(playerName2.begin(), playerName2.end(), playerName2.begin(), ::tolower);
+				auto playerName2 = player2->getName();
+				std::transform(playerName2.begin(), playerName2.end(), playerName2.begin(), ::tolower);
 
-			return playerName1.compare(playerName2) >= 0;
-		});
+				return playerName1.compare(playerName2) >= 0;
+			});
 	}
 
 	Player* maxBidder = maxBidders.back();
-	
+
 	const int supply = maxBidder->getCoins() - maxBid;
 	maxBidder->setCoins(supply);
 	setCurrentBid(maxBid);

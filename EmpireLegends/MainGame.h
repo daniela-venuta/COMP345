@@ -1,6 +1,7 @@
 #pragma once
 #include "BiddingFacility.h"
 #include "Cards.h"
+#include "GameObserver.h"
 
 class PlayerRotation
 {
@@ -15,12 +16,15 @@ public:
 	int getNbPlayers();
 };
 
-class MainGame
+class MainGame : public Observable
 {
 	GameMap* map;
 	Deck* deck;
 	PlayerRotation* players;
 	vector<Card*> cardDeck;
+	string state;
+	void startPlayerTurn(const Player* player);
+	void SetupEndGame();
 
 public:
 
@@ -32,4 +36,16 @@ public:
 	int pickACard();
 	int botPickACard();
 	void chooseWinner();
+	string getState() { return state; };
+};
+
+class MainGameObserver : public Observer
+{
+public:
+	MainGameObserver(MainGame* s);
+	~MainGameObserver();
+	void Update() override;
+	void display();
+private:
+	MainGame* subject;
 };

@@ -45,6 +45,18 @@ Player* MainGame::getCurrentPlayer()
 	return players->getCurrentPlayer();
 }
 
+void MainGame::startPlayerTurn(const Player* player)
+{
+	state = player->getName() + "'s turn. They are buying a card";
+	Notify();
+}
+
+void MainGame::SetupEndGame()
+{
+	state = "Initiating End Game and Calculating Winner....";
+	Notify();
+}
+
 MainGame::MainGame(GameMap* map, Deck* deck, vector<Player*>& players)
 {
 	this->map = map;
@@ -54,12 +66,15 @@ MainGame::MainGame(GameMap* map, Deck* deck, vector<Player*>& players)
 
 MainGame::~MainGame()
 {
-	delete map;  
+	delete map;
 	delete players;
 }
 
 void MainGame::afterAction()
 {
+	state = "Turn ended.";
+	Notify();
+
 	this->deck->draw(1);
 	this->players->rotate();
 	std::cout << std::endl;
@@ -76,10 +91,10 @@ void MainGame::mainGameloop(int numOfTurns) {
 		std::cout << "Turn #" << turnNum << std::endl;
 
 		for (int i = 0; i < players->getNbPlayers(); i++) {
-			
-			
+
+
 			Player* player = getCurrentPlayer();
-			std::cout << "\n\nPlayer " << player->getName() << std::endl;
+			startPlayerTurn(player);
 
 			Card* faceCard = player->chooseCard(deck->getHand());
 
@@ -94,19 +109,21 @@ void MainGame::mainGameloop(int numOfTurns) {
 				player->applyGood(faceCard->getGood());
 			}
 
+
 			afterAction();
 			std::cout << *deck->getHand() << std::endl;
 		}
 		turnNum++;
+		Notify();
 	}
 	std::cout << "The Game is Over!!" << std::endl;
 	chooseWinner();
 }
 
-
 // Calculate winner based off victory points (VPs)
 void MainGame::chooseWinner() {
 
+	SetupEndGame();
 	vector<Player*> allPlayers = players->players;
 
 	for (Player* player : allPlayers) {
@@ -265,11 +282,10 @@ void MainGame::chooseWinner() {
 	const int nameWidth = 15;
 	const int numWidth = 10; 
 	
-	
 	std::cout << "----------------------------------------------------------------------------" << std::endl;
 	std::cout << "Player #"
 		<< std::setw(nameWidth + 3) << "Cards"
-		<< std::setw(numWidth + 10) << "Victory Points" 
+		<< std::setw(numWidth + 10) << "Victory Points"
 		<< std::setw(numWidth) << "Coins"
 		<< std::setw(numWidth + 10) << "Armies Placed" << std::endl;
 	std::cout << "----------------------------------------------------------------------------" << std::endl;
@@ -282,7 +298,28 @@ void MainGame::chooseWinner() {
 			<< std::setw(numWidth) << player->getResources()->totalCoins
 			<< std::setw(numWidth + 10) << player->getNumArmy() << std::endl;
 		std::cout << "----------------------------------------------------------------------------" << std::endl;
-
 	}
 }
 
+MainGameObserver::MainGameObserver(MainGame* s)
+{
+	subject = s;
+	subject->Attach(this);
+}
+
+MainGameObserver::~MainGameObserver()
+{
+	subject->Detach(this);
+}
+
+void MainGameObserver::Update()
+{
+	display();
+}
+
+void MainGameObserver::display()
+{
+	std::cout << "--------------------------------------------------------------------- \n ---------------------------------------------------------------------  " << std::endl;
+	std::cout << "Main Game: " << subject->getState() << std::endl;
+	std::cout << "--------------------------------------------------------------------- \n ---------------------------------------------------------------------  " << std::endl;
+}

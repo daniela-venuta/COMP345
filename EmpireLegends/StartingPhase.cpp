@@ -127,8 +127,7 @@ StartingPhase::~StartingPhase()
 vector<Player*> StartingPhase::startGame(const vector<Player*>& playerVector)
 {
 	this->players = playerVector;
-	this->numOfPlayers = playerVector.size();
-	
+
 	shuffleCardDeck();
 	assignPlayerResources();
 	setupStartingTerritories();
@@ -162,6 +161,7 @@ int StartingPhase::setNumberOfCoins(int numPlayers)
 
 	return playerCoins;
 }
+
 // Method to initiate shuffling of the current deck of cards (changes their order in the vector)
 void StartingPhase::shuffleCardDeck() const
 {
@@ -169,14 +169,21 @@ void StartingPhase::shuffleCardDeck() const
 	std::cout << "Here is the current deck: " << std::endl;
 	std::cout << *cardDeck;
 	std::cout << std::endl;
+
+	//std::cout << "The deck was shuffled." << std::endl;
+	//std::cout << *cardDeck;
+	//std::cout << std::endl;
+
+	// Draw cards from deck and add them to the hand
+	//cardDeck->draw(6);
+	//std::cout << *cardDeck;
 }
 
 // Assigns colours to the players and provides coins, armies and cities
 void StartingPhase::assignPlayerResources()
 {
-	
 	std::cout << "\nColor options \n 1.Red \n 2.Green  \n 3.Blue \n 4. Yellow \n";
-	
+
 	// Assign number of coins based on players
 	int playerCoins = setNumberOfCoins(numOfPlayers);
 
@@ -188,8 +195,8 @@ void StartingPhase::assignPlayerResources()
 		Resources* resources = players[i]->getResources();
 		Color col = Color::none;
 
-		
-		while(isColorUnavailable)
+
+		while (isColorUnavailable)
 		{
 			//For Bots Players
 			int bot = player->getName().find("Bot");
@@ -197,19 +204,25 @@ void StartingPhase::assignPlayerResources()
 			{
 				colorNum = rand() % 4 + 1;
 			}
-
-			//For Human Players
-			else 
+			else //For Human Players
 			{
 				std::cout << player->getName() << ", choose your color: ";
 				std::cin >> colorNum;
+
+				while (std::cin.fail()) {
+					std::cin.clear();
+					std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+					std::cout << "Bad entry.  Enter a NUMBER: ";
+					std::cin >> colorNum;
+				}
+
 			}
 
 			std::cout << player->getName();
 			col = colorUtilities->getColor(colorNum);
 			isColorUnavailable = !colorUtilities->getColorAvailability(col);
 
-			if(isColorUnavailable)
+			if (isColorUnavailable)
 			{
 				std::cout << "\nColor unavailable, try again \n";
 			}
@@ -222,9 +235,9 @@ void StartingPhase::assignPlayerResources()
 		// assign coins
 		resources->totalCoins = playerCoins;
 
-		
+
 		resources->playerColor = col;
-		
+
 		// mark color as unavailable
 		colorUtilities->setColorAvailability(col, false);
 	}
@@ -257,6 +270,10 @@ void StartingPhase::placeArmiesOnMap()
 		int index = i % 2;
 
 		Player* player = players[index];
+		currentPlayer = player;
+		state = player->getName() + " is placing non-color players on the board";
+		Notify();
+
 		std::cout << "\n" << player->getName() << ", place the non player army on the board. \n";
 
 		do
@@ -265,10 +282,10 @@ void StartingPhase::placeArmiesOnMap()
 			{
 				destination = player->chooseTerritory(MapUtility::printTerritoriesWithMap(map));
 			}
-			catch(TerritoryNotFoundException&){
+			catch (TerritoryNotFoundException&) {
 				std::cout << (territoryName.empty() ? territoryName : continentName) << " does not exist. Try again. \n"; // Territory or region string was invalid
 			}
-		
+
 		} while (destination == nullptr);
 	}
 }
@@ -276,13 +293,11 @@ void StartingPhase::placeArmiesOnMap()
 // Initiates the bidding phase
 void StartingPhase::startBidding()
 {
+	state = "BIDDING START";
+	Notify();
 	// Players place bids
 	string maxBidder = BiddingFacility::placeBids(players);
-	maxBidderFirst(maxBidder);
-}
 
-void StartingPhase::maxBidderFirst(string maxBidder)
-{
 	for (int i = 0; i < players.size(); i++)
 	{
 		auto temp = players[i];
@@ -293,4 +308,28 @@ void StartingPhase::maxBidderFirst(string maxBidder)
 			return;
 		}
 	}
+}
+
+
+StartingPhaseObserver::StartingPhaseObserver(StartingPhase* s)
+{
+	subject = s;
+	subject->Attach(this);
+}
+
+StartingPhaseObserver::~StartingPhaseObserver()
+{
+	subject->Detach(this);
+}
+
+void StartingPhaseObserver::Update()
+{
+	display();
+}
+
+void StartingPhaseObserver::display()
+{
+	std::cout << "--------------------------------------------------------------" << std::endl;
+	std::cout << "Starting Phase: " << subject->getState() << std::endl;
+	std::cout << "--------------------------------------------------------------" << std::endl;
 }

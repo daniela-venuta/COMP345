@@ -1,22 +1,24 @@
-//#include "MainGame.h"
-//#include <vector>
-//#include <iostream>
-//#include <algorithm>
 //
-//int main()
+//#include "StartingPhase.h"
+//#include "MainGame.h"
+//#include "GameStart.h"
+//#include "MapLoader.h"
+//#include "PlayerStrategies.h"
+//
+//Deck* setDeck()
 //{
+//	Deck* deck = new Deck();
 //	vector<Card*> cardVector;
 //	cardVector.reserve(27);
-//	vector<Player*> players;
-//	int numOfTurns = 0;
-//	int playerCount = 0;
 //
-//	Card* card1 = new Card("Dire Dragon", new Flying, new Action("Place armies", 3) , new Action("Destroy armies", 3), AndOr::AND);
+//	Card* card1 = new Card("Dire Dragon", new Flying, new Action("Place armies", 3), new Action("Destroy armies", 3), AndOr::AND);
 //	Card* card2 = new Card("Dire Giant", new Immune, new Action("Place armies", 3), new Action("Destroy armies", 3), AndOr::AND);
 //	Card* card3 = new Card("Dire Eye", new Flying, new Action("Place armies", 4));
 //	Card* card4 = new Card("Dire Ogre", new CoinVPs, new Action("Move armies", 2));
-//	Card* card5 = new Card("Lake", new SetNameVPs(CardSet::forest), new Action("Place armies", 2), new Action("Move armies", 3),AndOr::AND);
-//	Caard* card8 = new Card("Cursed Gargoyles", new Flying, new Action("Move armies", 5));
+//	Card* card5 = new Card("Lake", new SetNameVPs(CardSet::forest), new Action("Place armies", 2), new Action("Move armies", 3), AndOr::AND);
+//	Card* card6 = new Card("Noble Hills", new CompleteSetVPs(3, CardSet::noble), new Action("Place armies", 3));
+//	Card* card7 = new Card("Arcane Phoenix", new Flying, new Action("Move armies", 5));
+//	Card* card8 = new Card("Cursed Gargoyles", new Flying, new Action("Move armies", 5));
 //	Card* card9 = new Card("Arcane Sphinx", new Flying, new Action("Place armies", 2), new Action("Move armies", 4), AndOr::OR);
 //	Card* card10 = new Card("Dire Goblin", new Elixir(1), new Action("Move armies", 5));
 //	Card* card11 = new Card("Forest Elf", new ExtraArmy, new Action("Place armies", 3), new Action("Move armies", 2), AndOr::OR);
@@ -25,7 +27,7 @@
 //	Card* card14 = new Card("Noble Unicorn", new ExtraMove, new Action("Move armies", 4), new Action("Place armies", 1), AndOr::AND);
 //	Card* card15 = new Card("Night Hydra", new ExtraArmy, new Action("Move armies", 5), new Action("Destroy armies", 1), AndOr::AND);
 //	Card* card16 = new Card("Night Village", new ExtraArmy, new Action("Build city", 1));
-//	Card* card17 = new Card("Castle 1", new Elixir(1), new Action("Place armies", 3),new Action("Build city", 1), AndOr::OR);
+//	Card* card17 = new Card("Castle 1", new Elixir(1), new Action("Place armies", 3), new Action("Build city", 1), AndOr::OR);
 //	Card* card18 = new Card("Forest Pixie", new ExtraArmy, new Action("Move armies", 4));
 //	Card* card19 = new Card("Arcane Manticore", new ExtraMove, new Action("Place armies", 4), new Action("Destroy armies", 1), AndOr::AND);
 //	Card* card20 = new Card("Ancient Woods", new ExtraArmy, new Action("Build city", 1), new Action("Place armies", 1), AndOr::AND);
@@ -65,44 +67,52 @@
 //	cardVector.push_back(card26);
 //	cardVector.push_back(card27);
 //
-//	Deck* deck = new Deck(cardVector);
+//	deck = new Deck(cardVector);
 //
-//	do {
-//		std::cout << "How many players will be playing (2-4)?  ";
-//		std::cin >> playerCount;
-//	} while (playerCount > 4 || playerCount < 2);
+//	return deck;
+//}
 //
+//int main()
+//{
+//	vector<ActionObserver*> actionObservers;
+//	GameStart* gameStart = new GameStart();
+//	GameStartObserver* gameStartObserver = new GameStartObserver(gameStart);
 //
-//	switch (playerCount) {
-//		case 2:
-//			players.push_back(new Player("John", 14));
-//			players.push_back(new Player("Bob", 14));
-//			numOfTurns = 13;
-//			break;
+//	//Game Start Part
+//	GameMap* gameMap = gameStart->loadMap();
+//	vector<Player*> players = gameStart->detPlayerBotCount();
 //
-//		case 3:
-//			players.push_back(new Player("John", 11));
-//			players.push_back(new Player("Bob", 11));
-//			players.push_back(new Player("Anna", 11));
-//			numOfTurns = 10;
-//			break;
+//	int num = players.size();
+//	StartingPhase* startPhase = new StartingPhase();
+//	StartingPhaseObserver* startingPhaseObserver = new StartingPhaseObserver(startPhase);
+//	Deck* deck = setDeck();
+//	players = startPhase->startGame(gameMap, players, deck, num);
 //
-//		case 4:
-//			players.push_back(new Player("John", 9));
-//			players.push_back(new Player("Bob", 9));
-//			players.push_back(new Player("Jack", 9));
-//			players.push_back(new Player("Anna", 9));
-//			numOfTurns = 8;
-//			break;
+//	for (int i = 0; i < players.size(); i++)
+//	{
+//		PlayerStrategy* strat = players[i]->getStrategy();
+//		ActionObserver* actionObserver = new ActionObserver(strat);
+//		actionObservers.push_back(actionObserver);
 //	}
 //
-//	MainGame* mainGame = new MainGame(nullptr, deck, players);
+//	MainGame* mainGame = new MainGame(gameMap, deck, players);
+//	MainGameObserver* mainGameObserver = new MainGameObserver(mainGame);
 //
-//	mainGame->mainGameloop(numOfTurns);
+//	int numOfTurns = 4;
+//	mainGame->mainGameloop(numOfTurns);// Number of turns was set to a specific value based on criterias
 //
-//	delete mainGame;rd* card6 = new Card("Noble Hills", new CompleteSetVPs(3, CardSet::noble), new Action("Place armies", 3));
-//	Card* card7 = new Card("Arcane Phoenix", new Flying, new Action("Move armies", 5));
-//	
+//	delete gameStartObserver;
+//	delete gameStart;
+//	delete startingPhaseObserver;
+//	delete startPhase;
+//
+//	for (int i = 0; i < actionObservers.size(); i++)
+//	{
+//		delete actionObservers[i];
+//	}
+//	delete deck;
+//	delete mainGameObserver;
+//	delete mainGame;
 //
 //	return 0;
 //}

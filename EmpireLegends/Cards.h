@@ -221,12 +221,12 @@ public:
 	~Action() = default;
 	// copy constructor
 	Action(const Action& action);
-	
+
 	// stream insertion operator overload
 	friend ostream& operator<<(ostream& os, const Action& action);
 	// assignment operator
 	Action& operator=(const Action& action);
-	
+
 	string getName() const { return name; }
 	int getMultiplier() const { return multiplier; }
 };
@@ -276,7 +276,7 @@ public:
 
 	void draw(const int count);
 	bool shuffle();
-	
+
 	Hand* getHand() const;
 
 private:
@@ -291,5 +291,3 @@ struct CardCost
 {
 	vector<int> cardCost = {};
 };
-
-

@@ -12,11 +12,9 @@ private:
 	StartingPhase* startPhase;
 
 	void setDeck();
-
-
 public:
 	GameEngine();
 	~GameEngine(); 
 	void singleMode();
-	void tournamentMode(); 
+	void tournamentMode();
 };
