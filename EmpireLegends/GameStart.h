@@ -9,14 +9,16 @@ public:
 	GameStart();
 	~GameStart();
 	void startGame();
+	void startSetup();
+	string getState() const { return state; };
 
-	string state;
-	
 	GameMap* loadMap();
 	vector<Player*> detPlayerCount();
 	vector<Player*> detPlayerBotCount();
 	vector<Player*> detBotCount();
 	//vector<Player*> getPlayers();
+private:
+	string state;
 	
 //private:
 	//int typeMap;

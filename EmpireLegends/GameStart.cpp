@@ -23,6 +23,11 @@ GameStart::~GameStart() {
 
 GameMap* GameStart::loadMap() {
 
+	startGame();
+	
+	state = "Map Selection";
+	Notify();
+	
 	MapLoader* mapLoader = new MapLoader();
 	int x = 0;
 	std::cout << "Please enter the type of map you wish to play with." << std::endl;
@@ -67,6 +72,8 @@ GameMap* GameStart::loadMap() {
 
 vector<Player*> GameStart::detPlayerCount() {
 
+	startSetup();
+	
 	int playerCoins = 0;
 	string playerName = "";
 	int numOfPlayers = 0;
@@ -118,6 +125,8 @@ vector<Player*> GameStart::detPlayerCount() {
 
 vector<Player*> GameStart::detPlayerBotCount()
 {
+	startSetup();
+	
 	int playerCoins = 0;
 	string playerName = "";
 	int numOfPlayers = 2;
@@ -219,6 +228,12 @@ void GameStart::startGame()
 	Notify();
 }
 
+void GameStart::startSetup()
+{
+	state = "Setting Up Players.";
+	Notify();
+}
+
 GameStartObserver::GameStartObserver(GameStart* s)
 {
 	subject = s;
@@ -237,5 +252,7 @@ void GameStartObserver::Update()
 
 void GameStartObserver::display()
 {
-	std::cout << subject->state;
+	std::cout << "--------------------------------------------------------------" << std::endl;
+	std::cout << "Game Start Phase: " << subject->getState() << std::endl;
+	std::cout << "--------------------------------------------------------------" << std::endl;
 }

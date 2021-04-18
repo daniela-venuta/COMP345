@@ -222,7 +222,7 @@ bool NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 				}
 				
 			} while (invalid);
-			state = "Destroying" + std::to_string(numArmies) + " of " + chosenEnemy->getName() + " at " + location->getName();
+			state = "Destroying " + std::to_string(numArmies) + " of " + chosenEnemy->getName() + " at " + location->getName();
 			actionDone = player->destroyArmy(numArmies, location, chosenEnemy);
 		}
 		//Place New Armies

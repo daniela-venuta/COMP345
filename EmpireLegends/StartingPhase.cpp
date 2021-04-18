@@ -114,8 +114,6 @@ StartingPhase::StartingPhase()
 	colorUtilities = new ColorUtilities();
 	cardDeck = nullptr;
 	numOfPlayers = 0;
-
-	// observer pattern
 }
 
 // Destructor for the StartingPhase class for cleanup
@@ -273,7 +271,7 @@ void StartingPhase::placeArmiesOnMap()
 
 		Player* player = players[index];
 		currentPlayer = player;
-		currentAction = player->getName() + " is placing non-colour players on the board";
+		state = player->getName() + " is placing non-color players on the board";
 		Notify();
 		
 		std::cout << "\n" << player->getName() << ", place the non player army on the board. \n";
@@ -310,7 +308,7 @@ void StartingPhase::setupNonPlayers()
 // Initiates the bidding phase
 void StartingPhase::startBidding()
 {
-	currentAction = "----------- BIDDING START -----------------";
+	state = "BIDDING START";
 	Notify();
 	// Players place bids
 	string maxBidder = BiddingFacility::placeBids(players);
@@ -353,8 +351,7 @@ void StartingPhaseObserver::Update()
 
 void StartingPhaseObserver::display()
 {
-	std::cout << "-----------------------------------" << std::endl;
-	//string name = subject->currentPlayer->getName();
-	std::cout << ": " << subject->currentAction << std::endl;
-	std::cout << "-----------------------------------" << std::endl;
+	std::cout << "--------------------------------------------------------------" << std::endl;
+	std::cout << "Starting Phase: " << subject->getState() << std::endl;
+	std::cout << "--------------------------------------------------------------" << std::endl;
 }

@@ -29,10 +29,10 @@
     <ClCompile Include="CardsDriver.cpp" />
     <ClCompile Include="BiddingFacility.cpp" />
     <ClCompile Include="BiddingFacilityDriver.cpp" />
-    <ClCompile Include="PhaseObserverDrivercpp.cpp" />
+    <ClCompile Include="PhaseObserverDriver.cpp" />
   </ItemGroup>
   <ItemGroup>
-   <ClInclude Include="GameObserver.h" />
+    <ClInclude Include="GameObserver.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameStart.h" />
     <ClInclude Include="MainGame.h" />

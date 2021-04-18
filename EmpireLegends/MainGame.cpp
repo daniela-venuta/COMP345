@@ -73,12 +73,13 @@ MainGame::~MainGame()
 
 void MainGame::afterAction()
 {
-	state = "";
+	state = "Turn ended.";
+	Notify();
+	
 	this->deck->draw(1);
 	this->players->rotate();
 	std::cout << std::endl;
 	std::cout << getCurrentPlayer()->getName() << " plays next." << std::endl;
-	Notify();
 }
 
 void MainGame::mainGameloop(int numOfTurns) {
@@ -131,10 +132,14 @@ void MainGame::mainGameloop(int numOfTurns) {
 
 					if (faceCard == nullptr) {
 						std::cout << "Card not added to player" << std::endl;
+						state = "Invalid card position.";
+					}else
+					{
+						state = player->getName() = " has picked the card at position " + std::to_string(cardPosition);
 					}
 				}
 			}
-			// DANIELA ADD STATE
+			
 			std::cout << "Picked card: " << std::endl << *faceCard << std::endl;
 			bool getCard = player->andOrAction( faceCard, map);
 			
@@ -152,6 +157,7 @@ void MainGame::mainGameloop(int numOfTurns) {
 		}
 		turnNum++;
 		numOfTurns--;
+		Notify();
 	}
 	std::cout << "The Game is Over!!" << std::endl;
 	chooseWinner();
@@ -384,6 +390,6 @@ void MainGameObserver::Update()
 void MainGameObserver::display()
 {
 	std::cout << "--------------------------------------------------------------------- \n ---------------------------------------------------------------------  " << std::endl;
-	std::cout << subject->getState() << std::endl;
+	std::cout << "Main Game: " << subject->getState() << std::endl;
 	std::cout << "--------------------------------------------------------------------- \n ---------------------------------------------------------------------  " << std::endl;
 }

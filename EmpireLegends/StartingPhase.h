@@ -29,9 +29,9 @@ public:
 	vector<Player*> startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
 	vector<Player*> startGamePlayerBot(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
 	vector<Player*> startGameBot(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
-
+	string getState() const { return state; };
 	Player* currentPlayer;
-	string currentAction;
+	
 
 private:
 	void shuffleCardDeck() const;
@@ -50,6 +50,7 @@ private:
 	Player* nonPlayer1;
 	GameMap* map;
 	ColorUtilities* colorUtilities;
+	string state;
 };
 
 class StartingPhaseObserver : public Observer

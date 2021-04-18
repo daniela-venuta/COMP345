@@ -3,6 +3,7 @@
 #include "MainGame.h"
 #include "GameStart.h"
 #include "MapLoader.h"
+#include "PlayerStrategies.h"
 
 Deck* setDeck()
 {
@@ -73,24 +74,45 @@ Deck* setDeck()
 
 int main()
 {
+	vector<ActionObserver*> actionObservers;
 	GameStart* gameStart = new GameStart();
-	GameStartObserver* gameStartObersever = new GameStartObserver(gameStart);
+	GameStartObserver* gameStartObserver = new GameStartObserver(gameStart);
 	
 	//Game Start Part
 	GameMap* gameMap = gameStart->loadMap();
-	vector<Player*> players = gameStart->detPlayerCount();
+	vector<Player*> players = gameStart->detPlayerBotCount();
 
 	int num = players.size();
 	StartingPhase* startPhase = new StartingPhase();
-	StartingPhaseObserver* startingPhase = new StartingPhaseObserver(startPhase);
+	StartingPhaseObserver* startingPhaseObserver = new StartingPhaseObserver(startPhase);
 	Deck* deck = setDeck();
 	players = startPhase->startGame(gameMap, players, deck, num);
 
+	for(int i=0; i<players.size(); i++)
+	{
+		PlayerStrategy* strat = players[i]->getStrategy();
+		ActionObserver* actionObserver = new ActionObserver(strat);
+		actionObservers.push_back(actionObserver);
+	}
+	
 	MainGame* mainGame = new MainGame(gameMap, deck, players);
 	MainGameObserver* mainGameObserver = new MainGameObserver(mainGame);
 
 	int numOfTurns = 4;
 	mainGame->mainGameloop(numOfTurns);// Number of turns was set to a specific value based on criterias
+
+	delete gameStartObserver;
+	delete gameStart;
+	delete startingPhaseObserver;
+	delete startPhase;
+	
+	for (int i = 0; i < actionObservers.size(); i++)
+	{
+		delete actionObservers[i];
+	}
+	delete deck;
+	delete mainGameObserver;
+	delete mainGame;
 	
 	return 0;
 }
