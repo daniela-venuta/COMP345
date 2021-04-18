@@ -284,7 +284,7 @@ void ActionObserver::Update()
 
 void ActionObserver::display()
 {
-	std::cout << subject->state;
+	std::cout << "Turn events: "<< subject->state << std::endl;
 }
 
 ActionObserver::ActionObserver(PlayerStrategy* s)

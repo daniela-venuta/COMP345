@@ -213,7 +213,7 @@ void StartingPhase::assignPlayerResources()
 				std::cout << "\nColor unavailable, try again \n";
 			}
 		}
-		
+
 		resources->playerColor = col;
 		// mark color as unavailable
 		colorUtilities->setColorAvailability(col, false);
@@ -254,6 +254,10 @@ void StartingPhase::placeArmiesOnMap()
 		int index = i % 2;
 
 		Player* player = players[index];
+		
+		currentAction = player->getName() + " is placing non-colour players on the board";
+		Notify();
+		
 		std::cout << "\n" << player->getName() << ", place the non player army on the board. \n";
 
 		do
@@ -288,6 +292,8 @@ void StartingPhase::setupNonPlayers()
 // Initiates the bidding phase
 void StartingPhase::startBidding()
 {
+	currentAction = "----------- BIDDING START -----------------";
+	Notify();
 	// Players place bids
 	BiddingFacility::placeBids(players);
 }
@@ -313,4 +319,5 @@ void StartingPhaseObserver::display()
 	std::cout << "-----------------------------------" << std::endl;
 	string name = subject->currentPlayer->getName();
 	std::cout << name << ": " << subject->currentAction << std::endl;
+	std::cout << "-----------------------------------" << std::endl;
 }
