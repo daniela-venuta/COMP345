@@ -169,6 +169,7 @@ int StartingPhase::setNumberOfCoins(int numofPlayers)
 
 	return playerCoins;
 }
+
 // Method to initiate shuffling of the current deck of cards (changes their order in the vector)
 void StartingPhase::shuffleCardDeck() const
 {
@@ -189,7 +190,6 @@ void StartingPhase::shuffleCardDeck() const
 // Assigns colours to the players and provides coins, armies and cities
 void StartingPhase::assignPlayerResources()
 {
-	
 	std::cout << "\nColor options \n 1.Red \n 2.Green  \n 3.Blue \n 4. Yellow \n";
 	
 	// Assign number of coins based on players
@@ -212,9 +212,7 @@ void StartingPhase::assignPlayerResources()
 			{
 				colorNum = rand() % 4 + 1;
 			}
-
-			//For Human Players
-			else 
+			else //For Human Players
 			{
 				std::cout << player->getName() << ", choose your color: ";
 				std::cin >> colorNum;
@@ -242,8 +240,6 @@ void StartingPhase::assignPlayerResources()
 		
 		// mark color as unavailable
 		colorUtilities->setColorAvailability(col, false);
-
-		
 	}
 }
 
@@ -274,6 +270,10 @@ void StartingPhase::placeArmiesOnMap()
 		int index = i % 2;
 
 		Player* player = players[index];
+		currentPlayer = player;
+		state = player->getName() + " is placing non-color players on the board";
+		Notify();
+		
 		std::cout << "\n" << player->getName() << ", place the non player army on the board. \n";
 
 		do
@@ -308,6 +308,8 @@ void StartingPhase::setupNonPlayers()
 // Initiates the bidding phase
 void StartingPhase::startBidding()
 {
+	state = "BIDDING START";
+	Notify();
 	// Players place bids
 	string maxBidder = BiddingFacility::placeBids(players);
 	maxBidderFirst(maxBidder);
@@ -329,4 +331,27 @@ void StartingPhase::maxBidderFirst(string maxBidder)
 			continue;
 		}
 	}
+}
+
+StartingPhaseObserver::StartingPhaseObserver(StartingPhase* s)
+{
+	subject = s;
+	subject->Attach(this);
+}
+
+StartingPhaseObserver::~StartingPhaseObserver()
+{
+	subject->Detach(this);
+}
+
+void StartingPhaseObserver::Update()
+{
+	display();
+}
+
+void StartingPhaseObserver::display()
+{
+	std::cout << "--------------------------------------------------------------" << std::endl;
+	std::cout << "Starting Phase: " << subject->getState() << std::endl;
+	std::cout << "--------------------------------------------------------------" << std::endl;
 }
