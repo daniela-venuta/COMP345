@@ -34,7 +34,7 @@ public:
 	/// <param name="action"></param>
 	/// <param name="player"></param>
 	/// <param name="map"></param>
-	virtual void executeAction(Action* action, Player* player, GameMap* map) = 0;
+	virtual bool executeAction(Action* action, Player* player, GameMap* map) = 0;
 
 	friend ostream& operator<<(ostream& os, const PlayerStrategy& strategy);
 };
@@ -45,7 +45,7 @@ class HumanStrategy: public PlayerStrategy
 public:
 	HumanStrategy() : PlayerStrategy("human") {}
 	Action* chooseAction(Action* action1, Action* action2) override;
-	void executeAction(Action* action, Player* player, GameMap* map) override;
+	bool executeAction(Action* action, Player* player, GameMap* map) override;
 };
 
 // Non human strategy. Execution is the same for Greedy and Moderate, but the choice method changes.
@@ -56,7 +56,7 @@ private:
 protected:
 	NonHumanStrategy(const string& stratName) : PlayerStrategy("non human: " + stratName) {}
 public:
-	void executeAction(Action* action, Player* player, GameMap* map) override;
+	bool executeAction(Action* action, Player* player, GameMap* map) override;
 };
 
 // Prioritizes building cities and destroying armies

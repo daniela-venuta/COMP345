@@ -50,6 +50,11 @@ void Player::setStrategy(PlayerStrategy* strategy)
 	this->strategy = strategy;
 }
 
+PlayerStrategy* Player::getStrategy()
+{
+	return this->strategy;
+}
+
 Player::Player(const string username, PlayerStrategy* strategy)
 {
 	// verify that this is not a duplicate username for the current players in game
@@ -176,6 +181,11 @@ void Player::setBalance(int newBalance)
 	pResources->totalCoins = newBalance;
 }
 
+int Player::geNumOfOwnedCard()
+{
+	return numOwnedCard;
+}
+
 /// <summary>
 /// Takes care of changes that come from moving Armies
 /// *** Since the travel cost is computed by the GameMap, MoveOverLand and MoveOverWater are in this method.
@@ -227,6 +237,8 @@ bool Player::placeNewArmies(int number, Territory<Region>* location, Territory<R
 			pResources->unplacedArmies -= number;
 			location->addArmies(number, this);
 			placeDone = true;
+			int newArmyCount = this->geNumOfOwnedCard() + number;
+			this->setNumArmy(newArmyCount);
 			std::cout << playerName << " added " << number << " armies at " << location->getName() << std::endl;
 		}
 		else
@@ -268,13 +280,15 @@ bool Player::destroyArmy(int number, Territory<Region>* location, Player* player
 		location->removeArmies(number, player);
 		pResources->unplacedArmies += number;
 		destroyDone = true;
+		int newArmyCount = player->geNumOfOwnedCard() - number;
+		player->setNumArmy(newArmyCount);
 		std::cout << "Successfully destroyed " << number << " armies owned by " << player->getName() << " at " << location->getName() << " ." << std::endl;
 	}
 	else
 	{
 		std::cout << "Action not permissible (Destroy Armies at " << location->getName() << "). There are not " << number << " armies to destroy " << std::endl;
 	}
-
+	
 	return destroyDone;
 }
 
@@ -336,6 +350,7 @@ Resources* Player::getResources() const
 
 void Player::addCard(Card* card)
 {
+	numOwnedCard += 1;
 	playerHand->addCard(card);
 	applyGood(card->getGood());
 }
@@ -469,22 +484,35 @@ vector < Territory<Region>*> Player::getTerritories() {
 	return playerTerritories;
 }
 
+int Player::getNumArmy()
+{
+	return numArmy;
+}
+
+void Player::setNumArmy(int num)
+{
+	numArmy = num;
+}
+
 void Player::applyGood(Good* addedGood)
 {
 	addedGood->applyGood(pResources);
 }
+
+
 
 /// <summary>
 /// Ask for Player for which action they will call
 /// </summary>
 /// <param name="card"></param>
 /// <param name="map"></param>
-void Player::andOrAction(Card* card, GameMap* map) {
+bool Player::andOrAction(Card* card, GameMap* map) {
 
+	bool actionDone = false;
 	if (strategy == nullptr)
 	{
 		std::cout << "Cannot execute action(s). Player has no strategy." << std::endl;
-		return;
+		return false;
 	}
 
 	Action* action1 = card->getAction();
@@ -497,18 +525,25 @@ void Player::andOrAction(Card* card, GameMap* map) {
 		Action* chosenAction = strategy->chooseAction(action1, action2);
 		std::cout << std::endl << playerName << " chose: " << chosenAction->getName() << std::endl;
 
-		strategy->executeAction(chosenAction, this, map);
+		actionDone = strategy->executeAction(chosenAction, this, map);
 	}
 	else if (card->getAndOr() == AndOr::AND)
 	{
+		bool a1, a2;
+		a1 = a2 = false;
 		std::cout << std::endl << "This card has two actions, " << *action1 << " and " << *action2 << std::endl;
 
-		strategy->executeAction(action1, this, map);
-		strategy->executeAction(action2, this, map);
+		a1 = strategy->executeAction(action1, this, map);
+		a2 = strategy->executeAction(action2, this, map);
+		if (a1 == a2)
+		{
+			actionDone = true;
+		}
 	} else
 	{
-		strategy->executeAction(action1, this, map);
+		actionDone = strategy->executeAction(action1, this, map);
 	}
+	return actionDone;
 }
 
 /// <summary>
@@ -544,6 +579,7 @@ Territory<Region>* Player::chooseTerritory(map<int, Territory<Region>*> regions)
 
 	return chosenRegion;
 }
+
 
 Player* Player::chooseEnemy(Territory<Region>* location, int numArmies)
 {

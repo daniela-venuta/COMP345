@@ -25,7 +25,9 @@ public:
 	StartingPhase();
 	~StartingPhase();
 
-	void startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
+	vector<Player*> startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
+	vector<Player*> startGamePlayerBot(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
+	vector<Player*> startGameBot(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
 
 private:
 	void shuffleCardDeck() const;
@@ -34,6 +36,7 @@ private:
 	void placeArmiesOnMap();
 	void setupNonPlayers();
 	void startBidding();
+	void maxBidderFirst(string maxBidder);
 
 	int setNumberOfCoins(int numofPlayers);
 
