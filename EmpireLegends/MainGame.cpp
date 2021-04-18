@@ -45,6 +45,18 @@ Player* MainGame::getCurrentPlayer()
 	return players->getCurrentPlayer();
 }
 
+void MainGame::startPlayerTurn(const Player* player)
+{
+	state =  player->getName() + "'s turn. They are buying a card";
+	Notify();
+}
+
+void MainGame::SetupEndGame()
+{
+	state = "Initiating End Game and Calculating Winner....";
+	Notify();
+}
+
 MainGame::MainGame(GameMap* map, Deck* deck, vector<Player*>& players)
 {
 	this->map = map;
@@ -61,6 +73,9 @@ MainGame::~MainGame()
 
 void MainGame::afterAction()
 {
+	state = "Turn ended.";
+	Notify();
+	
 	this->deck->draw(1);
 	this->players->rotate();
 	std::cout << std::endl;
@@ -96,7 +111,9 @@ void MainGame::mainGameloop(int numOfTurns) {
 		for (int i = 0; i < players->getNbPlayers(); i++) {
 			
 			Player* player = getCurrentPlayer();
-			std::cout << "\n\nPlayer " << player->getName() << std::endl;
+			startPlayerTurn(player);
+			
+			//std::cout << "\n\nPlayer " << player->getName() << std::endl;
 
 			// Check player card count
 			if (player->geNumOfOwnedCard() >= maxCardCount)
@@ -122,6 +139,7 @@ void MainGame::mainGameloop(int numOfTurns) {
 					p = cardPosition;
 				}
 				std::cout << "The bot picked the card at position " << p <<"." << std::endl;
+				state = player->getName() = " has picked the card at position " + std::to_string(p);
 			}
 
 			//For Human Players
@@ -137,10 +155,14 @@ void MainGame::mainGameloop(int numOfTurns) {
 
 					if (faceCard == nullptr) {
 						std::cout << "Card not added to player" << std::endl;
+						state = "Invalid card position.";
+					}else
+					{
+						state = player->getName() = " has picked the card at position " + std::to_string(cardPosition);
 					}
 				}
 			}
-
+			
 			std::cout << "Picked card: " << std::endl << *faceCard << std::endl;
 			bool getCard = player->andOrAction( faceCard, map);
 			
@@ -151,11 +173,13 @@ void MainGame::mainGameloop(int numOfTurns) {
 				player->applyGood(faceCard->getGood());
 			}
 
+
 			afterAction();
 			std::cout << *deck->getHand() << std::endl;
 		}
 		turnNum++;
 		numOfTurns--;
+		Notify();
 	}
 	std::cout << "The Game is Over!!" << std::endl;
 	chooseWinner();
@@ -189,6 +213,7 @@ int MainGame::botPickACard() {
 // Calculate winner based off victory points (VPs)
 void MainGame::chooseWinner() {
 
+	SetupEndGame();
 	vector<Player*> allPlayers = players->players;
 
 	for (Player* player : allPlayers) {
@@ -367,3 +392,25 @@ void MainGame::chooseWinner() {
 	}
 }
 
+MainGameObserver::MainGameObserver(MainGame* s)
+{
+	subject = s;
+	subject->Attach(this);
+}
+
+MainGameObserver::~MainGameObserver()
+{
+	subject->Detach(this);
+}
+
+void MainGameObserver::Update()
+{
+	display();
+}
+
+void MainGameObserver::display()
+{
+	std::cout << "--------------------------------------------------------------------- \n ---------------------------------------------------------------------  " << std::endl;
+	std::cout << "Main Game: " << subject->getState() << std::endl;
+	std::cout << "--------------------------------------------------------------------- \n ---------------------------------------------------------------------  " << std::endl;
+}

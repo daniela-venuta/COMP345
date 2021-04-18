@@ -43,17 +43,13 @@ int BiddingFacility::getPlayerBid(Player* player)
 					playerBid = rand() % player->getCoins() + 1;
 				} while (playerBid > player->getCoins() || playerBid < 0);
 			}
-
-			//For Human Players
-			else 
+			else  //For Human Players
 			{
 				do {
 					std::cout << "\n" << player->getName() << " place your bid: ";
 					std::cin >> playerBid;
 				} while (playerBid > player->getCoins() || playerBid < 0);
 			}
-			
-			//system("cls");
 
 			addPlayerBid(player, playerBid);
 		}

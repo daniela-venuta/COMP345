@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 #include "BiddingFacility.h"
+#include "GameObserver.h"
 
 struct Region;
 class GameMap;
@@ -13,7 +14,7 @@ using std::ostream;
 using std::map;
 
 // Player trategy interface
-class PlayerStrategy
+class PlayerStrategy : public Observable
 {
 protected:
 	string name;
@@ -37,6 +38,7 @@ public:
 	virtual bool executeAction(Action* action, Player* player, GameMap* map) = 0;
 
 	friend ostream& operator<<(ostream& os, const PlayerStrategy& strategy);
+	string state;
 };
 
 // Human strategy. Choice and execution are dictated by user input.
@@ -75,3 +77,13 @@ public:
 	Action* chooseAction(Action* action1, Action* action2) override;
 };
 
+class ActionObserver : public Observer {
+public:
+	ActionObserver(PlayerStrategy* s);
+	~ActionObserver();
+	
+	void Update() override;
+	void display();
+private:
+	PlayerStrategy* subject;
+};
