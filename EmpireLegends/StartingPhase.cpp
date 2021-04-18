@@ -244,8 +244,6 @@ void StartingPhase::assignPlayerResources()
 		
 		// mark color as unavailable
 		colorUtilities->setColorAvailability(col, false);
-
-		
 	}
 }
 

@@ -96,7 +96,7 @@ void MainGame::mainGameloop(int numOfTurns) {
 			Player* player = getCurrentPlayer();
 			startPlayerTurn(player);
 			
-			std::cout << "\n\nPlayer " << player->getName() << std::endl;
+			//std::cout << "\n\nPlayer " << player->getName() << std::endl;
 
 			Card* faceCard = nullptr;
 
