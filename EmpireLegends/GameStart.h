@@ -8,18 +8,22 @@ class GameStart : public Observable
 public:
 	GameStart();
 	~GameStart();
-
-	void loadMap();
-	void detPlayerCount();
 	void startGame();
 
 	string state;
 
 private:
-	int mapType;
-	int numOfPlayers;
-	vector<Player*> players;
-	vector<Player*> biddingPlayers;
+	GameMap* loadMap();
+	vector<Player*> detPlayerCount();
+	vector<Player*> detPlayerBotCount();
+	vector<Player*> detBotCount();
+	//vector<Player*> getPlayers();
+	
+//private:
+	//int typeMap;
+	//int numOfPlayers;
+	//vector<Player*> players;
+	//vector<Player*> biddingPlayers;
 };
 
 class GameStartObserver : public Observer
@@ -29,6 +33,7 @@ public:
 	~GameStartObserver();
 	void Update() override;
 	void display();
+
 private:
 	GameStart* subject;
 };

@@ -67,10 +67,13 @@ public:
 	void setCoins(int coins);
 
 	void setStrategy(PlayerStrategy* strategy);
+	PlayerStrategy* getStrategy();
 
 	void payCoin(int price);
 	int getBalance() const;
 	void setBalance(int newBalance);
+
+	int geNumOfOwnedCard();
 
 	bool moveArmies(int number, Territory<Region>* from, Territory<Region>* to, GameMap* map);
 	bool placeNewArmies(int number, Territory<Region>* destination, Territory<Region>* initialRegion);
@@ -87,9 +90,12 @@ public:
 	int getVictoryPoints();
 	vector<Territory<Region>*> getTerritories();
 
+	int getNumArmy();
+	void setNumArmy(int num);
+
 	void addCard(Card* card);
 	void applyGood(Good* addedGood);
-	void andOrAction(Card* cardTwoAction, GameMap* gm);
+	bool andOrAction(Card* cardTwoAction, GameMap* gm);
 	Player* chooseEnemy(Territory<Region>* location, int numArmies);
 	Territory<Region>* chooseTerritory(map<int, Territory<Region>*> regions);
 private:
@@ -98,13 +104,14 @@ private:
 	Hand* playerHand;
 	Resources* pResources;
 
-	void executeAction(Action* action, GameMap* map);
 
+	int numOwnedCard;
+	int numArmy;
 	int victoryPoints;
 
 	// Resources
-	static const int MAX_NUM_ARMIES = 18;
-	static const int MAX_NUM_CITIES = 3;
+	static const int TOTAL_NUM_ARMIES = 18;
+	static const int TOTAL_NUM_CITIES = 3;
 	static const int DEFAULT_NUM_COINS = 9;
 
 	// Cardset types

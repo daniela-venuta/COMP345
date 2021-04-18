@@ -3,6 +3,8 @@
   <ItemGroup>
     <ClCompile Include="ComputeScoreDriver.cpp" />
     <ClCompile Include="GameObserver.cpp" />
+    <ClCompile Include="GameEngine.cpp" />
+    <ClCompile Include="GameEngineDriver.cpp" />
     <ClCompile Include="GameStartDriver.cpp" />
     <ClCompile Include="jsoncpp.cpp" />
     <ClCompile Include="MainDriver.cpp" />
@@ -30,7 +32,8 @@
     <ClCompile Include="PhaseObserverDrivercpp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameObserver.h" />
+   <ClInclude Include="GameObserver.h" />
+    <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameStart.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Map.h" />
