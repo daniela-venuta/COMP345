@@ -52,8 +52,6 @@ int BiddingFacility::getPlayerBid(Player* player)
 					std::cin >> playerBid;
 				} while (playerBid > player->getCoins() || playerBid < 0);
 			}
-			
-			//system("cls");
 
 			addPlayerBid(player, playerBid);
 		}

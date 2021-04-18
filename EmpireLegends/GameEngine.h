@@ -7,10 +7,8 @@ class GameEngine {
 
 private:
 	GameStart* gameStart; 
-	GameMap* gameMap;
 	MainGame* mainGame; 
 	StartingPhase* startPhase;
-	Deck* deck;
 
 public:
 	GameEngine();
@@ -18,5 +16,4 @@ public:
 	Deck* setDeck();
 	void singleMode();
 	void tournamentMode(); 
-	int numOfTurns(int size); 
 };

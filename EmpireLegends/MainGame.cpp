@@ -57,6 +57,9 @@ MainGame::~MainGame()
 	delete map;  
 	delete deck;
 	delete players;
+	map = nullptr;
+	deck = nullptr;
+	players = nullptr;
 }
 
 void MainGame::afterAction()

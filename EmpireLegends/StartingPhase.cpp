@@ -109,8 +109,8 @@ Color ColorUtilities::getColor(int index)
 // Default constructor for the Starting Phase to initialize all pointers
 StartingPhase::StartingPhase()
 {
-	//nonPlayer1 = new Player("CPU1", 0);
-	
+	nonPlayer1 = new Player("CPU1", 0);
+	map = nullptr;
 	colorUtilities = new ColorUtilities();
 	cardDeck = nullptr;
 	numOfPlayers = 0;
@@ -121,7 +121,9 @@ StartingPhase::~StartingPhase()
 {
 	delete nonPlayer1;
 	delete colorUtilities;
-	delete map;
+	nonPlayer1 = nullptr;
+	colorUtilities = nullptr;
+	map = nullptr;
 }
 
 // Method to start the sequence of actions that are needed in the starting phase
@@ -135,9 +137,6 @@ vector<Player*> StartingPhase::startGame(GameMap* gameMap, const vector<Player*>
 	shuffleCardDeck();
 	assignPlayerResources();
 	setupStartingTerritories();
-	//setupNonPlayers();
-	//placeArmiesOnMap();
-
 	startBidding();
 
 	return players;
@@ -176,14 +175,6 @@ void StartingPhase::shuffleCardDeck() const
 	std::cout << "Here is the current deck: " << std::endl;
 	std::cout << *cardDeck;
 	std::cout << std::endl;
-
-	//std::cout << "The deck was shuffled." << std::endl;
-	//std::cout << *cardDeck;
-	//std::cout << std::endl;
-
-	// Draw cards from deck and add them to the hand
-	//cardDeck->draw(6);
-	//std::cout << *cardDeck;
 }
 
 // Assigns colours to the players and provides coins, armies and cities
@@ -242,8 +233,6 @@ void StartingPhase::assignPlayerResources()
 		
 		// mark color as unavailable
 		colorUtilities->setColorAvailability(col, false);
-
-		
 	}
 }
 

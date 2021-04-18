@@ -5,22 +5,6 @@
 #include "PlayerStrategies.h"
 #include <iostream>
 
-//Game Engine Commented
-GameStart::GameStart() {
-	//  typeMap = 0;
-	  //numOfPlayers = 0;
-	//players = {};
-	//biddingPlayers = {};
-}
-
-GameStart::~GameStart() {
-	//typeMap = 0;
-	//numOfPlayers = 0;
-	/*for (Player* player : players) {
-		delete player;
-	}*/
-}
-
 GameMap* GameStart::loadMap() {
 
 	MapLoader* mapLoader = new MapLoader();
@@ -38,7 +22,6 @@ GameMap* GameStart::loadMap() {
 		std::cin >> x;
 	}
 
-	//typeMap = x;
 	// Choose which map type is being used
 	GameMap* gameMap = nullptr;
 	switch (x) {
@@ -164,11 +147,6 @@ vector<Player*> GameStart::detPlayerBotCount()
 
 	return players;
 }
-
-//vector<Player*> GameStart::getPlayers()
-//{
-//	return players;
-//}
 
 vector<Player*> GameStart::detBotCount() {
 

@@ -26,9 +26,7 @@ public:
 	~StartingPhase();
 
 	vector<Player*> startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
-	vector<Player*> startGamePlayerBot(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
-	vector<Player*> startGameBot(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
-
+	
 private:
 	void shuffleCardDeck() const;
 	void assignPlayerResources();
