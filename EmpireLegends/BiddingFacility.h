@@ -13,7 +13,7 @@ class BiddingFacility {
 	BiddingFacility() = default;
 
 public:
-	
+
 	static string placeBids(vector <Player*> biddingPlayers);
 
 	static int getCurrentBid();
