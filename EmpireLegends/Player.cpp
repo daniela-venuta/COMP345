@@ -78,6 +78,11 @@ void Player::setStrategy(PlayerStrategy* strategy)
 	this->strategy = strategy;
 }
 
+PlayerStrategy* Player::getStrategy()
+{
+	return strategy;
+}
+
 Resources::Resources(const Resources& otherResources)
 {
 	this->totalCoins = otherResources.totalCoins;
