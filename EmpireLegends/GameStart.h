@@ -6,6 +6,7 @@ class GameStart
 {
 public:
 	GameStart() = default;
+	~GameStart() = default;
 
 	GameMap* loadMap();
 	vector<Player*> detPlayerCount();

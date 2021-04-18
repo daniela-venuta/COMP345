@@ -8,6 +8,36 @@ ostream& operator<<(ostream& os, const PlayerStrategy& strategy)
 	return os << strategy.name << std::endl;
 }
 
+// Player picks the position of the card
+int HumanStrategy::pickCardPosition() {
+
+	int cardposition;
+
+	do {
+		std::cout << "Pick a position (1-6): ";
+		std::cin >> cardposition;
+	} while (cardposition > 6 || cardposition < 1);
+
+	return cardposition;
+}
+
+Card* HumanStrategy::chooseCard(Hand* hand, Player* player)
+{
+	Card* faceCard = nullptr;
+	while (faceCard == nullptr) {
+		const int cardPosition = pickCardPosition();
+		std::cout << "\n";
+
+		faceCard = hand->exchange(cardPosition, player);
+
+		if (faceCard == nullptr) {
+			std::cout << "Card not be added to player" << std::endl;
+		}
+	}
+
+	return faceCard;
+}
+
 Action* HumanStrategy::chooseAction(Action* action1, Action* action2)
 {
 	Action* chosenAction = nullptr;
@@ -124,6 +154,55 @@ Territory<Region>* NonHumanStrategy::getRandomTerritory(std::map<int, Territory<
 	auto destinationItr = territories.begin();
 	std::advance(destinationItr, rand() % territories.size());
 	return destinationItr->second;
+}
+
+Card* NonHumanStrategy::chooseCard(Hand* hand, Player* player)
+{
+	Card* faceCard = nullptr;
+	
+	int p;
+	std::cout << "The bot is picking a card. " << std::endl;
+	while (faceCard == nullptr) {
+
+		vector<Card*> cards = hand->getCards();
+		auto itr = std::find_if(cards.begin(),cards.end(), [this](const Card* c)
+		{
+			bool foundCard = false;
+
+			for(const string& action : wantedActions)
+			{
+				foundCard = (c->getAction() != nullptr && c->getAction()->getName().find(action) != std::string::npos) || (c->getSecondAction() != nullptr && c->getSecondAction()->getName().find(action) != std::string::npos);
+
+				if (foundCard)
+				{
+					break;
+				}
+			}
+			
+			return foundCard;
+		});
+		
+		int cardPosition;
+
+		const int foundPosition = itr == cards.end() ? -1 : static_cast<int>(std::distance(cards.begin(), itr)) + 1;
+		
+		if (foundPosition != -1 && Hand::getCardCost(foundPosition) <= player->getBalance())
+		{
+			cardPosition = foundPosition;
+		}
+		else
+		{
+			do {
+				cardPosition = rand() % 6 + 1;
+			} while (cardPosition > 6 || cardPosition < 1);
+		}
+		
+		faceCard = hand->exchange(cardPosition, player);
+		p = cardPosition;
+	}
+	std::cout << "The bot picked the card at position " << p << "." << std::endl;
+
+	return faceCard;
 }
 
 bool NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* map)

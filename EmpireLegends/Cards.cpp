@@ -1,6 +1,6 @@
 #include "Cards.h"
-#include <stdlib.h>
-#include <time.h> 
+#include <cstdlib>
+#include <ctime>
 
 #include <utility>
 #include "Player.h"
@@ -200,13 +200,11 @@ int Hand::getCardCost(int position)
 	int cardCost;
 	switch (position)
 	{
-	case 1:cardCost = 0; break;
-	case 2:cardCost = 1; break;
-	case 3:cardCost = 1; break;
-	case 4:cardCost = 2; break;
-	case 5:cardCost = 2; break;
-	case 6:cardCost = 3; break;
-	default: cardCost = -1;
+		case 1: cardCost = 0; break;
+		case 2: case 3: cardCost = 1; break;
+		case 4: case 5: cardCost = 2; break;
+		case 6: cardCost = 3; break;
+		default: cardCost = -1;
 	}
 
 	return cardCost;
@@ -273,9 +271,6 @@ Card::~Card()
 	delete good;
 	delete action;
 	delete secondAction;
-	good = nullptr;
-	action = nullptr;
-	secondAction = nullptr;
 }
 
 Card::Card(const Card& otherCard)

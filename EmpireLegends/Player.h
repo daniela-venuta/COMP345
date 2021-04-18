@@ -67,6 +67,7 @@ public:
 	void setCoins(int coins);
 
 	void setStrategy(PlayerStrategy* strategy);
+	Card* chooseCard(Hand* hand);
 	PlayerStrategy* getStrategy();
 
 	void payCoin(int price);

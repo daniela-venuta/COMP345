@@ -44,6 +44,8 @@ GameMap* GameStart::loadMap() {
 			std::cin >> x;
 		}
 	}
+
+	delete mapLoader;
 	 
 	return gameMap;
 }
@@ -163,28 +165,24 @@ vector<Player*> GameStart::detBotCount() {
 		std::cin >> strategyOfBots;
 	}
 
-	// Assign Bots to their strategies
-	Player* greedy1 = new Player("GreedyBot1", playerCoins, new GreedyStrategy());
-	Player* greedy2 = new Player("GreedyBot2", playerCoins, new GreedyStrategy());
-	Player* moderate1 = new Player("ModerateBot1", playerCoins, new ModerateStrategy());
-	Player* moderate2 = new Player("ModerateBot2", playerCoins, new ModerateStrategy());
-
+	// Assigning Bots to their strategies
+	
 	switch (strategyOfBots) {
-	case 1:
-		bots.push_back(greedy1);
-		bots.push_back(greedy2);
-		break;
+		case 1:
+			bots.push_back(new Player("GreedyBot1", playerCoins, new GreedyStrategy()));
+			bots.push_back(new Player("GreedyBot2", playerCoins, new GreedyStrategy()));
+			break;
 
-	case 2:
-		bots.push_back(moderate1);
-		bots.push_back(greedy2);
-		break;
+		case 2:
+			bots.push_back(new Player("ModerateBot", playerCoins, new ModerateStrategy()));
+			bots.push_back(new Player("GreedyBot", playerCoins, new GreedyStrategy()));
+			break;
 
-	case 3:
-		bots.push_back(moderate1);
-		bots.push_back(moderate2);
-		break;
-	}
+		case 3:
+			bots.push_back(new Player("ModerateBot1", playerCoins, new ModerateStrategy()));
+			bots.push_back(new Player("ModerateBot2", playerCoins, new ModerateStrategy()));
+			break;
+		}
 	
 	std::cin.ignore();
 

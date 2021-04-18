@@ -107,32 +107,27 @@ Color ColorUtilities::getColor(int index)
 }
 
 // Default constructor for the Starting Phase to initialize all pointers
-StartingPhase::StartingPhase()
+StartingPhase::StartingPhase(GameMap* gameMap, Deck* deck)
 {
-	nonPlayer1 = new Player("CPU1", 0);
-	map = nullptr;
+	map = gameMap;
 	colorUtilities = new ColorUtilities();
-	cardDeck = nullptr;
+	cardDeck = deck;
 	numOfPlayers = 0;
 }
 
 // Destructor for the StartingPhase class for cleanup
 StartingPhase::~StartingPhase()
 {
-	delete nonPlayer1;
 	delete colorUtilities;
-	nonPlayer1 = nullptr;
 	colorUtilities = nullptr;
 	map = nullptr;
 }
 
 // Method to start the sequence of actions that are needed in the starting phase
-vector<Player*> StartingPhase::startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers)
+vector<Player*> StartingPhase::startGame(const vector<Player*>& playerVector)
 {
 	this->players = playerVector;
-	this->cardDeck = deck;
-	this->numOfPlayers = numPlayers;
-	this->map = gameMap;
+	this->numOfPlayers = playerVector.size();
 	
 	shuffleCardDeck();
 	assignPlayerResources();
@@ -143,27 +138,26 @@ vector<Player*> StartingPhase::startGame(GameMap* gameMap, const vector<Player*>
 }
 
 // Retrieve number of starting coins per player
-int StartingPhase::setNumberOfCoins(int numofPlayers)
+int StartingPhase::setNumberOfCoins(int numPlayers)
 {
 	int playerCoins;
-	switch (numofPlayers) {
+	switch (numPlayers) {
+		case 2:
+			playerCoins = 14;
+			std::cout << "Each player gets 14 coins" << std::endl;
+			break;
 
-	case 2:
-		playerCoins = 14;
-		std::cout << "Each player gets 14 coins" << std::endl;
-		break;
+		case 3:
+			playerCoins = 11;
+			std::cout << "Each player gets 11 coins" << std::endl;
+			break;
 
-	case 3:
-		playerCoins = 11;
-		std::cout << "Each player gets 11 coins" << std::endl;
-		break;
+		case 4:
+			playerCoins = 9;
+			std::cout << "Each player gets 9 coins" << std::endl;
+			break;
 
-	case 4:
-		playerCoins = 9;
-		std::cout << "Each player gets 9 coins" << std::endl;
-		break;
-
-	default: playerCoins = 0;
+		default: playerCoins = 0;
 	}
 
 	return playerCoins;
@@ -276,22 +270,7 @@ void StartingPhase::placeArmiesOnMap()
 			}
 		
 		} while (destination == nullptr);
-		
-		nonPlayer1->placeNewArmies(1, destination, destination);// Bypassing initial region check
 	}
-}
-
-// Assigns a remaining colour to a non-player and assigns them armies to be placed on the board
-void StartingPhase::setupNonPlayers()
-{
-	Color color1 = colorUtilities->getNewColor();
-	colorUtilities->setColorAvailability(color1, false);
-
-	Resources* resources1 = nonPlayer1->getResources();
-	
-	resources1->playerColor = color1;
-	resources1->unplacedCities = 3;
-	resources1->unplacedArmies = 18;
 }
 
 // Initiates the bidding phase
@@ -312,10 +291,6 @@ void StartingPhase::maxBidderFirst(string maxBidder)
 			players.erase(players.begin() + i);
 			players.insert(players.begin(), temp);
 			return;
-		}
-		else
-		{
-			continue;
 		}
 	}
 }

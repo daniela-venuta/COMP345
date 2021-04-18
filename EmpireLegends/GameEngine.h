@@ -6,14 +6,17 @@
 class GameEngine {
 
 private:
+	Deck* deck; 
 	GameStart* gameStart; 
 	MainGame* mainGame; 
 	StartingPhase* startPhase;
 
+	void setDeck();
+
+
 public:
 	GameEngine();
 	~GameEngine(); 
-	Deck* setDeck();
 	void singleMode();
 	void tournamentMode(); 
 };

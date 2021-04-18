@@ -22,26 +22,24 @@ struct ColorUtilities
 class StartingPhase
 {
 public:
-	StartingPhase();
+	StartingPhase(GameMap* map, Deck* deck);
 	~StartingPhase();
 
-	vector<Player*> startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
+	vector<Player*> startGame(const vector<Player*>& playerVector);
 	
 private:
 	void shuffleCardDeck() const;
 	void assignPlayerResources();
 	void setupStartingTerritories();
 	void placeArmiesOnMap();
-	void setupNonPlayers();
 	void startBidding();
 	void maxBidderFirst(string maxBidder);
 
-	int setNumberOfCoins(int numofPlayers);
+	int setNumberOfCoins(int numPlayers);
 
 	int numOfPlayers = 0;
 	Deck* cardDeck;
 	vector<Player*> players;
-	Player* nonPlayer1;
 	GameMap* map;
 	ColorUtilities* colorUtilities;
 };
