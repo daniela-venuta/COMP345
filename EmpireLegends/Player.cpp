@@ -165,7 +165,7 @@ void Player::payCoin(const int price)
 	if (price > -1 && (pResources->totalCoins - price) >= 0)
 	{
 		setBalance(pResources->totalCoins - price);
-		state = playerName + " paid " + to_string(price) + ".\nRemoved " + to_string(price) + " coins from player total. \nNew player total: " + to_string(pResources->totalCoins) + " coins.";
+		state = playerName + " paid " + to_string(price) + ".\nRemoved " + to_string(price) + " coins from player total. \nNew player total: " + to_string(pResources->totalCoins) + " coins.\n";
 	}
 	else
 	{
@@ -315,7 +315,7 @@ bool Player::buildCity(Territory<Region>* location)
 		pResources->unplacedCities--;
 		location->addCity(this);
 		buildDone = true;
-		state = playerName + " built a city at " + location->getName() + ".\n" + playerName + " can now only place " + to_string(pResources->unplacedArmies) + " more cities on the board.";
+		state = playerName + " built a city at " + location->getName() + ".\n" + playerName + " can now only place " + to_string(pResources->unplacedCities) + " more cities on the board.";
 	}
 	else
 	{
