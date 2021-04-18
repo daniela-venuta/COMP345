@@ -16,9 +16,7 @@
 //	Card* card3 = new Card("Dire Eye", new Flying, new Action("Place armies", 4));
 //	Card* card4 = new Card("Dire Ogre", new CoinVPs, new Action("Move armies", 2));
 //	Card* card5 = new Card("Lake", new SetNameVPs(CardSet::forest), new Action("Place armies", 2), new Action("Move armies", 3),AndOr::AND);
-//	Card* card6 = new Card("Noble Hills", new CompleteSetVPs(3, CardSet::noble), new Action("Place armies", 3));
-//	Card* card7 = new Card("Arcane Phoenix", new Flying, new Action("Move armies", 5));
-//	Card* card8 = new Card("Cursed Gargoyles", new Flying, new Action("Move armies", 5));
+//	Caard* card8 = new Card("Cursed Gargoyles", new Flying, new Action("Move armies", 5));
 //	Card* card9 = new Card("Arcane Sphinx", new Flying, new Action("Place armies", 2), new Action("Move armies", 4), AndOr::OR);
 //	Card* card10 = new Card("Dire Goblin", new Elixir(1), new Action("Move armies", 5));
 //	Card* card11 = new Card("Forest Elf", new ExtraArmy, new Action("Place armies", 3), new Action("Move armies", 2), AndOr::OR);
@@ -102,7 +100,9 @@
 //
 //	mainGame->mainGameloop(numOfTurns);
 //
-//	delete mainGame;
+//	delete mainGame;rd* card6 = new Card("Noble Hills", new CompleteSetVPs(3, CardSet::noble), new Action("Place armies", 3));
+//	Card* card7 = new Card("Arcane Phoenix", new Flying, new Action("Move armies", 5));
+//	
 //
 //	return 0;
 //}

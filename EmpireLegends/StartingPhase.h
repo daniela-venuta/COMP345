@@ -1,4 +1,5 @@
 #pragma once
+#include "GameObserver.h"
 #include "Player.h"
 
 #ifndef COLOR_UTILITIES
@@ -19,7 +20,7 @@ struct ColorUtilities
 };
 #endif
 
-class StartingPhase
+class StartingPhase : public Observable
 {
 public:
 	StartingPhase();
@@ -28,6 +29,9 @@ public:
 	vector<Player*> startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
 	vector<Player*> startGamePlayerBot(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
 	vector<Player*> startGameBot(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers);
+	string getState() const { return state; };
+	Player* currentPlayer;
+	
 
 private:
 	void shuffleCardDeck() const;
@@ -46,4 +50,18 @@ private:
 	Player* nonPlayer1;
 	GameMap* map;
 	ColorUtilities* colorUtilities;
+	string state;
+};
+
+class StartingPhaseObserver : public Observer
+{
+public:
+	StartingPhaseObserver(StartingPhase* s);
+	~StartingPhaseObserver();
+	
+	void Update() override;
+	void display();
+
+private:
+	StartingPhase* subject;
 };

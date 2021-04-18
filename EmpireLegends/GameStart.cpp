@@ -23,6 +23,11 @@ GameStart::~GameStart() {
 
 GameMap* GameStart::loadMap() {
 
+	startGame();
+	
+	state = "Map Selection";
+	Notify();
+	
 	MapLoader* mapLoader = new MapLoader();
 	int x = 0;
 	std::cout << "Please enter the type of map you wish to play with." << std::endl;
@@ -67,6 +72,8 @@ GameMap* GameStart::loadMap() {
 
 vector<Player*> GameStart::detPlayerCount() {
 
+	startSetup();
+	
 	int playerCoins = 0;
 	string playerName = "";
 	int numOfPlayers = 0;
@@ -118,6 +125,8 @@ vector<Player*> GameStart::detPlayerCount() {
 
 vector<Player*> GameStart::detPlayerBotCount()
 {
+	startSetup();
+	
 	int playerCoins = 0;
 	string playerName = "";
 	int numOfPlayers = 2;
@@ -211,4 +220,39 @@ vector<Player*> GameStart::detBotCount() {
 	std::cin.ignore();
 
 	return bots;	
+}
+
+void GameStart::startGame()
+{
+	state = "WELCOME TO EMPIRE LEGENDS. THE GAME IS ABOUT TO START.";
+	Notify();
+}
+
+void GameStart::startSetup()
+{
+	state = "Setting Up Players.";
+	Notify();
+}
+
+GameStartObserver::GameStartObserver(GameStart* s)
+{
+	subject = s;
+	subject->Attach(this);
+}
+
+GameStartObserver::~GameStartObserver()
+{
+	subject->Detach(this);
+}
+
+void GameStartObserver::Update()
+{
+	display();
+}
+
+void GameStartObserver::display()
+{
+	std::cout << "--------------------------------------------------------------" << std::endl;
+	std::cout << "Game Start Phase: " << subject->getState() << std::endl;
+	std::cout << "--------------------------------------------------------------" << std::endl;
 }
