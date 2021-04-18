@@ -14,10 +14,11 @@ GameEngine::GameEngine()
 
 GameEngine::~GameEngine()
 {
-	delete gameStart;
-	//Conflict between startPhase & mainGame when closing  bc they both delete a map
-	delete startPhase;
-	//delete mainGame;
+	gameStart = nullptr;
+	startPhase = nullptr;
+	gameMap = nullptr;
+	mainGame = nullptr;
+	deck = nullptr;
 }
 
 Deck* GameEngine::setDeck()
