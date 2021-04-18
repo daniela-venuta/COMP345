@@ -115,9 +115,8 @@ void MainGame::mainGameloop(int numOfTurns) {
 					p = cardPosition;
 				}
 				std::cout << "The bot picked the card at position " << p <<"." << std::endl;
+				state = player->getName() = " has picked the card at position " + std::to_string(p);
 			}
-
-				state = player->getName() = " has picked the card at position " + std::to_string(cardPosition);
 
 			//For Human Players
 			else 

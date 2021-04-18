@@ -11,8 +11,7 @@ public:
 	void startGame();
 
 	string state;
-
-private:
+	
 	GameMap* loadMap();
 	vector<Player*> detPlayerCount();
 	vector<Player*> detPlayerBotCount();

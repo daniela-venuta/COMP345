@@ -246,7 +246,7 @@ bool NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 		numOfTry++;
 	}
 
-	IF(numOfTry >= 10){
+	if(numOfTry >= 10){
 		state = "No more tries available";
 	}
 	
