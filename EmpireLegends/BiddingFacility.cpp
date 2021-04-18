@@ -25,24 +25,40 @@ int BiddingFacility::getPlayerBid(Player* player)
 	return bids[player];
 }
 
-void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
+ string BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 
 	auto playerBid = 0;
 	string temp;
 
 	// each players places their bid
-	for (auto& player : biddingPlayers)
-	{
-		do {
-			std::cout << "\n" << player->getName() << " place your bid: ";
-			std::cin >> playerBid;
-		} while (playerBid > player->getCoins() || playerBid < 0);
+	
+		for (auto& player : biddingPlayers)
+		{
+			//For Bot Players
+			int bot = player->getName().find("Bot");
+			if (bot != std::string::npos)
+			{
+				do {
+					std::cout << "\n" << player->getName() << " places its bid. "<<std::endl;
+					playerBid = rand() % player->getCoins() + 1;
+				} while (playerBid > player->getCoins() || playerBid < 0);
+			}
 
-		system("cls");
+			//For Human Players
+			else 
+			{
+				do {
+					std::cout << "\n" << player->getName() << " place your bid: ";
+					std::cin >> playerBid;
+				} while (playerBid > player->getCoins() || playerBid < 0);
+			}
+			
+			//system("cls");
 
-		addPlayerBid(player, playerBid);
-	}
-
+			addPlayerBid(player, playerBid);
+		}
+	
+	
 	std::cout << "--------------------------" << std::endl;
 	std::cout << "WHO WILL GO FIRST??:" << std::endl;
 	std::cout << "--------------------------\n" << std::endl;
@@ -50,7 +66,7 @@ void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 	std::cout << "Bids placed by players: " << std::endl;
 	for (Player* myPlayer : biddingPlayers)
 	{
-		std::cout << "Player " << myPlayer->getName() << "\t" << "bids " << getPlayerBid(myPlayer) << " coins." << std::endl;
+		std::cout << "Player " << myPlayer->getName() << " " << "bids " << getPlayerBid(myPlayer) << " coins." << std::endl;
 	}
 
 	vector<Player*> maxBidders;
@@ -95,9 +111,13 @@ void BiddingFacility::placeBids(vector<Player*> biddingPlayers) {
 	}
 
 	Player* maxBidder = maxBidders.back();
+	
 	const int supply = maxBidder->getCoins() - maxBid;
 	maxBidder->setCoins(supply);
 	setCurrentBid(maxBid);
 
 	std::cout << "\nThe player to start is " << maxBidder->getName() << "! They now have " << maxBidder->getCoins() << " coins.\n";
+	return maxBidder->getName();
 }
+
+

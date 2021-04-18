@@ -2,6 +2,7 @@
 #include "MapLoader.h"
 #include "MapUtility.h"
 #include "BiddingFacility.h"
+#include <ctime>
 
 // Number of armies of non player colour that need to be placed on the map in a two player game
 static const int NUM_ARMIES_TO_PLACE = 10;
@@ -84,22 +85,22 @@ Color ColorUtilities::getColor(int index)
 	if (index == Color::red)
 	{
 		col = Color::red;
-		std::cout << "Selected Red\n";
+		std::cout << " selected Red\n";
 	}
 	else if (index == Color::green)
 	{
 		col = Color::green;
-		std::cout << "Selected Green\n";
+		std::cout << " selected Green\n";
 	}
 	else if (index == Color::blue)
 	{
 		col = Color::green;
-		std::cout << "Selected Blue\n";
+		std::cout << " selected Blue\n";
 	}
 	else if (index == Color::yellow)
 	{
 		col = Color::yellow;
-		std::cout << "Selected Yellow\n";
+		std::cout << " selected Yellow\n";
 	}
 
 	return col;
@@ -108,7 +109,7 @@ Color ColorUtilities::getColor(int index)
 // Default constructor for the Starting Phase to initialize all pointers
 StartingPhase::StartingPhase()
 {
-	nonPlayer1 = new Player("CPU1", 0);
+	//nonPlayer1 = new Player("CPU1", 0);
 	
 	colorUtilities = new ColorUtilities();
 	cardDeck = nullptr;
@@ -124,7 +125,7 @@ StartingPhase::~StartingPhase()
 }
 
 // Method to start the sequence of actions that are needed in the starting phase
-void StartingPhase::startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers)
+vector<Player*> StartingPhase::startGame(GameMap* gameMap, const vector<Player*> playerVector, Deck* deck, int numPlayers)
 {
 	this->players = playerVector;
 	this->cardDeck = deck;
@@ -134,9 +135,12 @@ void StartingPhase::startGame(GameMap* gameMap, const vector<Player*> playerVect
 	shuffleCardDeck();
 	assignPlayerResources();
 	setupStartingTerritories();
-	setupNonPlayers();
-	placeArmiesOnMap();
+	//setupNonPlayers();
+	//placeArmiesOnMap();
+
 	startBidding();
+
+	return players;
 }
 
 // Retrieve number of starting coins per player
@@ -169,14 +173,18 @@ int StartingPhase::setNumberOfCoins(int numofPlayers)
 // Method to initiate shuffling of the current deck of cards (changes their order in the vector)
 void StartingPhase::shuffleCardDeck() const
 {
-	std::cout << *cardDeck;
-
 	cardDeck->shuffle();
+	std::cout << "Here is the current deck: " << std::endl;
 	std::cout << *cardDeck;
+	std::cout << std::endl;
+
+	//std::cout << "The deck was shuffled." << std::endl;
+	//std::cout << *cardDeck;
+	//std::cout << std::endl;
 
 	// Draw cards from deck and add them to the hand
-	cardDeck->draw(6);
-	std::cout << *cardDeck;
+	//cardDeck->draw(6);
+	//std::cout << *cardDeck;
 }
 
 // Assigns colours to the players and provides coins, armies and cities
@@ -190,15 +198,29 @@ void StartingPhase::assignPlayerResources()
 	for (int i = 0; i < numOfPlayers; i++)
 	{
 		bool isColorUnavailable = true;
-		int colorNum;
+		int colorNum = 0;
 		const Player* player = players[i];
 		Resources* resources = players[i]->getResources();
 		Color col = Color::none;
 
+		
 		while(isColorUnavailable)
 		{
-			std::cout << player->getName() << ", choose your color: ";
-			std::cin >> colorNum;
+			//For Bots Players
+			int bot = player->getName().find("Bot");
+			if (bot != std::string::npos)
+			{
+				colorNum = rand() % 4 + 1;
+			}
+
+			//For Human Players
+			else 
+			{
+				std::cout << player->getName() << ", choose your color: ";
+				std::cin >> colorNum;
+			}
+
+			std::cout << player->getName();
 			col = colorUtilities->getColor(colorNum);
 			isColorUnavailable = !colorUtilities->getColorAvailability(col);
 
@@ -207,11 +229,6 @@ void StartingPhase::assignPlayerResources()
 				std::cout << "\nColor unavailable, try again \n";
 			}
 		}
-		
-		resources->playerColor = col;
-		
-		// mark color as unavailable
-		colorUtilities->setColorAvailability(col, false);
 
 		// assign cities and armies
 		resources->unplacedCities = 3;
@@ -219,6 +236,14 @@ void StartingPhase::assignPlayerResources()
 
 		// assign coins
 		resources->totalCoins = playerCoins;
+
+		
+		resources->playerColor = col;
+		
+		// mark color as unavailable
+		colorUtilities->setColorAvailability(col, false);
+
+		
 	}
 }
 
@@ -284,5 +309,24 @@ void StartingPhase::setupNonPlayers()
 void StartingPhase::startBidding()
 {
 	// Players place bids
-	BiddingFacility::placeBids(players);
+	string maxBidder = BiddingFacility::placeBids(players);
+	maxBidderFirst(maxBidder);
+}
+
+void StartingPhase::maxBidderFirst(string maxBidder)
+{
+	for (int i = 0; i < players.size(); i++)
+	{
+		auto temp = players[i];
+		if (temp->getName() == maxBidder)
+		{
+			players.erase(players.begin() + i);
+			players.insert(players.begin(), temp);
+			return;
+		}
+		else
+		{
+			continue;
+		}
+	}
 }

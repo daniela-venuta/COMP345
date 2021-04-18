@@ -1,176 +1,54 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Driver Files">
-      <UniqueIdentifier>{c2df1747-cc95-456d-9315-ec16653a1d20}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="ComputeScoreDriver.cpp" />
+    <ClCompile Include="GameEngine.cpp" />
+    <ClCompile Include="GameEngineDriver.cpp" />
+    <ClCompile Include="GameStartDriver.cpp" />
+    <ClCompile Include="jsoncpp.cpp" />
+    <ClCompile Include="MainDriver.cpp" />
+    <ClCompile Include="MainGame.cpp" />
+    <ClCompile Include="AfterActionDriver.cpp" />
+    <ClCompile Include="MainLoopDriver.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="MapDriver.cpp" />
+    <ClCompile Include="PlayerStrategies.cpp" />
+    <ClCompile Include="PlayerStrategiesDriver.cpp" />
+    <ClCompile Include="StartingPhase.cpp" />
+    <ClCompile Include="StartupPhaseDriver.cpp" />
+    <ClCompile Include="CardActionDriver.cpp" />
+    <ClCompile Include="GameStart.cpp" />
+    <ClCompile Include="MapLoader.cpp" />
+    <ClCompile Include="MapLoaderDriver.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerDriver.cpp" />
+    <ClCompile Include="MapUtility.cpp" />
+    <ClCompile Include="MapUtility.h" />
+    <ClCompile Include="Cards.cpp" />
+    <ClCompile Include="CardsDriver.cpp" />
+    <ClCompile Include="BiddingFacility.cpp" />
+    <ClCompile Include="BiddingFacilityDriver.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MapLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MainGame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameStart.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StartingPhase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObserver.h">
-    <ClInclude Include="PlayerStrategies.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="GameEngine.h" />
+    <ClInclude Include="GameStart.h" />
+    <ClInclude Include="MainGame.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="PlayerStrategies.h" />
+    <ClInclude Include="StartingPhase.h" />
+    <ClInclude Include="MapLoader.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Cards.h" />
+    <ClInclude Include="BiddingFacility.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Map.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MapDriver.cpp">
-      <Filter>Driver Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MapUtility.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CardsDriver.cpp">
-      <Filter>Driver Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerDriver.cpp">
-      <Filter>Driver Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MapLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MapLoaderDriver.cpp">
-      <Filter>Driver Files</Filter>
-    </ClCompile>
-    <ClCompile Include="jsoncpp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MapUtility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BiddingFacilityDriver.cpp">
-      <Filter>Driver Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MainDriver.cpp">
-      <Filter>Driver Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MainGame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AfterActionDriver.cpp">
-      <Filter>Driver Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MainLoopDriver.cpp">
-      <Filter>Driver Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CardActionDriver.cpp">
-      <Filter>Driver Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameStartDriver.cpp">
-      <Filter>Driver Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameStart.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StartingPhase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StartupPhaseDriver.cpp">
-      <Filter>Driver Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ComputeScoreDriver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObserver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-      <Filter>Driver Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerStrategies.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerStrategiesDriver.cpp">
-      <Filter>Driver Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Cards.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Cards.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="valid_map_1.json">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="valid_map_2.json">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="invalid_map_disconnected.json">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="invalid_map_missing_name_field.json">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="invalid_map_missing_edges_field.json">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="map_rectangle.json">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="map_L.json">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="map_T.json">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="BiddingFacility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="BiddingFacility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <None Include="invalid_map_disconnected.json" />
+    <None Include="invalid_map_missing_edges_field.json" />
+    <None Include="invalid_map_missing_name_field.json" />
+    <None Include="map_L.json" />
+    <None Include="map_rectangle.json" />
+    <None Include="map_T.json" />
+    <None Include="valid_map_1.json" />
+    <None Include="valid_map_2.json" />
   </ItemGroup>
 </Project>
