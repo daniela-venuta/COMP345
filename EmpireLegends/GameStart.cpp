@@ -7,7 +7,6 @@
 #include <iostream>
 #include <string>
 
-
 GameMap* GameStart::loadMap() {
 
 	startGame();
@@ -16,21 +15,11 @@ GameMap* GameStart::loadMap() {
 	Notify();
 
 	MapLoader* mapLoader = new MapLoader();
-	int x = 0;
-	std::cout << "Please enter the type of map you wish to play with." << std::endl;
-	std::cout << "	- Enter 1 for a rectangular map (4 continents)." << std::endl;
-	std::cout << "	- Enter 2 for an L-shaped map (3 continents)." << std::endl;
-	std::cout << "	- Enter 3 for a T-shaped map (4 continents)." << std::endl;
-	std::cin >>x;
 
 	string fileName = "";
 	std::cout << "Please enter the name of the map you wish to play with." << std::endl;
 	std::getline(std::cin, fileName);
 
-	//typeMap = x;
-	// Choose which map type is being used
-	// Choose which map type is being used
-	// Choose which map type is being used
 	GameMap* gameMap = nullptr;
 	while (gameMap == nullptr)
 	{
