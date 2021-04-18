@@ -72,21 +72,44 @@ void MainGame::mainGameloop(int numOfTurns) {
 	std::cout << *deck->getHand() << std::endl;
 	int turnNum = 1;
 
-	while (numOfTurns > 0) {
+	int maxCardCount = 13;
+	switch (players->getNbPlayers()) {
+		case 2:
+			maxCardCount = 13;
+			break;
+		case 3:
+			maxCardCount = 10;
+			break;
+		case 4:
+			maxCardCount = 8;
+			break;
+		default:
+			maxCardCount = 13;
+	}
+
+	bool playerReachedMaxCardCount = false;
+
+	while (numOfTurns > 0 || playerReachedMaxCardCount) {
 		std::cout << "-----------------------------------------------------------------------------"<< std::endl;
 		std::cout << "Turn #" << turnNum << std::endl;
 
 		for (int i = 0; i < players->getNbPlayers(); i++) {
 			
-			
 			Player* player = getCurrentPlayer();
 			std::cout << "\n\nPlayer " << player->getName() << std::endl;
+
+			// Check player card count
+			if (player->geNumOfOwnedCard() >= maxCardCount)
+			{
+				playerReachedMaxCardCount = true;
+				break;
+			}
 
 			Card* faceCard = nullptr;
 
 			//For Bot players
-			int bot = player->getName().find("Bot");
-			if (bot != std::string::npos)
+			bool isBot = player->getName().find("Bot") != std::string::npos;
+			if (isBot)
 			{
 				int p;
 				std::cout << "The bot is picking a card. "<<std::endl;
@@ -123,7 +146,6 @@ void MainGame::mainGameloop(int numOfTurns) {
 			
 			if (getCard == true)
 			{
-				
 				std::cout << "The card " + faceCard->getName() + " has been added to your hand." << std::endl;
 				player->addCard(faceCard);
 				player->applyGood(faceCard->getGood());
@@ -324,7 +346,6 @@ void MainGame::chooseWinner() {
 	const char separator = '|';
 	const int nameWidth = 15;
 	const int numWidth = 10; 
-	
 	
 	std::cout << "------------------------------------------------------------------" << std::endl;
 	std::cout << "Player #"
