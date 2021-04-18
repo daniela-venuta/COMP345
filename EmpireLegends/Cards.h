@@ -204,9 +204,9 @@ public:
 
 private:
 	string name;
-	Good* good;
-	Action* action;
-	Action* secondAction;
+	Good* good = nullptr;
+	Action* action = nullptr;
+	Action* secondAction = nullptr;
 	AndOr andOr;
 };
 
@@ -218,14 +218,15 @@ class Action
 public:
 
 	explicit Action(string name, int multiplier = 0);
+	~Action() = default;
 	// copy constructor
 	Action(const Action& action);
-	
+
 	// stream insertion operator overload
 	friend ostream& operator<<(ostream& os, const Action& action);
 	// assignment operator
 	Action& operator=(const Action& action);
-	
+
 	string getName() const { return name; }
 	int getMultiplier() const { return multiplier; }
 };
@@ -275,7 +276,7 @@ public:
 
 	void draw(const int count);
 	bool shuffle();
-	
+
 	Hand* getHand() const;
 
 private:
@@ -290,5 +291,3 @@ struct CardCost
 {
 	vector<int> cardCost = {};
 };
-
-

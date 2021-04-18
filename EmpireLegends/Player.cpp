@@ -50,6 +50,11 @@ void Player::setStrategy(PlayerStrategy* strategy)
 	this->strategy = strategy;
 }
 
+Card* Player::chooseCard(Hand* hand)
+{
+	return strategy->chooseCard(hand, this);
+}
+
 PlayerStrategy* Player::getStrategy()
 {
 	return this->strategy;
@@ -64,7 +69,7 @@ Player::Player(const string username, PlayerStrategy* strategy)
 	pResources->totalCoins = DEFAULT_NUM_COINS;
 	pResources->unplacedCities = TOTAL_NUM_CITIES;
 	pResources->unplacedArmies = TOTAL_NUM_ARMIES;
-	
+
 	this->strategy = strategy;
 
 	// define a bidingFacility
@@ -205,7 +210,8 @@ bool Player::moveArmies(int number, Territory<Region>* from, Territory<Region>* 
 		{
 			moveDone = true;
 			std::cout << "Moved " << number << " armies." << std::endl;
-		} else
+		}
+		else
 		{
 			std::cout << "Could not perform action (MoveArmies)" << std::endl;
 		}
@@ -237,7 +243,7 @@ bool Player::placeNewArmies(int number, Territory<Region>* location, Territory<R
 			pResources->unplacedArmies -= number;
 			location->addArmies(number, this);
 			placeDone = true;
-			int newArmyCount = this->geNumOfOwnedCard() + number;
+			int newArmyCount = this->getNumArmy() + number;
 			this->setNumArmy(newArmyCount);
 			std::cout << playerName << " added " << number << " armies at " << location->getName() << std::endl;
 		}
@@ -280,7 +286,7 @@ bool Player::destroyArmy(int number, Territory<Region>* location, Player* player
 		location->removeArmies(number, player);
 		pResources->unplacedArmies += number;
 		destroyDone = true;
-		int newArmyCount = player->geNumOfOwnedCard() - number;
+		int newArmyCount = player->getNumArmy() - number;
 		player->setNumArmy(newArmyCount);
 		std::cout << "Successfully destroyed " << number << " armies owned by " << player->getName() << " at " << location->getName() << " ." << std::endl;
 	}
@@ -288,7 +294,7 @@ bool Player::destroyArmy(int number, Territory<Region>* location, Player* player
 	{
 		std::cout << "Action not permissible (Destroy Armies at " << location->getName() << "). There are not " << number << " armies to destroy " << std::endl;
 	}
-	
+
 	return destroyDone;
 }
 
@@ -396,7 +402,7 @@ int Player::computeScore() {
 	if (getResources()->coinVPs) {
 		victoryPoints += (totalCoins / 3);
 	}
-	
+
 	// VP for set names
 	for (auto& set : getResources()->setNameVPs) {
 		// if boolean is TRUE
@@ -427,8 +433,6 @@ int Player::computeScore() {
 				case CardSet::night:
 					victoryPoints += nightCards;
 					break;
-				default:
-					victoryPoints;
 			}
 		}
 	}
@@ -439,32 +443,20 @@ int Player::computeScore() {
 		if (set.second) {
 			// allocate VP per complete set
 			switch (set.first) {
-			case CardSet::forest:
-				victoryPoints += 1;
-				break;
-			case CardSet::dire:
-				victoryPoints += 1;
-				break;
-			case CardSet::ancient:
-				victoryPoints += 1;
-				break;
-			case CardSet::noble:
-				victoryPoints += 4;
-				break;
-			case CardSet::mountain:
-				victoryPoints += 3;
-				break;
-			case CardSet::arcane:
-				victoryPoints += 1;
-				break;
-			case CardSet::cursed:
-				victoryPoints += 1;
-				break;
-			case CardSet::night:
-				victoryPoints += 1;
-				break;
-			default:
-				victoryPoints;
+				case CardSet::forest:
+				case CardSet::dire:
+				case CardSet::ancient:
+				case CardSet::night:
+				case CardSet::arcane:
+				case CardSet::cursed:
+					victoryPoints += 1;
+					break;
+				case CardSet::noble:
+					victoryPoints += 4;
+					break;
+				case CardSet::mountain:
+					victoryPoints += 3;
+					break;
 			}
 		}
 	}
@@ -539,7 +531,8 @@ bool Player::andOrAction(Card* card, GameMap* map) {
 		{
 			actionDone = true;
 		}
-	} else
+	}
+	else
 	{
 		actionDone = strategy->executeAction(action1, this, map);
 	}
@@ -596,7 +589,7 @@ Player* Player::chooseEnemy(Territory<Region>* location, int numArmies)
 			std::cout << num << "-" << player->getName() << std::endl;
 		}
 	}
-	
+
 	do
 	{
 		std::vector<Player*, std::allocator<Player*>>::size_type optionChosen = 0;
@@ -611,7 +604,7 @@ Player* Player::chooseEnemy(Territory<Region>* location, int numArmies)
 		}
 		else if (optionChosen > 0 && optionChosen <= enemyPlayers.size())
 		{
-			choosePlayer = enemyPlayers.at(optionChosen -1);
+			choosePlayer = enemyPlayers.at(optionChosen - 1);
 		}
 		else
 		{

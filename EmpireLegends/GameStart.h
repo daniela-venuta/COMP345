@@ -6,19 +6,18 @@
 class GameStart : public Observable
 {
 public:
-	GameStart();
-	~GameStart();
+	GameStart() = default;
+	~GameStart() = default;
 	void startGame();
 	void startSetup();
-	string getState() const { return state; };
+	string getState() { return state; };
 
 	GameMap* loadMap();
 	vector<Player*> detPlayerCount();
 	vector<Player*> detPlayerBotCount();
 	vector<Player*> detBotCount();
-
-private:
 	string state;
+	
 };
 
 class GameStartObserver : public Observer
