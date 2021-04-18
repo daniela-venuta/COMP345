@@ -568,7 +568,10 @@ Territory<Region>* Player::chooseTerritory(map<int, Territory<Region>*> regions)
 		else if (optionChosen > 0 && optionChosen <= regions.size())
 		{
 			chosenRegion = regions.at(optionChosen);
-			std::cout << playerName + " chose territory: " + chosenRegion->getName() <<  std::endl;
+			if (chosenRegion != nullptr)
+			{
+				std::cout << playerName + " chose territory: " + chosenRegion->getName() << std::endl;
+			}
 		}
 		else
 		{
@@ -611,7 +614,10 @@ Player* Player::chooseEnemy(Territory<Region>* location, int numArmies)
 		else if (optionChosen > 0 && optionChosen <= enemyPlayers.size())
 		{
 			choosePlayer = enemyPlayers.at(optionChosen - 1);
-			std::cout << this->getName() + " chose player " + choosePlayer->getName() << std::endl;
+			if (choosePlayer != nullptr)
+			{
+				std::cout << this->getName() + " chose player " + choosePlayer->getName() << std::endl;
+			}
 		}
 		else
 		{
