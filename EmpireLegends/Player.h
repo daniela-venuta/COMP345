@@ -3,6 +3,7 @@
 #include <vector>
 #include "Map.h"
 #include "Cards.h"
+#include "GameObserver.h"
 
 using std::string;
 using std::vector;
@@ -40,7 +41,7 @@ struct Resources
 	bool immune = false;
 };
 
-class Player
+class Player : public Observable
 {
 	PlayerStrategy* strategy;
 public:
@@ -92,15 +93,16 @@ public:
 	void andOrAction(Card* cardTwoAction, GameMap* gm);
 	Player* chooseEnemy(Territory<Region>* location, int numArmies);
 	Territory<Region>* chooseTerritory(map<int, Territory<Region>*> regions);
+
+	string state;
 private:
 	string playerName;
 	vector<Territory<Region>*> playerTerritories;
 	Hand* playerHand;
 	Resources* pResources;
+	int victoryPoints;
 
 	void executeAction(Action* action, GameMap* map);
-
-	int victoryPoints;
 
 	// Resources
 	static const int MAX_NUM_ARMIES = 18;
@@ -126,5 +128,16 @@ private:
 	static const int MAX_NUM_ARCANE_CARDS = 2;
 	static const int MAX_NUM_CURSED_CARDS = 5;
 	static const int MAX_NUM_NIGHT_CARDS = 2;
+};
+
+class PlayerObserver : public Observer
+{
+public:
+	PlayerObserver(Player* p);
+	~PlayerObserver();
+	void Update() override;
+	void display();
+private:
+	Player* subject;
 };
 	

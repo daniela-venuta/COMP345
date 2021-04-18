@@ -165,6 +165,7 @@ int StartingPhase::setNumberOfCoins(int numofPlayers)
 
 	return playerCoins;
 }
+
 // Method to initiate shuffling of the current deck of cards (changes their order in the vector)
 void StartingPhase::shuffleCardDeck() const
 {
@@ -181,7 +182,6 @@ void StartingPhase::shuffleCardDeck() const
 // Assigns colours to the players and provides coins, armies and cities
 void StartingPhase::assignPlayerResources()
 {
-	
 	std::cout << "\nColor options \n 1.Red \n 2.Green  \n 3.Blue \n 4. Yellow \n";
 	
 	// Assign number of coins based on players
@@ -263,7 +263,7 @@ void StartingPhase::placeArmiesOnMap()
 		
 		} while (destination == nullptr);
 		
-		nonPlayer1->placeNewArmies(1, destination, destination);// Bypassing initial region check
+		nonPlayer1->placeNewArmies(1, destination, destination); // Bypassing initial region check
 	}
 }
 
