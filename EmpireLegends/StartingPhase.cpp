@@ -214,9 +214,7 @@ void StartingPhase::assignPlayerResources()
 			{
 				colorNum = rand() % 4 + 1;
 			}
-
-			//For Human Players
-			else 
+			else //For Human Players
 			{
 				std::cout << player->getName() << ", choose your color: ";
 				std::cin >> colorNum;
@@ -274,7 +272,7 @@ void StartingPhase::placeArmiesOnMap()
 		int index = i % 2;
 
 		Player* player = players[index];
-		
+		currentPlayer = player;
 		currentAction = player->getName() + " is placing non-colour players on the board";
 		Notify();
 		
@@ -356,7 +354,7 @@ void StartingPhaseObserver::Update()
 void StartingPhaseObserver::display()
 {
 	std::cout << "-----------------------------------" << std::endl;
-	string name = subject->currentPlayer->getName();
-	std::cout << name << ": " << subject->currentAction << std::endl;
+	//string name = subject->currentPlayer->getName();
+	std::cout << ": " << subject->currentAction << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
 }
