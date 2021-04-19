@@ -3,8 +3,9 @@
 #include "Player.h"
 #include "BiddingFacility.h"
 #include "PlayerStrategies.h"
-#include <iostream>
 
+#include <iostream>
+#include <string>
 
 GameMap* GameStart::loadMap() {
 
@@ -14,39 +15,35 @@ GameMap* GameStart::loadMap() {
 	Notify();
 
 	MapLoader* mapLoader = new MapLoader();
-	int x = 0;
-	std::cout << "Please enter the type of map you wish to play with." << std::endl;
-	std::cout << "	- Enter 1 for a rectangular map (4 continents)." << std::endl;
-	std::cout << "	- Enter 2 for an L-shaped map (3 continents)." << std::endl;
-	std::cout << "	- Enter 3 for a T-shaped map (4 continents)." << std::endl;
-	std::cin >> x;
 
-	while (std::cin.fail()) {
-		std::cin.clear();
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		std::cout << "Bad entry.  Enter a NUMBER: ";
-		std::cin >> x;
-	}
+	string fileName = "";
+	std::cout << "Please enter the name of the map you wish to play with." << std::endl;
+	// Ignores the extra whitespace from previously required inputs
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, fileName);
 
 	GameMap* gameMap = nullptr;
-	switch (x) {
-	case 1:
-		gameMap = mapLoader->load("map_rectangle.json");
-		break;
-	case 2:
-		gameMap = mapLoader->load("map_L.json");
-		break;
-	case 3:
-		gameMap = mapLoader->load("map_T.json");
-		break;
-	default:
-		while (x < 1 || x > 3) {
-			std::cout << "INVALID selection." << std::endl;
-			std::cout << "Please enter the type of map you wish to play with." << std::endl;
-			std::cout << "	- Enter 1 for a rectangular map (4 continents)." << std::endl;
-			std::cout << "	- Enter 2 for an L-shaped map (3 continents)." << std::endl;
-			std::cout << "	- Enter 3 for an T-shaped map (4 continents)." << std::endl;
-			std::cin >> x;
+	while (gameMap == nullptr)
+	{
+		try
+		{
+			gameMap = mapLoader->load(fileName);
+		}
+		catch (InvalidMapFileException& imf)
+		{
+			std::cout << "This file does not contain a valid map." << std::endl;
+			std::cout << imf << std::endl;
+
+			std::cout << "Could not process map. Please enter a valid file name: ";
+			std::getline(std::cin, fileName);
+		}
+		catch (MapException& me)
+		{
+			std::cout << "This map is invalid." << std::endl;
+			std::cout << me << std::endl;
+
+			std::cout << "Could not process map. Please enter a valid file name: ";
+			std::getline(std::cin, fileName);
 		}
 	}
 
@@ -79,15 +76,15 @@ vector<Player*> GameStart::detPlayerCount() {
 	// Assign coins according to numOfPlayers
 	switch (numOfPlayers) {
 
-	case 2:
-		playerCoins = 14;
-		break;
-	case 3:
-		playerCoins = 11;
-		break;
-	default: //4
-		playerCoins = 9;
-		break;
+		case 2:
+			playerCoins = 14;
+			break;
+		case 3:
+			playerCoins = 11;
+			break;
+		default: //4
+			playerCoins = 9;
+			break;
 	}
 
 	std::cin.ignore();

@@ -491,8 +491,6 @@ void Player::applyGood(Good* addedGood)
 	addedGood->applyGood(pResources);
 }
 
-
-
 /// <summary>
 /// Ask for Player for which action they will call
 /// </summary>
