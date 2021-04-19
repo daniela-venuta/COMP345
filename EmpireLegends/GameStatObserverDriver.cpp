@@ -75,8 +75,6 @@ int main()
 {
 	// Start game
 	GameStart* gameStart = new GameStart();
-	GameStartObserver* gameStartObserver = new GameStartObserver(gameStart);
-
 	GameMap* gameMap = gameStart->loadMap();
 	vector<Player*> players = gameStart->detPlayerBotCount();
 
@@ -84,49 +82,18 @@ int main()
 	Deck* deck = setDeck();
 
 	StartingPhase* startPhase = new StartingPhase();
-	StartingPhaseObserver* startingPhaseObserver = new StartingPhaseObserver(startPhase);
-
 	players = startPhase->startGame(gameMap, players, deck, numPlayers);
 
-	vector<ActionObserver*> actionObservers;
-	vector<PlayerObserver*> playerObservers;
-
-	for (int i = 0; i < players.size(); i++)
-	{
-		// Add player observers
-		Player* player = players[i];
-		PlayerObserver* playerObserver = new PlayerObserver(player);
-		playerObservers.push_back(playerObserver);
-
-		// Add action observers
-		PlayerStrategy* strat = players[i]->getStrategy();
-		ActionObserver* actionObserver = new ActionObserver(strat);
-		actionObservers.push_back(actionObserver);
-	}
-
 	MainGame* mainGame = new MainGame(gameMap, deck, players);
-	MainGameObserver* mainGameObserver = new MainGameObserver(mainGame);
+	GameStatisticsObserver* gameStatisticsObserver = new GameStatisticsObserver(mainGame);
 
 	int numOfTurns = 4;
 	mainGame->mainGameloop(numOfTurns);
 
-	delete gameStartObserver;
 	delete gameStart;
-	delete startingPhaseObserver;
 	delete startPhase;
-
-	for (int i = 0; i < playerObservers.size(); i++)
-	{
-		delete playerObservers[i];
-	}
-
-	for (int i = 0; i < actionObservers.size(); i++)
-	{
-		delete actionObservers[i];
-	}
-
 	delete deck;
-	delete mainGameObserver;
+	delete gameStatisticsObserver;
 	delete mainGame;
 
 	return 0;

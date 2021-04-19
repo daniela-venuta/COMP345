@@ -54,6 +54,7 @@ bool HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 	const std::size_t destroy = action->getName().find("Destroy");
 	const std::size_t place = action->getName().find("Place");
 	const std::size_t move = action->getName().find("Move");
+
 	int numOfTry = 0;
 	bool actionDone = false;
 

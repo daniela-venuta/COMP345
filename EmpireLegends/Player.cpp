@@ -165,7 +165,7 @@ void Player::payCoin(const int price)
 	if (price > -1 && (pResources->totalCoins - price) >= 0)
 	{
 		setBalance(pResources->totalCoins - price);
-		state = playerName + " paid " + to_string(price) + ".\nRemoved " + to_string(price) + " coins from player total. \nNew player total: " + to_string(pResources->totalCoins) + " coins.\n";
+		state = playerName + " paid " + to_string(price) + ".\nRemoved " + to_string(price) + " coins from player total. \nNew player total: " + to_string(pResources->totalCoins) + " coins.\n\n";
 	}
 	else
 	{

@@ -1,6 +1,7 @@
 #include "MainGame.h"
 #include "Player.h"
 #include "Cards.h"
+#include "MapUtility.h"
 #include <algorithm>
 #include <iomanip>
 
@@ -209,7 +210,6 @@ int MainGame::botPickACard() {
 	return cardposition;
 }
 
-
 // Calculate winner based off victory points (VPs)
 void MainGame::chooseWinner() {
 
@@ -414,3 +414,56 @@ void MainGameObserver::display()
 	std::cout << "Main Game: " << subject->getState() << std::endl;
 	std::cout << "--------------------------------------------------------------------- \n ---------------------------------------------------------------------  " << std::endl;
 }
+
+GameStatisticsObserver::GameStatisticsObserver(MainGame* s)
+{
+	subject = s;
+	subject->Attach(this);
+}
+
+GameStatisticsObserver::~GameStatisticsObserver()
+{
+	subject->Detach(this);
+}
+
+void GameStatisticsObserver::Update()
+{
+	display();
+}
+
+void GameStatisticsObserver::display()
+{
+	std::cout << "--------------------------------------------------------------------- \n ---------------------------------------------------------------------  " << std::endl;
+	std::cout << "Current map status: " << std::endl;
+	std::cout << "--------------------------------------------------------------------- \n ---------------------------------------------------------------------  " << std::endl;
+	std::cout << std::endl;
+
+	GameMap* map = subject->map;
+
+	for (auto& continentPair : map->terrs)
+	{
+		Continent* cont = continentPair.second->value;
+		std::cout << "\n" + cont->getName() << ":" << std::endl;
+
+		for (auto& regionPair : cont->terrs)
+		{
+			std::cout << "\t" + regionPair.second->getName() << ":" << std::endl;
+			std::cout << "\t\tRegion owner: " << MapUtility::getRegionOwner(regionPair.second);
+
+			for (Player* player : subject->players->players)
+			{
+				std::cout << std::endl;
+				std::cout << "\t\tPlayer name: " << player->getName();
+				const int placedCities = regionPair.second->getPlacedCities(player);
+				const int placedArmies = regionPair.second->getPlacedArmies(player);
+				std::cout << " | " + std::to_string(placedArmies) + " armies";
+				std::cout << " | " + std::to_string(placedCities) + " cities";
+			}
+
+			std::cout << std::endl;
+		}
+	}
+
+	std::cout << std::endl;
+}
+

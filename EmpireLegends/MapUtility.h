@@ -1,7 +1,8 @@
 #pragma once
 #include "Map.h"
+#include <string>
 
-class Player;
+using std::string;
 
 class MapUtility
 {
@@ -13,4 +14,5 @@ public:
 	static std::map<int, Territory<Region>*>printTerritoriesForPlacingArmies(GameMap* map, Player* player);
 	static std::map<int, Territory<Region>*> printTerritoriesWithEnemyArmies(GameMap* map, Player* player, int numArmiesToDestroy);
 	static Territory<Region>* getStartingLocation(GameMap* map);
+	static string getRegionOwner(Territory<Region>* region);
 };

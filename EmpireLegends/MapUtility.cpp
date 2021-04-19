@@ -122,7 +122,6 @@ map<int, Territory<Region>*> MapUtility::printTerritoriesWithMap(GameMap* map)
 
 			// Increment the Iterator to point to next entry
 			++regionIterator;
-			
 		}
 
 		// Increment the Iterator to point to next entry
@@ -198,4 +197,19 @@ std::map<int, Territory<Region>*> MapUtility::printTerritoriesWithEnemyArmies(Ga
 	std::cout << std::endl;
 	
 	return terrsWithEnemyArmies;
+}
+
+string MapUtility::getRegionOwner(Territory<Region>* region)
+{
+	for (auto pair : region->armies)
+	{
+		vector<Territory<Region>*> territories = pair.first->getTerritories();
+		bool isOwner = std::find(territories.begin(), territories.end(), region) != territories.end();
+		if (isOwner)
+		{
+			return pair.first->getName();
+		}
+	}
+
+	return "none";
 }

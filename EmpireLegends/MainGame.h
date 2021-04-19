@@ -18,16 +18,15 @@ public:
 
 class MainGame : public Observable
 {
-	GameMap* map;
 	Deck* deck;
-	PlayerRotation* players;
 	vector<Card*> cardDeck;
 	string state;
 	void startPlayerTurn(const Player* player);
 	void SetupEndGame();
 
 public:
-
+	GameMap* map;
+	PlayerRotation* players;
 	explicit MainGame(GameMap* map, Deck* deck, vector<Player*>& players);
 	~MainGame();
 	void afterAction();
@@ -45,6 +44,17 @@ class MainGameObserver : public Observer
 public:
 	MainGameObserver(MainGame* s);
 	~MainGameObserver();
+	void Update() override;
+	void display();
+private:
+	MainGame* subject;
+};
+
+class GameStatisticsObserver : public Observer
+{
+public:
+	GameStatisticsObserver(MainGame* s);
+	~GameStatisticsObserver();
 	void Update() override;
 	void display();
 private:
