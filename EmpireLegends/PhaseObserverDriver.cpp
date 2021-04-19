@@ -77,24 +77,24 @@
 //	vector<ActionObserver*> actionObservers;
 //	GameStart* gameStart = new GameStart();
 //	GameStartObserver* gameStartObserver = new GameStartObserver(gameStart);
-//	
+//
 //	//Game Start Part
 //	GameMap* gameMap = gameStart->loadMap();
 //	vector<Player*> players = gameStart->detPlayerBotCount();
 //
-//	int num = players.size();
-//	StartingPhase* startPhase = new StartingPhase();
-//	StartingPhaseObserver* startingPhaseObserver = new StartingPhaseObserver(startPhase);
 //	Deck* deck = setDeck();
-//	players = startPhase->startGame(gameMap, players, deck, num);
 //
-//	for(int i=0; i<players.size(); i++)
+//	StartingPhase* startPhase = new StartingPhase(gameMap, deck, players);
+//	StartingPhaseObserver* startingPhaseObserver = new StartingPhaseObserver(startPhase);
+//	players = startPhase->startGame();
+//
+//	for (int i = 0; i < players.size(); i++)
 //	{
 //		PlayerStrategy* strat = players[i]->getStrategy();
 //		ActionObserver* actionObserver = new ActionObserver(strat);
 //		actionObservers.push_back(actionObserver);
 //	}
-//	
+//
 //	MainGame* mainGame = new MainGame(gameMap, deck, players);
 //	MainGameObserver* mainGameObserver = new MainGameObserver(mainGame);
 //
@@ -105,14 +105,14 @@
 //	delete gameStart;
 //	delete startingPhaseObserver;
 //	delete startPhase;
-//	
-//	for (int i = 0; i < actionObservers.size(); i++)
+//
+//	for (auto& actionObserver : actionObservers)
 //	{
-//		delete actionObservers[i];
+//		delete actionObserver;
 //	}
 //	delete deck;
 //	delete mainGameObserver;
 //	delete mainGame;
-//	
+//
 //	return 0;
 //}

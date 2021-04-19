@@ -48,7 +48,7 @@ Player* MainGame::getCurrentPlayer()
 
 void MainGame::startPlayerTurn(const Player* player)
 {
-	state =  player->getName() + "'s turn. They are buying a card";
+	state = player->getName() + "'s turn. They are buying a card";
 	Notify();
 }
 
@@ -67,8 +67,7 @@ MainGame::MainGame(GameMap* map, Deck* deck, vector<Player*>& players)
 
 MainGame::~MainGame()
 {
-	delete map;  
-	delete deck;
+	delete map;
 	delete players;
 }
 
@@ -76,7 +75,7 @@ void MainGame::afterAction()
 {
 	state = "Turn ended.";
 	Notify();
-	
+
 	this->deck->draw(1);
 	this->players->rotate();
 	std::cout << std::endl;
@@ -105,7 +104,8 @@ void MainGame::mainGameloop(int numOfTurns) {
 
 	bool playerReachedMaxCardCount = false;
 
-	while (numOfTurns > 0 || playerReachedMaxCardCount) {
+
+	while (turnNum <= numOfTurns || playerReachedMaxCardCount) {
 		std::cout << "---------------------------------------------------------------------"<< std::endl;
 		std::cout << "Turn #" << turnNum << std::endl;
 
@@ -113,59 +113,17 @@ void MainGame::mainGameloop(int numOfTurns) {
 			
 			Player* player = getCurrentPlayer();
 			startPlayerTurn(player);
-			
-			//std::cout << "\n\nPlayer " << player->getName() << std::endl;
 
-			// Check player card count
+			Card* faceCard = player->chooseCard(deck->getHand());
+
 			if (player->geNumOfOwnedCard() >= maxCardCount)
 			{
 				playerReachedMaxCardCount = true;
 				break;
 			}
 
-			Card* faceCard = nullptr;
-
-			//For Bot players
-			bool isBot = player->getName().find("Bot") != std::string::npos;
-			if (isBot)
-			{
-				int p;
-				std::cout << "The bot is picking a card. "<<std::endl;
-				while (faceCard == nullptr) {
-					const int cardPosition = botPickACard();
-				
-					Hand* deckHand = deck->getHand();
-
-					faceCard = deckHand->exchange(cardPosition, player);
-					p = cardPosition;
-				}
-				std::cout << "The bot picked the card at position " << p <<"." << std::endl;
-				state = player->getName() = " has picked the card at position " + std::to_string(p);
-			}
-
-			//For Human Players
-			else 
-			{
-				while (faceCard == nullptr) {
-					const int cardPosition = pickACard();
-					std::cout << "\n";
-
-					Hand* deckHand = deck->getHand();
-
-					faceCard = deckHand->exchange(cardPosition, player);
-
-					if (faceCard == nullptr) {
-						std::cout << "Card not added to player" << std::endl;
-						state = "Invalid card position.";
-					}else
-					{
-						state = player->getName() = " has picked the card at position " + std::to_string(cardPosition);
-					}
-				}
-			}
-			
 			std::cout << "Picked card: " << std::endl << *faceCard << std::endl;
-			bool getCard = player->andOrAction( faceCard, map);
+			bool getCard = player->andOrAction(faceCard, map);
 			
 			if (getCard == true)
 			{
@@ -179,35 +137,10 @@ void MainGame::mainGameloop(int numOfTurns) {
 			std::cout << *deck->getHand() << std::endl;
 		}
 		turnNum++;
-		numOfTurns--;
 		Notify();
 	}
 	std::cout << "The Game is Over!!" << std::endl;
 	chooseWinner();
-}
-
-// Player picks the position of the card
-int MainGame::pickACard() {
-
-	int cardposition;
-
-	do {
-		std::cout << "Pick a position (1-6): ";
-		std::cin >> cardposition;
-	} while (cardposition > 6 || cardposition < 1);
-
-	return cardposition;
-}
-
-// Bot picks the position of the card
-int MainGame::botPickACard() {
-
-	int cardposition;
-	do {
-		cardposition = rand() % 6 + 1;
-	} while (cardposition > 6 || cardposition < 1);
-
-	return cardposition;
 }
 
 // Calculate winner based off victory points (VPs)
@@ -373,22 +306,22 @@ void MainGame::chooseWinner() {
 	const int numWidth = 10; 
 	
 	std::cout << "------------------------------------------------------------------" << std::endl;
+	std::cout << "------------------------------------------------------------------" << std::endl;
 	std::cout << "Player #"
 		<< std::setw(nameWidth + 3) << "Cards"
-		<< std::setw(numWidth + 10) << "Victory Points" 
+		<< std::setw(numWidth + 10) << "Victory Points"
 		<< std::setw(numWidth) << "Coins"
-		<< std::setw(numWidth) << "Armies" << std::endl;
-	std::cout << "------------------------------------------------------------------" << std::endl;
+		<< std::setw(numWidth + 10) << "Armies Placed" << std::endl;
+	std::cout << "----------------------------------------------------------------------------" << std::endl;
 
-	for (int i = 0; i < allPlayers.size(); i++) {
-		
-		std::cout  << std::left<<  std::setw(nameWidth) << allPlayers[i]->getName()
-			<< std::right << std::setw(numWidth) << allPlayers[i]->geNumOfOwnedCard()
-			<< std::setw(numWidth + 10) << allPlayers[i]->getVictoryPoints() 
-			<< std::setw(numWidth) << allPlayers[i]->getResources()->totalCoins
-			<< std::setw(numWidth) << allPlayers[i]->getNumArmy() << std::endl;
-		std::cout << "------------------------------------------------------------------" << std::endl;
-
+	for (auto& player : allPlayers)
+	{
+		std::cout  << std::left<<  std::setw(nameWidth) << player->getName()
+			<< std::right << std::setw(numWidth) << player->geNumOfOwnedCard()
+			<< std::setw(numWidth + 10) << player->getVictoryPoints() 
+			<< std::setw(numWidth) << player->getResources()->totalCoins
+			<< std::setw(numWidth + 10) << player->getNumArmy() << std::endl;
+		std::cout << "----------------------------------------------------------------------------" << std::endl;
 	}
 }
 

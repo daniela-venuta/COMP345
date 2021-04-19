@@ -23,6 +23,13 @@ protected:
 public:
 	virtual ~PlayerStrategy() = default;
 	/// <summary>
+	/// Choosing a card.
+	/// </summary>
+	/// <param name="hand">Hand to pick a card from</param>
+	/// <param name="player">Player making the choice</param>
+	/// /// <returns>Chosen action</returns>
+	virtual Card* chooseCard(Hand* hand, Player* player) = 0;
+	/// <summary>
 	/// Choosing between 2 actions to play.
 	/// </summary>
 	/// <param name="action1"></param>
@@ -42,10 +49,13 @@ public:
 };
 
 // Human strategy. Choice and execution are dictated by user input.
-class HumanStrategy: public PlayerStrategy
+class HumanStrategy : public PlayerStrategy
 {
+private:
+	int pickCardPosition();
 public:
 	HumanStrategy() : PlayerStrategy("human") {}
+	Card* chooseCard(Hand* hand, Player* player) override;
 	Action* chooseAction(Action* action1, Action* action2) override;
 	bool executeAction(Action* action, Player* player, GameMap* map) override;
 };
@@ -54,10 +64,12 @@ public:
 class NonHumanStrategy : public PlayerStrategy
 {
 private:
+	vector<string> wantedActions;
 	static Territory<Region>* getRandomTerritory(std::map<int, Territory<Region>*> territories);
 protected:
-	NonHumanStrategy(const string& stratName) : PlayerStrategy("non human: " + stratName) {}
+	NonHumanStrategy(const string& stratName, vector<string> actions) : PlayerStrategy("non human: " + stratName), wantedActions(actions) { }
 public:
+	Card* chooseCard(Hand* hand, Player* player) override;
 	bool executeAction(Action* action, Player* player, GameMap* map) override;
 };
 
@@ -65,7 +77,7 @@ public:
 class GreedyStrategy : public NonHumanStrategy
 {
 public:
-	GreedyStrategy() : NonHumanStrategy("greedy") {}
+	GreedyStrategy() : NonHumanStrategy("greedy", { "Build", "Destroy" }) {}
 	Action* chooseAction(Action* action1, Action* action2) override;
 };
 
@@ -73,7 +85,7 @@ public:
 class ModerateStrategy : public NonHumanStrategy
 {
 public:
-	ModerateStrategy() : NonHumanStrategy("moderate") {}
+	ModerateStrategy() : NonHumanStrategy("moderate", { "Place" }) {}
 	Action* chooseAction(Action* action1, Action* action2) override;
 };
 
@@ -81,7 +93,7 @@ class ActionObserver : public Observer {
 public:
 	ActionObserver(PlayerStrategy* s);
 	~ActionObserver();
-	
+
 	void Update() override;
 	void display();
 private:
