@@ -110,23 +110,22 @@ vector<Player*> GameStart::detPlayerBotCount()
 	startSetup();
 
 	int playerCoins = 0;
-	string playerName = "";
-	int numOfPlayers = 2;
-	vector<Player*> players = {};
+	string playerName;
+	vector<Player*> players;
 	int strategyOfBots = 0;
 
 	std::cout << "You'll be playing against 1 bot." << std::endl;
 
-	while (playerName == "") {
+	while (playerName.empty()) {
 		std::cout << "\nEnter your player name : ";
 		getline(std::cin, playerName);
-		Player* temp = new Player(playerName, playerCoins, new HumanStrategy());
-		players.push_back(temp);
-		std::cout << "Welcome " << playerName << " !" << std::endl;
-	};
+	}
 
+	players.push_back(new Player(playerName, playerCoins, new HumanStrategy()));
+	std::cout << "Welcome " << playerName << " !" << std::endl;
+	
 	std::cout << "What type of bot do you want to play against:" << std::endl;
-	while (strategyOfBots < 1 || strategyOfBots > 3)
+	while (strategyOfBots < 1 || strategyOfBots > 2)
 	{
 		std::cout << "What type of bot do you want to play against:" << std::endl;
 		std::cout << "1 - Greedy" << std::endl;
@@ -139,23 +138,12 @@ vector<Player*> GameStart::detPlayerBotCount()
 			std::cout << "Bad entry.  Enter a NUMBER: ";
 			std::cin >> strategyOfBots;
 		}
-	};
+	}
 
 	std::cin.ignore();
 
-	Player* bot = new Player();
-
-	switch (strategyOfBots) {
-	case 1:
-		bot = new Player("GreedyBot", playerCoins, new GreedyStrategy());
-		players.push_back(bot);
-		break;
-
-	case 2:
-		bot = new Player("ModerateBot", playerCoins, new ModerateStrategy());
-		players.push_back(bot);
-		break;
-	}
+	Player* bot = strategyOfBots == 1 ? new Player("GreedyBot", playerCoins, new GreedyStrategy()) : new Player("ModerateBot", playerCoins, new ModerateStrategy());
+	players.push_back(bot);
 
 	std::cout << "Human is playing against " + bot->getName() << std::endl;
 

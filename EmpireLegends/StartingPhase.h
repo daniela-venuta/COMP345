@@ -23,10 +23,10 @@ struct ColorUtilities
 class StartingPhase : public Observable
 {
 public:
-	StartingPhase(GameMap* map, Deck* deck);
+	StartingPhase(GameMap* map, Deck* deck, const vector<Player*>& playerVector);
 	~StartingPhase();
 
-	vector<Player*> startGame(const vector<Player*>& playerVector);
+	vector<Player*> startGame();
 
 	string getState() const { return state; };
 	Player* currentPlayer;
@@ -38,7 +38,7 @@ private:
 	void placeArmiesOnMap();
 	void startBidding();
 
-	int setNumberOfCoins(int numPlayers);
+	int setNumberOfCoins();
 
 	int numOfPlayers = 0;
 	Deck* cardDeck;

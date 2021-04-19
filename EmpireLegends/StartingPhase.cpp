@@ -107,12 +107,13 @@ Color ColorUtilities::getColor(int index)
 }
 
 // Default constructor for the Starting Phase to initialize all pointers
-StartingPhase::StartingPhase(GameMap* gameMap, Deck* deck)
+StartingPhase::StartingPhase(GameMap* gameMap, Deck* deck, const vector<Player*>& players)
 {
 	map = gameMap;
 	colorUtilities = new ColorUtilities();
 	cardDeck = deck;
-	numOfPlayers = 0;
+	numOfPlayers = players.size();
+	this->players = players;
 }
 
 // Destructor for the StartingPhase class for cleanup
@@ -124,10 +125,8 @@ StartingPhase::~StartingPhase()
 }
 
 // Method to start the sequence of actions that are needed in the starting phase
-vector<Player*> StartingPhase::startGame(const vector<Player*>& playerVector)
+vector<Player*> StartingPhase::startGame()
 {
-	this->players = playerVector;
-
 	shuffleCardDeck();
 	assignPlayerResources();
 	setupStartingTerritories();
@@ -137,10 +136,10 @@ vector<Player*> StartingPhase::startGame(const vector<Player*>& playerVector)
 }
 
 // Retrieve number of starting coins per player
-int StartingPhase::setNumberOfCoins(int numPlayers)
+int StartingPhase::setNumberOfCoins()
 {
 	int playerCoins;
-	switch (numPlayers) {
+	switch (numOfPlayers) {
 		case 2:
 			playerCoins = 14;
 			std::cout << "Each player gets 14 coins" << std::endl;
@@ -169,14 +168,6 @@ void StartingPhase::shuffleCardDeck() const
 	std::cout << "Here is the current deck: " << std::endl;
 	std::cout << *cardDeck;
 	std::cout << std::endl;
-
-	//std::cout << "The deck was shuffled." << std::endl;
-	//std::cout << *cardDeck;
-	//std::cout << std::endl;
-
-	// Draw cards from deck and add them to the hand
-	//cardDeck->draw(6);
-	//std::cout << *cardDeck;
 }
 
 // Assigns colours to the players and provides coins, armies and cities
@@ -185,7 +176,7 @@ void StartingPhase::assignPlayerResources()
 	std::cout << "\nColor options \n 1.Red \n 2.Green  \n 3.Blue \n 4. Yellow \n";
 
 	// Assign number of coins based on players
-	int playerCoins = setNumberOfCoins(numOfPlayers);
+	int playerCoins = setNumberOfCoins();
 
 	for (int i = 0; i < numOfPlayers; i++)
 	{

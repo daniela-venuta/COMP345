@@ -65,8 +65,8 @@ void GameEngine::singleMode()
 	GameMap* gameMap = gameStart->loadMap();
 	vector<Player*> players = gameStart->detPlayerBotCount();
 
-	startPhase = new StartingPhase(gameMap, deck);
-	players = startPhase->startGame(players);
+	startPhase = new StartingPhase(gameMap, deck, players);
+	players = startPhase->startGame();
 
 	mainGame = new MainGame(gameMap, deck, players);
 
@@ -86,8 +86,8 @@ void GameEngine::tournamentMode()
 	GameMap* gameMap = gameStart->loadMap();
 	vector<Player*> bots = gameStart->detBotCount();
 
-	startPhase = new StartingPhase(gameMap, deck);
-	bots = startPhase->startGame(bots);
+	startPhase = new StartingPhase(gameMap, deck, bots);
+	bots = startPhase->startGame();
 
 	// Main game loop	
 	mainGame = new MainGame(gameMap, deck, bots);
