@@ -12,21 +12,48 @@ using namespace std;
 Player::Player() {
 	playerName = "";
 	pResources = new Resources;
-	pResources->unplacedArmies = TOTAL_NUM_ARMIES;
-	pResources->unplacedCities = TOTAL_NUM_CITIES;
+	pResources->unplacedArmies = MAX_NUM_ARMIES;
+	pResources->unplacedCities = MAX_NUM_CITIES;
 	pResources->totalCoins = 0;
 	strategy = nullptr;
 }
 
-// parametrized constructor
+// parametrized constructors
 Player::Player(string name, int coins, PlayerStrategy* strategy) {
 	playerName = std::move(name);
 	pResources = new Resources;
 	pResources->totalCoins = coins;
-	pResources->unplacedArmies = TOTAL_NUM_ARMIES;
-	pResources->unplacedCities = TOTAL_NUM_CITIES;
+	pResources->unplacedArmies = MAX_NUM_ARMIES;
+	pResources->unplacedCities = MAX_NUM_CITIES;
 	playerHand = new Hand();
 	this->strategy = strategy;
+}
+
+Player::Player(const string username, PlayerStrategy* strategy)
+{
+	// verify that this is not a duplicate username for the current players in game
+	setName(username);
+	pResources = new Resources;
+	// set player resources to default values
+	pResources->totalCoins = DEFAULT_NUM_COINS;
+	pResources->unplacedCities = MAX_NUM_CITIES;
+	pResources->unplacedArmies = MAX_NUM_ARMIES;
+
+	this->strategy = strategy;
+
+	// define a bidingFacility
+	std::cout << "Created new player: " << getName() << std::endl;
+}
+
+// destructor
+Player::~Player()
+{
+	delete pResources;
+	delete playerHand;
+	delete strategy;
+	pResources = nullptr;
+	playerHand = nullptr;
+	strategy = nullptr;
 }
 
 string Player::getName() const {
@@ -40,6 +67,7 @@ void Player::setName(string Name) {
 int Player::getCoins() const {
 	return pResources->totalCoins;
 }
+
 void Player::setCoins(int coins) {
 	pResources->totalCoins = coins;
 }
@@ -57,33 +85,7 @@ Card* Player::chooseCard(Hand* hand)
 
 PlayerStrategy* Player::getStrategy()
 {
-	return this->strategy;
-}
-
-Player::Player(const string username, PlayerStrategy* strategy)
-{
-	// verify that this is not a duplicate username for the current players in game
-	setName(username);
-	pResources = new Resources;
-	// set player resources to default values
-	pResources->totalCoins = DEFAULT_NUM_COINS;
-	pResources->unplacedCities = TOTAL_NUM_CITIES;
-	pResources->unplacedArmies = TOTAL_NUM_ARMIES;
-
-	this->strategy = strategy;
-
-	// define a bidingFacility
-	std::cout << "Created new player: " << getName() << std::endl;
-}
-
-Player::~Player()
-{
-	delete pResources;
-	delete playerHand;
-	delete strategy;
-	pResources = nullptr;
-	playerHand = nullptr;
-	strategy = nullptr;
+	return strategy;
 }
 
 Resources::Resources(const Resources& otherResources)
@@ -118,6 +120,11 @@ Resources& Resources::operator=(const Resources& resources)
 	return *this;
 }
 
+Resources* Player::getResources() const
+{
+	return pResources;
+}
+
 // Copy constructor
 Player::Player(const Player& otherPlayer)
 {
@@ -135,7 +142,6 @@ Player& Player::operator=(const Player& player)
 
 	return *this;
 }
-
 
 // Stream insertion operator overload
 ostream& operator<<(ostream& os, const Player& player)
@@ -164,14 +170,13 @@ void Player::payCoin(const int price)
 	if (price > -1 && (pResources->totalCoins - price) >= 0)
 	{
 		setBalance(pResources->totalCoins - price);
-		std::cout << "Removed " << price << " coins from player total." << std::endl;
-		std::cout << "New total: " << pResources->totalCoins << " coins" << std::endl;
+		state = playerName + " paid " + to_string(price) + ".\nRemoved " + to_string(price) + " coins from player total. \nNew player total: " + to_string(pResources->totalCoins) + " coins.\n\n";
 	}
 	else
 	{
-		std::cout << "Cannot perform this action (PayCoin)." << std::endl;
+		state = "Cannot perform this action (PayCoin).";
 	}
-
+	Notify();
 }
 
 // Get player balance
@@ -188,6 +193,7 @@ void Player::setBalance(int newBalance)
 
 int Player::geNumOfOwnedCard()
 {
+	state = playerName + " owns " + to_string(numOwnedCard) + " cards.";
 	return numOwnedCard;
 }
 
@@ -209,18 +215,19 @@ bool Player::moveArmies(int number, Territory<Region>* from, Territory<Region>* 
 		if (from->removeArmies(number, this) && to->addArmies(number, this))
 		{
 			moveDone = true;
-			std::cout << "Moved " << number << " armies." << std::endl;
+			state = playerName + " moved " + to_string(number) + " armies from " + from->getName() + " to " + to->getName();
 		}
 		else
 		{
-			std::cout << "Could not perform action (MoveArmies)" << std::endl;
+			state = "Could not perform action (MoveArmies).";
 		}
 	}
 	else
 	{
-		std::cout << "Could not perform action (MoveArmies)" << std::endl;
+		state = "Could not perform action (MoveArmies).";
 	}
 
+	Notify();
 	return moveDone;
 }
 
@@ -245,26 +252,26 @@ bool Player::placeNewArmies(int number, Territory<Region>* location, Territory<R
 			placeDone = true;
 			int newArmyCount = this->getNumArmy() + number;
 			this->setNumArmy(newArmyCount);
-			std::cout << playerName << " added " << number << " armies at " << location->getName() << std::endl;
+			state = playerName + " added " + to_string(number) + " armies at " + location->getName() + ".";
 		}
 		else
 		{
-			std::cout << "You cannot add armies in " << location->getName() + " because you have no city in this region." << std::endl;
+			state = "You cannot add armies in " + location->getName() + " because you have not built a city in this region.";
 		}
 
 	}
 	else if (pResources->unplacedArmies - number < 0)
 	{
-		std::cout << "You do not have enough armies to perform this action (PlaceNewArmies)." << std::endl;
+		state = "You do not have enough armies to perform this action (PlaceNewArmies).";
 	}
 	else
 	{
-		std::cout << "An error made it impossible to perform this action. (PlaceNewArmies)" << std::endl;
+		state = "An error made it impossible to perform this action (PlaceNewArmies).";
 	}
 
+	Notify();
 	return placeDone;
 }
-
 
 /// <summary>
 /// Takes cares of the changes that comes from Destroying Armies in a specific region
@@ -276,10 +283,9 @@ bool Player::destroyArmy(int number, Territory<Region>* location, Player* player
 {
 	bool destroyDone = false;
 
-
 	if (location->getTotalArmyCount() == 0)
 	{
-		std::cout << "Action not permissible (Destroy Armies at " << location->getName() << "). There is no army to destroy." << std::endl;
+		state = "Action not permissible (Destroy Armies at " + location->getName() + "). There are no armies to destroy.";
 	}
 	else if (location->getTotalArmyCount() - number > 0)
 	{
@@ -288,16 +294,16 @@ bool Player::destroyArmy(int number, Territory<Region>* location, Player* player
 		destroyDone = true;
 		int newArmyCount = player->getNumArmy() - number;
 		player->setNumArmy(newArmyCount);
-		std::cout << "Successfully destroyed " << number << " armies owned by " << player->getName() << " at " << location->getName() << " ." << std::endl;
+		state = playerName + "successfully destroyed " + to_string(number) + " armies owned by " + player->getName() + " at " + location->getName() + ".";
 	}
 	else
 	{
-		std::cout << "Action not permissible (Destroy Armies at " << location->getName() << "). There are not " << number << " armies to destroy " << std::endl;
+		state = "Action not permissible (Destroy Armies at " + location->getName() + "). There are not " + to_string(number) + " armies located at " + location->getName() + ".";
 	}
 
+	Notify();
 	return destroyDone;
 }
-
 
 /// <summary>
 /// Builds a city at the specified location
@@ -308,20 +314,21 @@ bool Player::buildCity(Territory<Region>* location)
 	bool buildDone = false;
 	if (location->getPlacedArmies(this) == 0)
 	{
-		std::cout << "Action not permissible (Build City at " << location->getName() << ")." << " You need at least 1 army in this region." << std::endl;
+		state = "Action not permissible (Build City at " + location->getName() + "). You need at least 1 army in this region.";
 	}
-	else if (pResources->unplacedCities - 1 >= 0 && TOTAL_NUM_CITIES - pResources->unplacedCities + 1 <= TOTAL_NUM_CITIES)
+	else if (pResources->unplacedCities - 1 >= 0 && MAX_NUM_CITIES - pResources->unplacedCities + 1 <= MAX_NUM_CITIES)
 	{
 		pResources->unplacedCities--;
 		location->addCity(this);
 		buildDone = true;
-		std::cout << "City built at " + location->getName() << std::endl;
+		state = playerName + " built a city at " + location->getName() + ".\n" + playerName + " can now only place " + to_string(pResources->unplacedCities) + " more cities on the board.";
 	}
 	else
 	{
-		std::cout << "Action not permissible (Build City at " << location->getName() << ")." << ". You don't have any city left to place or there is no more space for more cities in this region." << std::endl;
+		state = "Action not permissible (Build City at " + location->getName() + "). You either do not have any cities left to place or you cannot place a city in this region.";
 	}
 
+	Notify();
 	return buildDone;
 }
 
@@ -333,8 +340,10 @@ void Player::addOwnedTerritory(Territory<Region>* territory)
 	if (itr == playerTerritories.end())
 	{
 		playerTerritories.push_back(territory);
-		std::cout << this->getName() << " now owns " << territory->getName() << "." << std::endl;
+		state = playerName + " now owns " + territory->getName() + ".";
 	}
+
+	Notify();
 }
 
 void Player::removeOwnedTerritory(Territory<Region>* territory)
@@ -345,13 +354,10 @@ void Player::removeOwnedTerritory(Territory<Region>* territory)
 	if (itr != playerTerritories.end())
 	{
 		playerTerritories.erase(itr);
-		std::cout << this->getName() << " loses ownership over " << territory->getName() << "." << std::endl;
+		state = playerName + " loses ownership over " + territory->getName() + ".";
 	}
-}
 
-Resources* Player::getResources() const
-{
-	return pResources;
+	Notify();
 }
 
 void Player::addCard(Card* card)
@@ -560,6 +566,10 @@ Territory<Region>* Player::chooseTerritory(map<int, Territory<Region>*> regions)
 		else if (optionChosen > 0 && optionChosen <= regions.size())
 		{
 			chosenRegion = regions.at(optionChosen);
+			if (chosenRegion != nullptr)
+			{
+				std::cout << playerName + " chose territory: " + chosenRegion->getName() << std::endl;
+			}
 		}
 		else
 		{
@@ -571,12 +581,12 @@ Territory<Region>* Player::chooseTerritory(map<int, Territory<Region>*> regions)
 	return chosenRegion;
 }
 
-
 Player* Player::chooseEnemy(Territory<Region>* location, int numArmies)
 {
 	Player* choosePlayer = nullptr;
 	vector<Player*> enemyPlayers;
 	int num = 0;
+
 	for (auto& armyPair : location->armies)
 	{
 		Player* player = armyPair.first;
@@ -603,6 +613,10 @@ Player* Player::chooseEnemy(Territory<Region>* location, int numArmies)
 		else if (optionChosen > 0 && optionChosen <= enemyPlayers.size())
 		{
 			choosePlayer = enemyPlayers.at(optionChosen - 1);
+			if (choosePlayer != nullptr)
+			{
+				std::cout << this->getName() + " chose player " + choosePlayer->getName() << std::endl;
+			}
 		}
 		else
 		{
@@ -612,4 +626,21 @@ Player* Player::chooseEnemy(Territory<Region>* location, int numArmies)
 	} while (choosePlayer == nullptr);
 
 	return choosePlayer;
+}
+
+PlayerObserver::PlayerObserver(Player* p) {
+	subject = p;
+	subject->Attach(this);
+}
+
+PlayerObserver::~PlayerObserver() {
+	subject->Detach(this);
+}
+
+void PlayerObserver::Update() {
+	display();
+}
+
+void PlayerObserver::display() {
+	std::cout << subject->state;
 }

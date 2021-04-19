@@ -217,7 +217,26 @@ void PhaseObserverDemo()
 
 void GameStatsObserverDemo()
 {
-	
+	// Start game
+	GameStart* gameStart = new GameStart();
+	GameMap* gameMap = gameStart->loadMap();
+	vector<Player*> players = gameStart->detPlayerBotCount();
+
+	Deck* deck = setDeck();
+	StartingPhase* startPhase = new StartingPhase(gameMap, deck, players);
+	players = startPhase->startGame();
+
+	MainGame* mainGame = new MainGame(gameMap, deck, players);
+	GameStatisticsObserver* gameStatisticsObserver = new GameStatisticsObserver(mainGame);
+
+	int numOfTurns = 4;
+	mainGame->mainGameloop(numOfTurns);
+
+	delete gameStart;
+	delete startPhase;
+	delete deck;
+	delete gameStatisticsObserver;
+	delete mainGame;
 }
 
 void TournamentDemo()

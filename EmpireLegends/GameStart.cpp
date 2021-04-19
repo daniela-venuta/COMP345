@@ -154,8 +154,9 @@ vector<Player*> GameStart::detPlayerBotCount()
 
 	std::cout << "You'll be playing against 1 bot." << std::endl;
 
+	std::cout << "\nEnter your player name : ";
+
 	while (playerName.empty()) {
-		std::cout << "\nEnter your player name : ";
 		getline(std::cin, playerName);
 	}
 

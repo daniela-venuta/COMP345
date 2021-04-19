@@ -153,6 +153,7 @@
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameEngineDriver.cpp" />
     <ClCompile Include="GameStartDriver.cpp" />
+    <ClCompile Include="GameStatObserverDriver.cpp" />
     <ClCompile Include="jsoncpp.cpp" />
     <ClCompile Include="MainDriver.cpp" />
     <ClCompile Include="MainGame.cpp" />

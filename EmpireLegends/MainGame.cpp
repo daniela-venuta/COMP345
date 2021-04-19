@@ -1,6 +1,7 @@
 #include "MainGame.h"
 #include "Player.h"
 #include "Cards.h"
+#include "MapUtility.h"
 #include <algorithm>
 #include <iomanip>
 
@@ -86,25 +87,47 @@ void MainGame::mainGameloop(int numOfTurns) {
 	std::cout << *deck->getHand() << std::endl;
 	int turnNum = 1;
 
-	while (turnNum <= numOfTurns) {
-		std::cout << "-----------------------------------------------------------------------------"<< std::endl;
+	int maxCardCount = 13;
+	switch (players->getNbPlayers()) {
+		case 2:
+			maxCardCount = 13;
+			break;
+		case 3:
+			maxCardCount = 10;
+			break;
+		case 4:
+			maxCardCount = 8;
+			break;
+		default:
+			maxCardCount = 13;
+	}
+
+	bool playerReachedMaxCardCount = false;
+
+
+	while (turnNum <= numOfTurns || playerReachedMaxCardCount) {
+		std::cout << "---------------------------------------------------------------------"<< std::endl;
 		std::cout << "Turn #" << turnNum << std::endl;
 
 		for (int i = 0; i < players->getNbPlayers(); i++) {
-
-
+			
 			Player* player = getCurrentPlayer();
 			startPlayerTurn(player);
 
 			Card* faceCard = player->chooseCard(deck->getHand());
+
+			if (player->geNumOfOwnedCard() >= maxCardCount)
+			{
+				playerReachedMaxCardCount = true;
+				break;
+			}
 
 			std::cout << "Picked card: " << std::endl << *faceCard << std::endl;
 			bool getCard = player->andOrAction(faceCard, map);
 			
 			if (getCard == true)
 			{
-				
-				std::cout << "The card " + faceCard->getName() + " has been added to " << player->getName() << "'s hand." << std::endl;
+				std::cout << "The card " + faceCard->getName() + " has been added to your hand." << std::endl;
 				player->addCard(faceCard);
 				player->applyGood(faceCard->getGood());
 			}
@@ -282,7 +305,8 @@ void MainGame::chooseWinner() {
 	const int nameWidth = 15;
 	const int numWidth = 10; 
 	
-	std::cout << "----------------------------------------------------------------------------" << std::endl;
+	std::cout << "------------------------------------------------------------------" << std::endl;
+	std::cout << "------------------------------------------------------------------" << std::endl;
 	std::cout << "Player #"
 		<< std::setw(nameWidth + 3) << "Cards"
 		<< std::setw(numWidth + 10) << "Victory Points"
@@ -319,7 +343,59 @@ void MainGameObserver::Update()
 
 void MainGameObserver::display()
 {
-	std::cout << "--------------------------------------------------------------------- \n ---------------------------------------------------------------------  " << std::endl;
+	std::cout << "---------------------------------------------------------------------\n---------------------------------------------------------------------  " << std::endl;
 	std::cout << "Main Game: " << subject->getState() << std::endl;
-	std::cout << "--------------------------------------------------------------------- \n ---------------------------------------------------------------------  " << std::endl;
+	std::cout << "---------------------------------------------------------------------\n---------------------------------------------------------------------  " << std::endl;
 }
+
+GameStatisticsObserver::GameStatisticsObserver(MainGame* s)
+{
+	subject = s;
+	subject->Attach(this);
+}
+
+GameStatisticsObserver::~GameStatisticsObserver()
+{
+	subject->Detach(this);
+}
+
+void GameStatisticsObserver::Update()
+{
+	display();
+}
+
+void GameStatisticsObserver::display()
+{
+	std::cout << "---------------------------------------------------------------------\n---------------------------------------------------------------------  " << std::endl;
+	std::cout << "                        Current map status: " << std::endl;
+	std::cout << "---------------------------------------------------------------------\n---------------------------------------------------------------------  " << std::endl;
+
+	GameMap* map = subject->map;
+
+	for (auto& continentPair : map->terrs)
+	{
+		Continent* cont = continentPair.second->value;
+		std::cout << "\n" + cont->getName() << ":" << std::endl;
+
+		for (auto& regionPair : cont->terrs)
+		{
+			std::cout << "\t" + regionPair.second->getName() << ":" << std::endl;
+			std::cout << "\t\tRegion owner: " << MapUtility::getRegionOwner(regionPair.second);
+
+			for (Player* player : subject->players->players)
+			{
+				std::cout << std::endl;
+				std::cout << "\t\tPlayer name: " << player->getName();
+				const int placedCities = regionPair.second->getPlacedCities(player);
+				const int placedArmies = regionPair.second->getPlacedArmies(player);
+				std::cout << " | " + std::to_string(placedArmies) + " armies";
+				std::cout << " | " + std::to_string(placedCities) + " cities";
+			}
+
+			std::cout << std::endl;
+		}
+	}
+	std::cout << "---------------------------------------------------------------------\n---------------------------------------------------------------------  " << std::endl;
+	std::cout << std::endl;
+}
+

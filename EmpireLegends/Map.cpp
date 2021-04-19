@@ -175,14 +175,14 @@ bool Territory<T>::addArmies(int number, Player* player)
     	// Adding ownership of the territory if only owned armies are on it
         if (armies[player] == getTotalArmyCount())
         {
-            player->addOwnedTerritory(dynamic_cast<Territory<Region>*>(this));
-        }
-    	for (auto itr = armies.begin(); itr != armies.end(); ++itr)
-        {
-            // Removing ownership of the territory to other players
-            if (itr->first != player)
+            for (auto itr = armies.begin(); itr != armies.end(); ++itr)
             {
-                player->removeOwnedTerritory(dynamic_cast<Territory<Region>*>(this));
+                // Removing ownership of the territory from the previous owner
+                if (itr->second == armies[player])
+                {
+                    player->addOwnedTerritory(dynamic_cast<Territory<Region>*>(this));
+                    itr->first->removeOwnedTerritory(dynamic_cast<Territory<Region>*>(this));
+                }
             }
         }
     }
