@@ -18,6 +18,8 @@ GameMap* GameStart::loadMap() {
 
 	string fileName = "";
 	std::cout << "Please enter the name of the map you wish to play with." << std::endl;
+	// Ignores the extra whitespace from previously required inputs
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	std::getline(std::cin, fileName);
 
 	GameMap* gameMap = nullptr;
