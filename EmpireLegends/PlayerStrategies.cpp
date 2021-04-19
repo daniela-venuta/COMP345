@@ -8,13 +8,43 @@ ostream& operator<<(ostream& os, const PlayerStrategy& strategy)
 	return os << strategy.name << std::endl;
 }
 
+// Player picks the position of the card
+int HumanStrategy::pickCardPosition() {
+
+	int cardposition;
+
+	do {
+		std::cout << "Pick a position (1-6): ";
+		std::cin >> cardposition;
+	} while (cardposition > 6 || cardposition < 1);
+
+	return cardposition;
+}
+
+Card* HumanStrategy::chooseCard(Hand* hand, Player* player)
+{
+	Card* faceCard = nullptr;
+	while (faceCard == nullptr) {
+		const int cardPosition = pickCardPosition();
+		std::cout << "\n";
+
+		faceCard = hand->exchange(cardPosition, player);
+
+		if (faceCard == nullptr) {
+			std::cout << "Card not be added to player" << std::endl;
+		}
+	}
+
+	return faceCard;
+}
+
 Action* HumanStrategy::chooseAction(Action* action1, Action* action2)
 {
 	Action* chosenAction = nullptr;
 	int option = 0;
 
 	std::cout << "You must chose which action to use." << std::endl;
-	
+
 	while (chosenAction == nullptr)
 	{
 		std::cout << "Please enter the number next to the desired action:" << std::endl;
@@ -100,7 +130,7 @@ bool HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 			std::cout << "You may destroy " << numArmies << " enemy armies. Please choose a region: \n";
 			Territory<Region>* location = player->chooseTerritory(MapUtility::printTerritoriesWithEnemyArmies(map, player, numArmies));
 			Player* enemyPlayer = player->chooseEnemy(location, numArmies);
-			
+
 			state = "Destroying" + std::to_string(numArmies) + " of " + enemyPlayer->getName() + " at " + location->getName();
 			actionDone = player->destroyArmy(numArmies, location, enemyPlayer);
 		}
@@ -116,7 +146,7 @@ bool HumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 			actionDone = player->placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
 		}
 
-		
+
 		numOfTry++;
 	}
 	if (numOfTry == 10)
@@ -135,6 +165,55 @@ Territory<Region>* NonHumanStrategy::getRandomTerritory(std::map<int, Territory<
 	return destinationItr->second;
 }
 
+Card* NonHumanStrategy::chooseCard(Hand* hand, Player* player)
+{
+	Card* faceCard = nullptr;
+	
+	int p;
+	std::cout << "The bot is picking a card. " << std::endl;
+	while (faceCard == nullptr) {
+
+		vector<Card*> cards = hand->getCards();
+		auto itr = std::find_if(cards.begin(),cards.end(), [this](const Card* c)
+		{
+			bool foundCard = false;
+
+			for(const string& action : wantedActions)
+			{
+				foundCard = (c->getAction() != nullptr && c->getAction()->getName().find(action) != std::string::npos) || (c->getSecondAction() != nullptr && c->getSecondAction()->getName().find(action) != std::string::npos);
+
+				if (foundCard)
+				{
+					break;
+				}
+			}
+			
+			return foundCard;
+		});
+		
+		int cardPosition;
+
+		const int foundPosition = itr == cards.end() ? -1 : static_cast<int>(std::distance(cards.begin(), itr)) + 1;
+		
+		if (foundPosition != -1 && Hand::getCardCost(foundPosition) <= player->getBalance())
+		{
+			cardPosition = foundPosition;
+		}
+		else
+		{
+			do {
+				cardPosition = rand() % 6 + 1;
+			} while (cardPosition > 6 || cardPosition < 1);
+		}
+		
+		faceCard = hand->exchange(cardPosition, player);
+		p = cardPosition;
+	}
+	std::cout << "The bot picked the card at position " << p << "." << std::endl;
+
+	return faceCard;
+}
+
 bool NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* map)
 {
 	const std::size_t build = action->getName().find("Build");
@@ -145,7 +224,7 @@ bool NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 	int numOfTry = 0;
 	srand(time(nullptr));
 
-	while (!actionDone && numOfTry < 10 )
+	while (!actionDone && numOfTry < 10)
 	{
 		//Build City
 		if (build != std::string::npos)
@@ -198,7 +277,7 @@ bool NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 		{
 			const int numArmies = action->getMultiplier();
 			std::cout << player->getName() << " may destroy " << numArmies << " enemy armies. Choosing a region. \n";
-			
+
 			std::map<int, Territory<Region>*> locations = MapUtility::printTerritoriesWithEnemyArmies(map, player, numArmies);
 
 			if (locations.empty())
@@ -221,7 +300,7 @@ bool NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 					invalid = false;
 					chosenEnemy = newEnemyItr->first;
 				}
-				
+
 			} while (invalid);
 			state = "Destroying " + std::to_string(numArmies) + " of " + chosenEnemy->getName() + " at " + location->getName();
 			actionDone = player->destroyArmy(numArmies, location, chosenEnemy);
@@ -240,17 +319,17 @@ bool NonHumanStrategy::executeAction(Action* action, Player* player, GameMap* ma
 			{
 				destination = getRandomTerritory(destinations);
 			} while (destination != MapUtility::getStartingLocation(map) && destination->getPlacedCities(player) == 0);
-			
+
 			state = "Placing " + std::to_string(numArmies) + " at " + destination->getName();
 			actionDone = player->placeNewArmies(numArmies, destination, MapUtility::getStartingLocation(map));
 		}
 		numOfTry++;
 	}
 
-	if(numOfTry >= 10){
+	if (numOfTry >= 10) {
 		state = "No more tries available";
 	}
-	
+
 	Notify();
 	return actionDone;
 }
@@ -267,12 +346,12 @@ Action* GreedyStrategy::chooseAction(Action* action1, Action* action2)
 	{
 		return action1->getMultiplier() >= action2->getMultiplier() ? action1 : action2;
 	}
-	
+
 	if (build1 != std::string::npos || destroy1 != std::string::npos)
 	{
 		return action1;
 	}
-	
+
 	if (build2 != std::string::npos || destroy2 != std::string::npos)
 	{
 		return action2;
@@ -314,7 +393,7 @@ void ActionObserver::Update()
 
 void ActionObserver::display()
 {
-	std::cout << "Turn events: "<< subject->state << std::endl;
+	std::cout << "Turn events: " << subject->state << std::endl;
 }
 
 ActionObserver::ActionObserver(PlayerStrategy* s)
